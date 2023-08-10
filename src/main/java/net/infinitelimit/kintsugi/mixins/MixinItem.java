@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Item.class)
-public abstract class MixinItemEntity {
+public abstract class MixinItem {
     @Inject(at = @At("HEAD"), method = "isFoil(Lnet/minecraft/world/item/ItemStack;)Z", cancellable = true)
     private void isFoil(ItemStack pStack, CallbackInfoReturnable<Boolean> callback) {
         callback.setReturnValue(true);

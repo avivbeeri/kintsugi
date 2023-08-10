@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "minecraft:chiseled_bookshelf"
+  ],
+  "remove": [
+    "minecraft:bookshelf"
+  ]
+}
