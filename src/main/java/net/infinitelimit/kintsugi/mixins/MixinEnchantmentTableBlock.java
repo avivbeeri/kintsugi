@@ -1,5 +1,6 @@
 package net.infinitelimit.kintsugi.mixins;
 
+import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
@@ -28,9 +29,8 @@ public abstract class MixinEnchantmentTableBlock {
         if (blockentity instanceof EnchantmentTableBlockEntity) {
             Component component = ((Nameable)blockentity).getDisplayName();
             SimpleMenuProvider menu = new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) ->
-                    new EnchantmentMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), component);
-           // callback.setReturnValue(menu);
-            callback.setReturnValue(null);
+                    new RemixEnchantmentMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), component);
+            callback.setReturnValue(menu);
         } else {
             callback.setReturnValue(null);
         }
