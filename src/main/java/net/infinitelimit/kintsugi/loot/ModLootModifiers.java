@@ -1,7 +1,6 @@
 package net.infinitelimit.kintsugi.loot;
 
 import com.mojang.serialization.Codec;
-import net.infinitelimit.kintsugi.loot.DungeonLootModifier;
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -14,7 +13,7 @@ public class ModLootModifiers {
             DeferredRegister.create(ForgeRegistries.Keys.GLOBAL_LOOT_MODIFIER_SERIALIZERS, Kintsugi.MOD_ID);
 
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> DUNGEON_ITEM =
-            LOOT_MODIFIER_SERIALIZERS.register("knowledge_book", DungeonLootModifier.CODEC);
+            LOOT_MODIFIER_SERIALIZERS.register("power_book", DungeonLootModifier.CODEC);
 
     public static void register(IEventBus bus) {
         LOOT_MODIFIER_SERIALIZERS.register(bus);

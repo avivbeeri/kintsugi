@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "net.infinitelimit.kintsugi.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "kintsugi.refmap.json",
+  "mixins": [
+    "MixinItemEntity"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}

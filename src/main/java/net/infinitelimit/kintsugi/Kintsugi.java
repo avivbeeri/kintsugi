@@ -1,6 +1,7 @@
 package net.infinitelimit.kintsugi;
 
 import com.mojang.logging.LogUtils;
+import net.infinitelimit.kintsugi.block.ModBlocks;
 import net.infinitelimit.kintsugi.item.ModCreativeModeTabs;
 import net.infinitelimit.kintsugi.item.ModItems;
 import net.infinitelimit.kintsugi.loot.ModLootModifiers;
@@ -47,6 +48,7 @@ public class Kintsugi
 
         ModCreativeModeTabs.register(modEventBus);
         ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
         ModLootModifiers.register(modEventBus);
 
         // Register the commonSetup method for modloading
