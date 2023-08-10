@@ -13,9 +13,9 @@ public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Kintsugi.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> KINTSUGI_TAB = CREATIVE_MODE_TABS.register("book_tab", () -> CreativeModeTab.builder()
-            .icon(() -> new ItemStack(ModItems.SPELL_BOOK.get())).title(Component.translatable("creativetab.kintsugi"))
+            .icon(() -> new ItemStack(ModItems.POWER_BOOK.get())).title(Component.translatable("creativetab.kintsugi"))
             .displayItems((pParameters, pOutput) -> {
-                pOutput.accept(ModItems.SPELL_BOOK.get());
+                pOutput.accept(ModItems.POWER_BOOK.get());
             })
             .build());
 

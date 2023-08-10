@@ -1,9 +1,9 @@
 package net.infinitelimit.kintsugi.events;
 
-import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.item.ModItems;
+import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -22,6 +22,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +43,6 @@ public class ModEvents {
         }
     }
 
-
     static class PowerBookForEmeralds implements VillagerTrades.ItemListing {
         private final int villagerXp;
 
@@ -49,13 +50,11 @@ public class ModEvents {
             this.villagerXp = pVillagerXp;
         }
 
-        public MerchantOffer getOffer(Entity pTrader, RandomSource pRandom) {
-            Villager villager = (Villager) pTrader;
-            
-            List<Enchantment> list = BuiltInRegistries.ENCHANTMENT.stream().filter(Enchantment::isTradeable).collect(Collectors.toList());
+        public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRandom) {
+            List<Enchantment> list = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter(Enchantment::isTradeable).toList();
             Enchantment enchantment = list.get(pRandom.nextInt(list.size()));
             int i = Mth.nextInt(pRandom, enchantment.getMinLevel(), enchantment.getMaxLevel());
-            ItemStack itemstack = EnchantedBookItem.createForEnchantment(new EnchantmentInstance(enchantment, i));
+            ItemStack itemstack = PowerBookItem.createForEnchantment(enchantment);
             int j = 2 + pRandom.nextInt(5 + i * 10) + 3 * i;
             if (enchantment.isTreasureOnly()) {
                 j *= 2;
@@ -65,11 +64,7 @@ public class ModEvents {
                 j = 64;
             }
 
-            if (villager.getVillagerData().getType() == VillagerType.PLAINS) {
-                return new MerchantOffer(new ItemStack(Items.EMERALD, j), new ItemStack(ModItems.SPELL_BOOK.get()), 1, this.villagerXp, 0.2F);
-            }
-
-            return new MerchantOffer(new ItemStack(Items.EMERALD, j), new ItemStack(Items.BOOK), itemstack, 12, this.villagerXp, 0.2F);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, j), itemstack, 1, this.villagerXp, 0.2F);
         }
     }
 }
