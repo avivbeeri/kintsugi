@@ -7,6 +7,7 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -95,6 +96,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlot(DataSlot.shared(this.levelClue, 0));
         this.addDataSlot(DataSlot.shared(this.levelClue, 1));
         this.addDataSlot(DataSlot.shared(this.levelClue, 2));
+    }
+
+    public RemixEnchantmentMenu(int id, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
+        this(id, inventory);
     }
 
     /**

@@ -3,15 +3,10 @@ package net.infinitelimit.kintsugi.mixins;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.Nameable;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.EnchantmentTableBlockEntity;
@@ -28,9 +23,9 @@ public abstract class MixinEnchantmentTableBlock {
         BlockEntity blockentity = pLevel.getBlockEntity(pPos);
         if (blockentity instanceof EnchantmentTableBlockEntity) {
             Component component = ((Nameable)blockentity).getDisplayName();
-            SimpleMenuProvider menu = new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) ->
+            SimpleMenuProvider menuProvider = new SimpleMenuProvider((pContainerId, pPlayerInventory, pPlayer) ->
                     new RemixEnchantmentMenu(pContainerId, pPlayerInventory, ContainerLevelAccess.create(pLevel, pPos)), component);
-            callback.setReturnValue(menu);
+            callback.setReturnValue(menuProvider);
         } else {
             callback.setReturnValue(null);
         }

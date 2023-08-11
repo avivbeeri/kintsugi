@@ -5,6 +5,8 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import java.util.List;
+
+import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -20,16 +22,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class RemixEnchantmentScreen extends AbstractContainerScreen<EnchantmentMenu> {
+public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchantmentMenu> {
     /** The ResourceLocation containing the Enchantment GUI texture location */
-    private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/enchanting_table.png");
+    private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/furnace.png");
     /** The ResourceLocation containing the texture for the Book rendered above the enchantment table */
     private static final ResourceLocation ENCHANTING_BOOK_LOCATION = new ResourceLocation("textures/entity/enchanting_table_book.png");
     /** A Random instance for use with the enchantment gui */
@@ -44,8 +45,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<EnchantmentM
     public float oOpen;
     private ItemStack last = ItemStack.EMPTY;
 
-    public RemixEnchantmentScreen(EnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, pTitle);
+    public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+        super(pMenu, pPlayerInventory, Component.literal("REMIX")/* pTitle */);
     }
 
     protected void init() {

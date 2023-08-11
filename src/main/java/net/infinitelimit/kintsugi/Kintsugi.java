@@ -5,9 +5,13 @@ import net.infinitelimit.kintsugi.block.ModBlocks;
 import net.infinitelimit.kintsugi.item.ModCreativeModeTabs;
 import net.infinitelimit.kintsugi.item.ModItems;
 import net.infinitelimit.kintsugi.loot.ModLootModifiers;
+import net.infinitelimit.kintsugi.menus.ModMenuTypes;
+import net.infinitelimit.kintsugi.screens.RemixEnchantmentScreen;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -52,6 +56,7 @@ public class Kintsugi
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModLootModifiers.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -90,6 +95,7 @@ public class Kintsugi
             // Some client setup code
             LOGGER.info("HELLO FROM CLIENT SETUP");
             LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+            MenuScreens.register(ModMenuTypes.ENCHANTMENT.get(), RemixEnchantmentScreen::new);
         }
     }
 
