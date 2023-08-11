@@ -4,8 +4,6 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import java.util.List;
-
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,8 +25,10 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import java.util.List;
+
 @OnlyIn(Dist.CLIENT)
-public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchantmentMenu> {
+public class RemixEnchantmentScreenBackup extends AbstractContainerScreen<RemixEnchantmentMenu> {
     /** The ResourceLocation containing the Enchantment GUI texture location */
     private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/furnace.png");
     /** The ResourceLocation containing the texture for the Book rendered above the enchantment table */
@@ -45,7 +45,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     public float oOpen;
     private ItemStack last = ItemStack.EMPTY;
 
-    public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public RemixEnchantmentScreenBackup(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, Component.literal("REMIX")/* pTitle */);
     }
 
@@ -84,46 +84,45 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     }
 
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
-        int pX = (this.width - this.imageWidth) / 2;
-        int pY = (this.height - this.imageHeight) / 2;
-        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX, pY, 0, 0, this.imageWidth, this.imageHeight);
-        this.renderBook(pGuiGraphics, pX, pY, pPartialTick);
-
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        this.renderBook(pGuiGraphics, i, j, pPartialTick);
         EnchantmentNames.getInstance().initSeed((long)this.menu.getEnchantmentSeed());
-        int goldCount = this.menu.getGoldCount();
+        int k = this.menu.getGoldCount();
 
-        for(int i = 0; i < 3; ++i) {
-            int xOffset = pX + 60;
-            int j1 = xOffset + 20;
-            int cost = (this.menu).costs[i];
-            if (cost == 0) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
+        for(int l = 0; l < 3; ++l) {
+            int i1 = i + 60;
+            int j1 = i1 + 20;
+            int k1 = (this.menu).costs[l];
+            if (k1 == 0) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 185, 108, 19);
             } else {
-                String s = "" + cost;
+                String s = "" + k1;
                 int l1 = 86 - this.font.width(s);
                 FormattedText formattedtext = EnchantmentNames.getInstance().getRandomName(this.font, l1);
                 int i2 = 6839882;
-                if (((goldCount < i + 1 || this.minecraft.player.experienceLevel < cost) && !this.minecraft.player.getAbilities().instabuild) || this.menu.enchantClue[i] == -1) { // Forge: render buttons as disabled when enchantable but enchantability not met on lower levels
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 239, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, pY + 16 + 19 * i, l1, (i2 & 16711422) >> 1);
+                if (((k < l + 1 || this.minecraft.player.experienceLevel < k1) && !this.minecraft.player.getAbilities().instabuild) || this.menu.enchantClue[l] == -1) { // Forge: render buttons as disabled when enchantable but enchantability not met on lower levels
+                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 185, 108, 19);
+                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1 + 1, j + 15 + 19 * l, 16 * l, 239, 16, 16);
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, (i2 & 16711422) >> 1);
                     i2 = 4226832;
                 } else {
-                    int j2 = pMouseX - (pX + 60);
-                    int k2 = pMouseY - (pY + 14 + 19 * i);
+                    int j2 = pMouseX - (i + 60);
+                    int k2 = pMouseY - (j + 14 + 19 * l);
                     if (j2 >= 0 && k2 >= 0 && j2 < 108 && k2 < 19) {
-                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 204, 108, 19);
+                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 204, 108, 19);
                         i2 = 16777088;
                     } else {
-                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 166, 108, 19);
+                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 166, 108, 19);
                     }
 
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 223, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, pY + 16 + 19 * i, l1, i2);
+                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1 + 1, j + 15 + 19 * l, 16 * l, 223, 16, 16);
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, i2);
                     i2 = 8453920;
                 }
 
-                pGuiGraphics.drawString(this.font, s, j1 + 86 - this.font.width(s), pY + 16 + 19 * i + 7, i2);
+                pGuiGraphics.drawString(this.font, s, j1 + 86 - this.font.width(s), j + 16 + 19 * l + 7, i2);
             }
         }
 
@@ -165,14 +164,14 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
         boolean flag = this.minecraft.player.getAbilities().instabuild;
-        int goldCount = this.menu.getGoldCount();
+        int i = this.menu.getGoldCount();
 
-        for(int i = 0; i < 3; ++i) {
-            int cost = (this.menu).costs[i];
-            Enchantment enchantment = Enchantment.byId((this.menu).enchantClue[i]);
-            int l = (this.menu).levelClue[i];
-            int i1 = i + 1;
-            if (this.isHovering(60, 14 + 19 * i, 108, 17, (double)pMouseX, (double)pMouseY) && cost > 0) {
+        for(int j = 0; j < 3; ++j) {
+            int k = (this.menu).costs[j];
+            Enchantment enchantment = Enchantment.byId((this.menu).enchantClue[j]);
+            int l = (this.menu).levelClue[j];
+            int i1 = j + 1;
+            if (this.isHovering(60, 14 + 19 * j, 108, 17, (double)pMouseX, (double)pMouseY) && k > 0) {
                 List<Component> list = Lists.newArrayList();
                 list.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(l))).withStyle(ChatFormatting.WHITE));
                 if (enchantment == null) {
@@ -180,8 +179,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
                     list.add(Component.translatable("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
                 } else if (!flag) {
                     list.add(CommonComponents.EMPTY);
-                    if (this.minecraft.player.experienceLevel < cost) {
-                        list.add(Component.translatable("container.enchant.level.requirement", (this.menu).costs[i]).withStyle(ChatFormatting.RED));
+                    if (this.minecraft.player.experienceLevel < k) {
+                        list.add(Component.translatable("container.enchant.level.requirement", (this.menu).costs[j]).withStyle(ChatFormatting.RED));
                     } else {
                         MutableComponent mutablecomponent;
                         if (i1 == 1) {
@@ -190,7 +189,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
                             mutablecomponent = Component.translatable("container.enchant.lapis.many", i1);
                         }
 
-                        list.add(mutablecomponent.withStyle(goldCount >= i1 ? ChatFormatting.GRAY : ChatFormatting.RED));
+                        list.add(mutablecomponent.withStyle(i >= i1 ? ChatFormatting.GRAY : ChatFormatting.RED));
                         MutableComponent mutablecomponent1;
                         if (i1 == 1) {
                             mutablecomponent1 = Component.translatable("container.enchant.level.one");

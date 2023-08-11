@@ -1,19 +1,11 @@
 package net.infinitelimit.kintsugi.menus;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,22 +15,21 @@ import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
-import net.minecraftforge.registries.ForgeRegistries;
 
-public class RemixEnchantmentMenu extends AbstractContainerMenu {
+import java.util.List;
+
+public class RemixEnchantmentMenuBackup extends AbstractContainerMenu {
     private final Container enchantSlots = new SimpleContainer(2) {
         /**
          * For block entities, ensures the chunk containing the block entity is saved to disk later - the game won't think
@@ -46,23 +37,21 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
          */
         public void setChanged() {
             super.setChanged();
-            RemixEnchantmentMenu.this.slotsChanged(this);
+            RemixEnchantmentMenuBackup.this.slotsChanged(this);
         }
     };
     private final ContainerLevelAccess access;
     private final RandomSource random = RandomSource.create();
     private final DataSlot enchantmentSeed = DataSlot.standalone();
-    private final DataSlot enchantmentPower = DataSlot.standalone();
     public final int[] costs = new int[3];
     public final int[] enchantClue = new int[]{-1, -1, -1};
     public final int[] levelClue = new int[]{-1, -1, -1};
 
-
-    public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
+    public RemixEnchantmentMenuBackup(int pContainerId, Inventory pPlayerInventory) {
         this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
     }
 
-    public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
+    public RemixEnchantmentMenuBackup(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(ModMenuTypes.ENCHANTMENT.get(), pContainerId);
         this.access = pAccess;
         this.addSlot(new Slot(this.enchantSlots, 0, 15, 47) {
@@ -90,56 +79,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        addPlayerInventory(pPlayerInventory);
-
-        this.addDataSlot(DataSlot.shared(this.costs, 0));
-        this.addDataSlot(DataSlot.shared(this.costs, 1));
-        this.addDataSlot(DataSlot.shared(this.costs, 2));
-
-        this.addDataSlot(this.enchantmentSeed).set(pPlayerInventory.player.getEnchantmentSeed());
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 0));
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 1));
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 2));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 0));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 1));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 2));
-
-        this.access.execute((pLevel, pBlockPos) -> {
-            int power = 0;
-            Set<Enchantment> enchantmentsFound = new HashSet<>();
-
-            for (BlockPos offsetPos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
-                if (EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos)) {
-                    BlockEntity entity = pLevel.getBlockEntity(pBlockPos.offset(offsetPos));
-                    if (entity instanceof ChiseledBookShelfBlockEntity bookshelf) {
-                        for (int i = 0; i < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); i++) {
-                            if (entity.getBlockState().getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i))) {
-                                ItemStack itemStack = bookshelf.getItem(i);
-                                if (!itemStack.isEmpty()) {
-                                    CompoundTag tag = itemStack.getOrCreateTag();
-                                    if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
-                                        power++;
-                                        ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
-                                        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
-                                        enchantmentsFound.add(enchantment);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            this.addDataSlot(this.enchantmentPower).set(enchantmentsFound.size());
-            this.broadcastChanges();
-            if (!pLevel.isClientSide()) {
-                pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
-                pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
-            }
-        });
-
-    }
-
-    private void addPlayerInventory(Inventory pPlayerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -149,9 +88,20 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         for (int k = 0; k < 9; ++k) {
             this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
         }
+
+        this.addDataSlot(DataSlot.shared(this.costs, 0));
+        this.addDataSlot(DataSlot.shared(this.costs, 1));
+        this.addDataSlot(DataSlot.shared(this.costs, 2));
+        this.addDataSlot(this.enchantmentSeed).set(pPlayerInventory.player.getEnchantmentSeed());
+        this.addDataSlot(DataSlot.shared(this.enchantClue, 0));
+        this.addDataSlot(DataSlot.shared(this.enchantClue, 1));
+        this.addDataSlot(DataSlot.shared(this.enchantClue, 2));
+        this.addDataSlot(DataSlot.shared(this.levelClue, 0));
+        this.addDataSlot(DataSlot.shared(this.levelClue, 1));
+        this.addDataSlot(DataSlot.shared(this.levelClue, 2));
     }
 
-    public RemixEnchantmentMenu(int id, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
+    public RemixEnchantmentMenuBackup(int id, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
         this(id, inventory);
     }
 
@@ -296,7 +246,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
      */
     public void removed(Player pPlayer) {
         super.removed(pPlayer);
-        this.access.execute((pLevel, pBlockPos) -> {
+        this.access.execute((p_39469_, p_39470_) -> {
             this.clearContainer(pPlayer, this.enchantSlots);
         });
     }
