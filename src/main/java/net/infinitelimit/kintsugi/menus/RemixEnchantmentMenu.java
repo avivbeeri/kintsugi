@@ -49,7 +49,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     }
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
-        super(MenuType.ENCHANTMENT, pContainerId);
+        super(ModMenuTypes.ENCHANTMENT.get(), pContainerId);
         this.access = pAccess;
         this.addSlot(new Slot(this.enchantSlots, 0, 15, 47) {
             /**
