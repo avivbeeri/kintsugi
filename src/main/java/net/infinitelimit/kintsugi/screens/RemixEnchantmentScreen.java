@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import java.util.List;
 
+import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -30,12 +31,14 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchantmentMenu> {
     /** The ResourceLocation containing the Enchantment GUI texture location */
-    private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/furnace.png");
+    private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation(Kintsugi.MOD_ID, "textures/gui/container/enchanting_table.png");
     /** The ResourceLocation containing the texture for the Book rendered above the enchantment table */
     private static final ResourceLocation ENCHANTING_BOOK_LOCATION = new ResourceLocation("textures/entity/enchanting_table_book.png");
     /** A Random instance for use with the enchantment gui */
     private final RandomSource random = RandomSource.create();
     private BookModel bookModel;
+    private static final int TEXTURE_WIDTH = 512;
+    private static final int TEXTURE_HEIGHT = 256;
     public int time;
     public float flip;
     public float oFlip;
@@ -47,6 +50,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
 
     public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, Component.literal("REMIX")/* pTitle */);
+        this.imageWidth = 276;
     }
 
     protected void init() {
@@ -86,7 +90,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int pX = (this.width - this.imageWidth) / 2;
         int pY = (this.height - this.imageHeight) / 2;
-        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX, pY, 0, 0, this.imageWidth, this.imageHeight);
+        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX, pY, 0, 0F, 0F,  this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+
         this.renderBook(pGuiGraphics, pX, pY, pPartialTick);
 
         EnchantmentNames.getInstance().initSeed((long)this.menu.getEnchantmentSeed());
@@ -94,39 +99,43 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
 
         for(int i = 0; i < 3; ++i) {
             int xOffset = pX + 60;
-            int j1 = xOffset + 20;
+            int textXOffset = xOffset + 20;
             int cost = (this.menu).costs[i];
             if (cost == 0) {
                 pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
             } else {
                 String s = "" + cost;
-                int l1 = 86 - this.font.width(s);
-                FormattedText formattedtext = EnchantmentNames.getInstance().getRandomName(this.font, l1);
-                int i2 = 6839882;
+                int maxWidth = 86 - this.font.width(s);
+                FormattedText formattedtext = EnchantmentNames.getInstance().getRandomName(this.font, maxWidth);
+                int color = 0x685e4a;
                 if (((goldCount < i + 1 || this.minecraft.player.experienceLevel < cost) && !this.minecraft.player.getAbilities().instabuild) || this.menu.enchantClue[i] == -1) { // Forge: render buttons as disabled when enchantable but enchantability not met on lower levels
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 239, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, pY + 16 + 19 * i, l1, (i2 & 16711422) >> 1);
-                    i2 = 4226832;
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 16 + 19 * i, maxWidth, (color & 16711422) >> 1);
+                    color = 0x407f10;
                 } else {
                     int j2 = pMouseX - (pX + 60);
                     int k2 = pMouseY - (pY + 14 + 19 * i);
                     if (j2 >= 0 && k2 >= 0 && j2 < 108 && k2 < 19) {
                         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 204, 108, 19);
-                        i2 = 16777088;
+                        color = 0xffff80;
                     } else {
                         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 166, 108, 19);
                     }
 
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 223, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, pY + 16 + 19 * i, l1, i2);
-                    i2 = 8453920;
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 16 + 19 * i, maxWidth, color);
+                    color = 0x80ff20;
                 }
 
-                pGuiGraphics.drawString(this.font, s, j1 + 86 - this.font.width(s), pY + 16 + 19 * i + 7, i2);
+                pGuiGraphics.drawString(this.font, s, textXOffset + 86 - this.font.width(s), pY + 16 + 19 * i + 7, color);
             }
         }
 
+        // draw render power to test
+        String s = "" + this.menu.getEnchantmentTotal();
+        int color = 0xa221ff;
+        pGuiGraphics.drawString(this.font, s,  pX, pY, color);
     }
 
     private void renderBook(GuiGraphics pGuiGraphics, int pX, int pY, float pPartialTick) {
@@ -170,11 +179,11 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         for(int i = 0; i < 3; ++i) {
             int cost = (this.menu).costs[i];
             Enchantment enchantment = Enchantment.byId((this.menu).enchantClue[i]);
-            int l = (this.menu).levelClue[i];
+            int levelClue = (this.menu).levelClue[i];
             int i1 = i + 1;
             if (this.isHovering(60, 14 + 19 * i, 108, 17, (double)pMouseX, (double)pMouseY) && cost > 0) {
                 List<Component> list = Lists.newArrayList();
-                list.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(l))).withStyle(ChatFormatting.WHITE));
+                list.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(levelClue))).withStyle(ChatFormatting.WHITE));
                 if (enchantment == null) {
                     list.add(Component.literal(""));
                     list.add(Component.translatable("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
@@ -206,7 +215,6 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
                 break;
             }
         }
-
     }
 
     public void tickBook() {

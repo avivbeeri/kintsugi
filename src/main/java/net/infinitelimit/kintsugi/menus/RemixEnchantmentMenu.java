@@ -1,10 +1,17 @@
 package net.infinitelimit.kintsugi.menus;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import it.unimi.dsi.fastutil.ints.IntCollection;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -37,8 +44,11 @@ import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 public class RemixEnchantmentMenu extends AbstractContainerMenu {
+    private final ContainerData enchantmentAvailability;
+
     private final Container enchantSlots = new SimpleContainer(2) {
         /**
          * For block entities, ensures the chunk containing the block entity is saved to disk later - the game won't think
@@ -56,6 +66,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public final int[] costs = new int[3];
     public final int[] enchantClue = new int[]{-1, -1, -1};
     public final int[] levelClue = new int[]{-1, -1, -1};
+    private final Map<ResourceLocation, Integer> enchantmentIndexMap;
 
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -65,6 +76,21 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(ModMenuTypes.ENCHANTMENT.get(), pContainerId);
         this.access = pAccess;
+        enchantmentAvailability = new SimpleContainerData(ForgeRegistries.ENCHANTMENTS.getValues().size());
+
+        List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream()
+                .sorted(Comparator.comparing(ResourceLocation::toString))
+                .toList();
+        enchantmentIndexMap = new Object2IntArrayMap<>();
+
+        int index = 0;
+        for (ResourceLocation location: enchantmentKeys) {
+            this.enchantmentAvailability.set(index, 0);
+            enchantmentIndexMap.put(location, index++);
+        }
+
+        this.addDataSlots(enchantmentAvailability);
+
         this.addSlot(new Slot(this.enchantSlots, 0, 15, 47) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
@@ -97,6 +123,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlot(DataSlot.shared(this.costs, 2));
 
         this.addDataSlot(this.enchantmentSeed).set(pPlayerInventory.player.getEnchantmentSeed());
+        this.addDataSlot(this.enchantmentPower).set(0);
         this.addDataSlot(DataSlot.shared(this.enchantClue, 0));
         this.addDataSlot(DataSlot.shared(this.enchantClue, 1));
         this.addDataSlot(DataSlot.shared(this.enchantClue, 2));
@@ -105,6 +132,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlot(DataSlot.shared(this.levelClue, 2));
 
         this.access.execute((pLevel, pBlockPos) -> {
+            if (pLevel.isClientSide()) {
+                return;
+            }
+
             int power = 0;
             Set<Enchantment> enchantmentsFound = new HashSet<>();
 
@@ -120,6 +151,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                                     if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
                                         power++;
                                         ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
+                                        this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
+
                                         Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                                         enchantmentsFound.add(enchantment);
                                     }
@@ -129,25 +162,31 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     }
                 }
             }
-            this.addDataSlot(this.enchantmentPower).set(enchantmentsFound.size());
+            this.enchantmentPower.set(enchantmentsFound.size());
             this.broadcastChanges();
-            if (!pLevel.isClientSide()) {
-                pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
-                pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
+            for (ResourceLocation location: enchantmentKeys) {
+                if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
+                    pPlayerInventory.player.sendSystemMessage(
+                            Component.literal("Found: " + Component.translatable(ForgeRegistries.ENCHANTMENTS.getValue(location).getDescriptionId())
+                                    .getString())
+                    );
+                }
+
             }
         });
-
     }
 
     private void addPlayerInventory(Inventory pPlayerInventory) {
-        for (int i = 0; i < 3; ++i) {
-            for (int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+        for(int i = 0; i < 3; ++i) {
+            for(int j = 0; j < 9; ++j) {
+                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 108 + j * 18, 84 + i * 18));
             }
         }
 
-        for (int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(pPlayerInventory, k, 8 + k * 18, 142));
+        for(int k = 0; k < 9; ++k) {
+            this.addSlot(new Slot(pPlayerInventory, k, 108 + k * 18, 142));
         }
     }
 
@@ -289,6 +328,16 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     public int getEnchantmentSeed() {
         return this.enchantmentSeed.get();
+    }
+
+    public int getEnchantmentTotal() {
+        int total = 0;
+        for (ResourceLocation location: ForgeRegistries.ENCHANTMENTS.getKeys()) {
+            if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
+                total++;
+            }
+        }
+        return total;
     }
 
     /**
