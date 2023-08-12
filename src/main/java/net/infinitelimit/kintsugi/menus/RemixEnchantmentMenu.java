@@ -174,23 +174,24 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     private Set<Enchantment> calculateFoundEnchantments(Level pLevel, BlockPos pBlockPos) {
         Set<Enchantment> enchantments = new HashSet<>();
-        for (BlockPos offsetPos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
-            if (EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos)) {
-                BlockEntity entity = pLevel.getBlockEntity(pBlockPos.offset(offsetPos));
-                if (entity instanceof ChiseledBookShelfBlockEntity bookshelf) {
-                    for (int i = 0; i < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); i++) {
-                        if (entity.getBlockState().getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i))) {
-                            ItemStack itemStack = bookshelf.getItem(i);
-                            if (!itemStack.isEmpty()) {
-                                CompoundTag tag = itemStack.getOrCreateTag();
-                                if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
-                                    ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
-                                    this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
+        List<ChiseledBookShelfBlockEntity> bookshelves = EnchantmentTableBlock.BOOKSHELF_OFFSETS.stream()
+                .filter(offsetPos -> EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos))
+                .map(offsetPos -> pLevel.getBlockEntity(pBlockPos.offset(offsetPos)))
+                .filter(entity -> entity instanceof ChiseledBookShelfBlockEntity)
+                .map(entity -> (ChiseledBookShelfBlockEntity) entity)
+                .toList();
+        for (ChiseledBookShelfBlockEntity bookshelf : bookshelves) {
+            for (int i = 0; i < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); i++) {
+                if (bookshelf.getBlockState().getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i))) {
+                    ItemStack itemStack = bookshelf.getItem(i);
+                    if (!itemStack.isEmpty()) {
+                        CompoundTag tag = itemStack.getOrCreateTag();
+                        if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
+                            ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
+                            this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
 
-                                    Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
-                                    enchantments.add(enchantment);
-                                }
-                            }
+                            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
+                            enchantments.add(enchantment);
                         }
                     }
                 }
