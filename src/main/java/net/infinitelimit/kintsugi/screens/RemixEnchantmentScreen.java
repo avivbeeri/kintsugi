@@ -25,6 +25,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -39,6 +40,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     private BookModel bookModel;
     private static final int TEXTURE_WIDTH = 512;
     private static final int TEXTURE_HEIGHT = 256;
+
     public int time;
     public float flip;
     public float oFlip;
@@ -49,8 +51,9 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     private ItemStack last = ItemStack.EMPTY;
 
     public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
-        super(pMenu, pPlayerInventory, Component.literal("REMIX")/* pTitle */);
-        this.imageWidth = 276;
+        super(pMenu, pPlayerInventory, pTitle);
+        this.imageWidth = 292;
+        this.inventoryLabelX = 123;
     }
 
     protected void init() {
@@ -72,6 +75,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
      * @param pButton the button that was clicked.
      */
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        return super.mouseClicked(pMouseX, pMouseY, pButton);
+        /*
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
 
@@ -85,21 +90,37 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);
+
+         */
     }
 
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         int pX = (this.width - this.imageWidth) / 2;
         int pY = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX, pY, 0, 0F, 0F,  this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        this.renderBook(pGuiGraphics, pX + 114, pY + 15, pPartialTick);
+        int xOffset = pX + 5;
+        int textXOffset = xOffset + 2;
 
-        this.renderBook(pGuiGraphics, pX, pY, pPartialTick);
+        List<Enchantment> enchantments = this.menu.getAvailableEnchantments();
+        int total = enchantments.size();
+        for (int i = 0; i < total; i++) {
+            int maxWidth = 104;
+            Enchantment enchantment = enchantments.get(i);
+            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            FormattedText formattedtext = Component.translatable(enchantment.getDescriptionId());
+            int color = enchantment.isCurse() ? 0xFF0000 :  0xffff80;
+            pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 20 + 19 * i, maxWidth, color);
+        }
+
+        /*
 
         EnchantmentNames.getInstance().initSeed((long)this.menu.getEnchantmentSeed());
         int goldCount = this.menu.getGoldCount();
 
         for(int i = 0; i < 3; ++i) {
-            int xOffset = pX + 60;
-            int textXOffset = xOffset + 20;
+
+
             int cost = (this.menu).costs[i];
             if (cost == 0) {
                 pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
@@ -131,6 +152,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
                 pGuiGraphics.drawString(this.font, s, textXOffset + 86 - this.font.width(s), pY + 16 + 19 * i + 7, color);
             }
         }
+        */
 
         // draw render power to test
         String s = "" + this.menu.getEnchantmentTotal();
@@ -174,6 +196,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
         boolean flag = this.minecraft.player.getAbilities().instabuild;
+        /*
         int goldCount = this.menu.getGoldCount();
 
         for(int i = 0; i < 3; ++i) {
@@ -214,7 +237,9 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
                 pGuiGraphics.renderComponentTooltip(this.font, list, pMouseX, pMouseY);
                 break;
             }
+
         }
+         */
     }
 
     public void tickBook() {

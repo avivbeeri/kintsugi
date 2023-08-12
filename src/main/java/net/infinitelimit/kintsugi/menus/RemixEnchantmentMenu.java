@@ -1,17 +1,13 @@
 package net.infinitelimit.kintsugi.menus;
 
-import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.ObjectSet;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.Util;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -32,19 +28,18 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.EnchantedBookItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
-import org.jetbrains.annotations.NotNull;
 
 public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private final ContainerData enchantmentAvailability;
@@ -67,10 +62,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public final int[] enchantClue = new int[]{-1, -1, -1};
     public final int[] levelClue = new int[]{-1, -1, -1};
     private final Map<ResourceLocation, Integer> enchantmentIndexMap;
+    public final Set<Enchantment> enchantmentsFound = new HashSet<>();
 
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
         this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
+    }
+
+    public RemixEnchantmentMenu(int id, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
+        this(id, inventory);
     }
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
@@ -78,9 +78,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.access = pAccess;
         enchantmentAvailability = new SimpleContainerData(ForgeRegistries.ENCHANTMENTS.getValues().size());
 
-        List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream()
-                .sorted(Comparator.comparing(ResourceLocation::toString))
-                .toList();
+        List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream().toList();
         enchantmentIndexMap = new Object2IntArrayMap<>();
 
         int index = 0;
@@ -91,7 +89,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
         this.addDataSlots(enchantmentAvailability);
 
-        this.addSlot(new Slot(this.enchantSlots, 0, 15, 47) {
+        this.addSlot(new Slot(this.enchantSlots, 0, 182, 37) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -107,7 +105,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 return 1;
             }
         });
-        this.addSlot(new Slot(this.enchantSlots, 1, 35, 47) {
+        this.addSlot(new Slot(this.enchantSlots, 1, 208, 37) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -133,66 +131,58 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
         this.access.execute((pLevel, pBlockPos) -> {
             if (pLevel.isClientSide()) {
+                this.refreshFoundEnchantments();
                 return;
             }
+            enchantmentsFound.addAll(calculateFoundEnchantments(pLevel, pBlockPos));
+            int power = this.enchantmentsFound.size();
+            this.enchantmentPower.set(enchantmentsFound.size());
+            this.broadcastChanges();
 
-            int power = 0;
-            Set<Enchantment> enchantmentsFound = new HashSet<>();
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
+        });
+    }
 
-            for (BlockPos offsetPos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
-                if (EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos)) {
-                    BlockEntity entity = pLevel.getBlockEntity(pBlockPos.offset(offsetPos));
-                    if (entity instanceof ChiseledBookShelfBlockEntity bookshelf) {
-                        for (int i = 0; i < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); i++) {
-                            if (entity.getBlockState().getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i))) {
-                                ItemStack itemStack = bookshelf.getItem(i);
-                                if (!itemStack.isEmpty()) {
-                                    CompoundTag tag = itemStack.getOrCreateTag();
-                                    if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
-                                        power++;
-                                        ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
-                                        this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
+    private Set<Enchantment> calculateFoundEnchantments(Level pLevel, BlockPos pBlockPos) {
+        Set<Enchantment> enchantments = new HashSet<>();
+        for (BlockPos offsetPos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
+            if (EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos)) {
+                BlockEntity entity = pLevel.getBlockEntity(pBlockPos.offset(offsetPos));
+                if (entity instanceof ChiseledBookShelfBlockEntity bookshelf) {
+                    for (int i = 0; i < ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size(); i++) {
+                        if (entity.getBlockState().getValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(i))) {
+                            ItemStack itemStack = bookshelf.getItem(i);
+                            if (!itemStack.isEmpty()) {
+                                CompoundTag tag = itemStack.getOrCreateTag();
+                                if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
+                                    ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
+                                    this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
 
-                                        Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
-                                        enchantmentsFound.add(enchantment);
-                                    }
+                                    Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
+                                    enchantments.add(enchantment);
                                 }
                             }
                         }
                     }
                 }
             }
-            this.enchantmentPower.set(enchantmentsFound.size());
-            this.broadcastChanges();
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
-            for (ResourceLocation location: enchantmentKeys) {
-                if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
-                    pPlayerInventory.player.sendSystemMessage(
-                            Component.literal("Found: " + Component.translatable(ForgeRegistries.ENCHANTMENTS.getValue(location).getDescriptionId())
-                                    .getString())
-                    );
-                }
-
-            }
-        });
+        }
+        return enchantments;
     }
 
     private void addPlayerInventory(Inventory pPlayerInventory) {
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 108 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 124 + j * 18, 84 + i * 18));
             }
         }
 
         for(int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(pPlayerInventory, k, 108 + k * 18, 142));
+            this.addSlot(new Slot(pPlayerInventory, k, 124 + k * 18, 142));
         }
     }
 
-    public RemixEnchantmentMenu(int id, Inventory inventory, FriendlyByteBuf friendlyByteBuf) {
-        this(id, inventory);
-    }
 
     /**
      * Callback for when the crafting matrix is changed.
@@ -202,6 +192,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             ItemStack itemstack = pInventory.getItem(0);
             if (!itemstack.isEmpty() && itemstack.isEnchantable()) {
                 this.access.execute((pLevel, pBlockPos) -> {
+                    this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
+
                     float j = 0;
 
                     for (BlockPos blockpos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
@@ -236,6 +228,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     this.broadcastChanges();
                 });
             } else {
+                this.enchantmentsFound.clear();
                 for (int i = 0; i < 3; ++i) {
                     this.costs[i] = 0;
                     this.enchantClue[i] = -1;
@@ -243,7 +236,33 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 }
             }
         }
+    }
 
+    public void refreshFoundEnchantments() {
+        this.enchantmentsFound.clear();
+        for (ResourceLocation location: enchantmentIndexMap.keySet()) {
+            if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
+                this.enchantmentsFound.add(ForgeRegistries.ENCHANTMENTS.getValue(location));
+            }
+        }
+    }
+
+    public List<Enchantment> getAvailableEnchantments() {
+        this.refreshFoundEnchantments();
+        ItemStack itemStack = this.getSlot(0).getItem();
+
+        return this.enchantmentsFound
+                .stream()
+                .filter(enchantment ->
+                        {
+                            return enchantment.canEnchant(itemStack);
+                        })
+                .sorted((a, b) -> {
+                    String aName = Component.translatable(a.getDescriptionId()).getString();
+                    String bName = Component.translatable(b.getDescriptionId()).getString();
+                    return aName.compareToIgnoreCase(bName);
+                })
+                .collect(Collectors.toList());
     }
 
     /**
@@ -313,6 +332,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     private List<EnchantmentInstance> getEnchantmentList(ItemStack pStack, int pEnchantSlot, int pLevel) {
         this.random.setSeed((long) (this.enchantmentSeed.get() + pEnchantSlot));
+
         List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(this.random, pStack, pLevel, false);
         if (pStack.is(Items.BOOK) && list.size() > 1) {
             list.remove(this.random.nextInt(list.size()));
