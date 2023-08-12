@@ -243,7 +243,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     }
 
     public void tickBook() {
-        ItemStack itemstack = this.menu.getSlot(0).getItem();
+        ItemStack itemstack = this.menu.getSlot(2).getItem();
         if (!ItemStack.matches(itemstack, this.last)) {
             this.last = itemstack;
 
@@ -255,13 +255,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         ++this.time;
         this.oFlip = this.flip;
         this.oOpen = this.open;
-        boolean flag = false;
-
-        for(int i = 0; i < 3; ++i) {
-            if ((this.menu).costs[i] != 0) {
-                flag = true;
-            }
-        }
+        boolean flag = !itemstack.isEmpty();
 
         if (flag) {
             this.open += 0.2F;

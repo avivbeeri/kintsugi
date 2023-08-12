@@ -5,6 +5,7 @@ import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
+import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenuBackup;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -28,7 +29,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class RemixEnchantmentScreenBackup extends AbstractContainerScreen<RemixEnchantmentMenu> {
+public class RemixEnchantmentScreenBackup extends AbstractContainerScreen<RemixEnchantmentMenuBackup> {
     /** The ResourceLocation containing the Enchantment GUI texture location */
     private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation("textures/gui/container/furnace.png");
     /** The ResourceLocation containing the texture for the Book rendered above the enchantment table */
@@ -45,7 +46,7 @@ public class RemixEnchantmentScreenBackup extends AbstractContainerScreen<RemixE
     public float oOpen;
     private ItemStack last = ItemStack.EMPTY;
 
-    public RemixEnchantmentScreenBackup(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public RemixEnchantmentScreenBackup(RemixEnchantmentMenuBackup pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, Component.literal("REMIX")/* pTitle */);
     }
 

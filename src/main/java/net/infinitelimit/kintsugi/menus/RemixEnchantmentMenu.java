@@ -55,14 +55,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
     };
     private final ContainerLevelAccess access;
-    private final RandomSource random = RandomSource.create();
-    private final DataSlot enchantmentSeed = DataSlot.standalone();
     private final DataSlot enchantmentPower = DataSlot.standalone();
-    public final int[] costs = new int[3];
-    public final int[] enchantClue = new int[]{-1, -1, -1};
-    public final int[] levelClue = new int[]{-1, -1, -1};
     private final Map<ResourceLocation, Integer> enchantmentIndexMap;
     public final Set<Enchantment> enchantmentsFound = new HashSet<>();
+    private final ResultContainer resultSlot = new ResultContainer();
 
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -114,20 +110,28 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
+        this.addSlot(new Slot(this.resultSlot, 1, 250, 37) {
+            /**
+             * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
+             */
+            public boolean mayPlace(ItemStack pStack) {
+                return false;
+            }
+
+            @Override
+            public boolean mayPickup(Player pPlayer) {
+                return RemixEnchantmentMenu.this.mayPickup(pPlayer, this.hasItem());
+            }
+
+            @Override
+            public void onTake(Player pPlayer, ItemStack pStack) {
+                RemixEnchantmentMenu.this.onTake(pPlayer, pStack);
+            }
+        });
+
         addPlayerInventory(pPlayerInventory);
-
-        this.addDataSlot(DataSlot.shared(this.costs, 0));
-        this.addDataSlot(DataSlot.shared(this.costs, 1));
-        this.addDataSlot(DataSlot.shared(this.costs, 2));
-
-        this.addDataSlot(this.enchantmentSeed).set(pPlayerInventory.player.getEnchantmentSeed());
         this.addDataSlot(this.enchantmentPower).set(0);
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 0));
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 1));
-        this.addDataSlot(DataSlot.shared(this.enchantClue, 2));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 0));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 1));
-        this.addDataSlot(DataSlot.shared(this.levelClue, 2));
+
 
         this.access.execute((pLevel, pBlockPos) -> {
             if (pLevel.isClientSide()) {
@@ -142,6 +146,30 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
             pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
         });
+    }
+
+    protected boolean mayPickup(Player pPlayer, boolean pHasStack) {
+        // calculate costs here
+        int cost = 1;
+        int lapisCost = 1;
+        return (pHasStack &&
+                this.enchantSlots.getItem(1).getCount() >= lapisCost &&
+                (pPlayer.getAbilities().instabuild || (pPlayer.experienceLevel >= cost)));
+    }
+
+    protected void onTake(Player pPlayer, ItemStack pStack) {
+        int cost = 1;
+        int lapisCost = 1;
+        // Clear the old tool
+        // Reduce the lapis by lapis cost
+        this.enchantSlots.setItem(0, ItemStack.EMPTY);
+        ItemStack fuelStack = this.enchantSlots.getItem(1);
+        fuelStack.shrink(lapisCost);
+        if (fuelStack.isEmpty()) {
+            this.enchantSlots.setItem(1, ItemStack.EMPTY);
+        }
+        pPlayer.giveExperienceLevels(-cost);
+        this.broadcastChanges();
     }
 
     private Set<Enchantment> calculateFoundEnchantments(Level pLevel, BlockPos pBlockPos) {
@@ -190,50 +218,31 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public void slotsChanged(Container pInventory) {
         if (pInventory == this.enchantSlots) {
             ItemStack itemstack = pInventory.getItem(0);
-            if (!itemstack.isEmpty() && itemstack.isEnchantable()) {
+            ItemStack fuelStack = pInventory.getItem(1);
+            if (!itemstack.isEmpty() && !fuelStack.isEmpty()) {
+
                 this.access.execute((pLevel, pBlockPos) -> {
                     this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
 
-                    float j = 0;
-
-                    for (BlockPos blockpos : EnchantmentTableBlock.BOOKSHELF_OFFSETS) {
-                        if (EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, blockpos)) {
-                            j += pLevel.getBlockState(pBlockPos.offset(blockpos)).getEnchantPowerBonus(pLevel, pBlockPos.offset(blockpos));
+                    if (!this.enchantmentsFound.isEmpty()) {
+                        Enchantment selection = this.enchantmentsFound.stream().findFirst().get();
+                        if (selection.canEnchant(this.enchantSlots.getItem(0))) {
+                            ItemStack copy = this.enchantSlots.getItem(0).copy();
+                            Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
+                            allEnchantments.put(selection, 1);
+                            EnchantmentHelper.setEnchantments(allEnchantments, copy);
+                            this.resultSlot.setItem(0, copy);
                         }
-                    }
-
-                    this.random.setSeed((long) this.enchantmentSeed.get());
-
-                    for (int k = 0; k < 3; ++k) {
-                        this.costs[k] = EnchantmentHelper.getEnchantmentCost(this.random, k, (int) j, itemstack);
-                        this.enchantClue[k] = -1;
-                        this.levelClue[k] = -1;
-                        if (this.costs[k] < k + 1) {
-                            this.costs[k] = 0;
-                        }
-                        this.costs[k] = net.minecraftforge.event.ForgeEventFactory.onEnchantmentLevelSet(pLevel, pBlockPos, k, (int) j, itemstack, costs[k]);
-                    }
-
-                    for (int l = 0; l < 3; ++l) {
-                        if (this.costs[l] > 0) {
-                            List<EnchantmentInstance> list = this.getEnchantmentList(itemstack, l, this.costs[l]);
-                            if (list != null && !list.isEmpty()) {
-                                EnchantmentInstance enchantmentinstance = list.get(this.random.nextInt(list.size()));
-                                this.enchantClue[l] = BuiltInRegistries.ENCHANTMENT.getId(enchantmentinstance.enchantment);
-                                this.levelClue[l] = enchantmentinstance.level;
-                            }
-                        }
+                    } else {
+                        this.resultSlot.setItem(0, ItemStack.EMPTY);
                     }
 
                     this.broadcastChanges();
                 });
             } else {
                 this.enchantmentsFound.clear();
-                for (int i = 0; i < 3; ++i) {
-                    this.costs[i] = 0;
-                    this.enchantClue[i] = -1;
-                    this.levelClue[i] = -1;
-                }
+                this.resultSlot.setItem(0, ItemStack.EMPTY);
+                this.broadcastChanges();
             }
         }
     }
@@ -265,89 +274,9 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Handles the given Button-click on the server, currently only used by enchanting. Name is for legacy.
-     */
-    public boolean clickMenuButton(Player pPlayer, int pId) {
-        if (pId >= 0 && pId < this.costs.length) {
-            ItemStack itemstack = this.enchantSlots.getItem(0);
-            ItemStack itemstack1 = this.enchantSlots.getItem(1);
-            int i = pId + 1;
-            if ((itemstack1.isEmpty() || itemstack1.getCount() < i) && !pPlayer.getAbilities().instabuild) {
-                return false;
-            } else if (this.costs[pId] <= 0 || itemstack.isEmpty() || (pPlayer.experienceLevel < i || pPlayer.experienceLevel < this.costs[pId]) && !pPlayer.getAbilities().instabuild) {
-                return false;
-            } else {
-                this.access.execute((pLevel, pBlockPos) -> {
-                    ItemStack itemstack2 = itemstack;
-                    List<EnchantmentInstance> list = this.getEnchantmentList(itemstack, pId, this.costs[pId]);
-                    if (!list.isEmpty()) {
-                        pPlayer.onEnchantmentPerformed(itemstack, i);
-                        boolean flag = itemstack.is(Items.BOOK);
-                        if (flag) {
-                            itemstack2 = new ItemStack(Items.ENCHANTED_BOOK);
-                            CompoundTag compoundtag = itemstack.getTag();
-                            if (compoundtag != null) {
-                                itemstack2.setTag(compoundtag.copy());
-                            }
-
-                            this.enchantSlots.setItem(0, itemstack2);
-                        }
-
-                        for (int j = 0; j < list.size(); ++j) {
-                            EnchantmentInstance enchantmentinstance = list.get(j);
-                            if (flag) {
-                                EnchantedBookItem.addEnchantment(itemstack2, enchantmentinstance);
-                            } else {
-                                itemstack2.enchant(enchantmentinstance.enchantment, enchantmentinstance.level);
-                            }
-                        }
-
-                        if (!pPlayer.getAbilities().instabuild) {
-                            itemstack1.shrink(i);
-                            if (itemstack1.isEmpty()) {
-                                this.enchantSlots.setItem(1, ItemStack.EMPTY);
-                            }
-                        }
-
-                        pPlayer.awardStat(Stats.ENCHANT_ITEM);
-                        if (pPlayer instanceof ServerPlayer) {
-                            CriteriaTriggers.ENCHANTED_ITEM.trigger((ServerPlayer) pPlayer, itemstack2, i);
-                        }
-
-                        this.enchantSlots.setChanged();
-                        this.enchantmentSeed.set(pPlayer.getEnchantmentSeed());
-                        this.slotsChanged(this.enchantSlots);
-                        pLevel.playSound((Player) null, pBlockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, pLevel.random.nextFloat() * 0.1F + 0.9F);
-                    }
-
-                });
-                return true;
-            }
-        } else {
-            Util.logAndPauseIfInIde(pPlayer.getName() + " pressed invalid button id: " + pId);
-            return false;
-        }
-    }
-
-    private List<EnchantmentInstance> getEnchantmentList(ItemStack pStack, int pEnchantSlot, int pLevel) {
-        this.random.setSeed((long) (this.enchantmentSeed.get() + pEnchantSlot));
-
-        List<EnchantmentInstance> list = EnchantmentHelper.selectEnchantment(this.random, pStack, pLevel, false);
-        if (pStack.is(Items.BOOK) && list.size() > 1) {
-            list.remove(this.random.nextInt(list.size()));
-        }
-
-        return list;
-    }
-
     public int getGoldCount() {
         ItemStack itemstack = this.enchantSlots.getItem(1);
         return itemstack.isEmpty() ? 0 : itemstack.getCount();
-    }
-
-    public int getEnchantmentSeed() {
-        return this.enchantmentSeed.get();
     }
 
     public int getEnchantmentTotal() {
@@ -364,6 +293,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
      * Called when the container is closed.
      */
     public void removed(Player pPlayer) {
+        this.resultSlot.setItem(0, ItemStack.EMPTY);
         super.removed(pPlayer);
         this.access.execute((pLevel, pBlockPos) -> {
             this.clearContainer(pPlayer, this.enchantSlots);
