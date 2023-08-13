@@ -1,6 +1,5 @@
 package net.infinitelimit.kintsugi.menus;
 
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -9,35 +8,23 @@ import java.util.stream.Collectors;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
-import net.minecraft.Util;
-import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.stats.Stats;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.EnchantmentTableBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -153,7 +140,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         int cost = 1;
         int lapisCost = 1;
         return (pHasStack &&
-                this.enchantSlots.getItem(1).getCount() >= lapisCost &&
+                this.getFuelCount() >= lapisCost &&
                 (pPlayer.getAbilities().instabuild || (pPlayer.experienceLevel >= cost)));
     }
 
@@ -228,7 +215,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     if (!this.enchantmentsFound.isEmpty()) {
                         Enchantment selection = this.enchantmentsFound.stream().findFirst().get();
                         if (selection.canEnchant(this.enchantSlots.getItem(0))) {
-                            ItemStack copy = this.enchantSlots.getItem(0).copy();
+                            ItemStack copy = this.enchantSlots.getItem(0).copyWithCount(1);
                             Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
                             allEnchantments.put(selection, 1);
                             EnchantmentHelper.setEnchantments(allEnchantments, copy);
@@ -275,9 +262,9 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 .collect(Collectors.toList());
     }
 
-    public int getGoldCount() {
-        ItemStack itemstack = this.enchantSlots.getItem(1);
-        return itemstack.isEmpty() ? 0 : itemstack.getCount();
+    public int getFuelCount() {
+        ItemStack fuelStack = this.enchantSlots.getItem(1);
+        return fuelStack.isEmpty() ? 0 : fuelStack.getCount();
     }
 
     public int getEnchantmentTotal() {
