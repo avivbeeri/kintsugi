@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.core.BlockPos;
@@ -43,7 +44,11 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     };
     private final ContainerLevelAccess access;
     private final DataSlot enchantmentPower = DataSlot.standalone();
+    private final DataSlot fuelCost = DataSlot.standalone();
+    private final DataSlot levelCost = DataSlot.standalone();
+    private final DataSlot selectedEnchantment = DataSlot.standalone();
     private final Map<ResourceLocation, Integer> enchantmentIndexMap;
+    private final Map<Integer, ResourceLocation> indexEnchantmentMap;
     public final Set<Enchantment> enchantmentsFound = new HashSet<>();
     private final ResultContainer resultSlot = new ResultContainer();
 
@@ -59,15 +64,21 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(ModMenuTypes.ENCHANTMENT.get(), pContainerId);
         this.access = pAccess;
+        this.levelCost.set(-1);
+        this.fuelCost.set(-1);
+        this.selectedEnchantment.set(-1);
         enchantmentAvailability = new SimpleContainerData(ForgeRegistries.ENCHANTMENTS.getValues().size());
 
         List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream().toList();
         enchantmentIndexMap = new Object2IntArrayMap<>();
+        indexEnchantmentMap = new Int2ObjectArrayMap<>();
 
         int index = 0;
         for (ResourceLocation location: enchantmentKeys) {
             this.enchantmentAvailability.set(index, 0);
-            enchantmentIndexMap.put(location, index++);
+            indexEnchantmentMap.put(index, location);
+            enchantmentIndexMap.put(location, index);
+            index++;
         }
 
         this.addDataSlots(enchantmentAvailability);
@@ -137,16 +148,16 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     protected boolean mayPickup(Player pPlayer, boolean pHasStack) {
         // calculate costs here
-        int cost = 1;
-        int lapisCost = 1;
+        int cost = this.levelCost.get();
+        int lapisCost = this.fuelCost.get();
         return (pHasStack &&
                 this.getFuelCount() >= lapisCost &&
                 (pPlayer.getAbilities().instabuild || (pPlayer.experienceLevel >= cost)));
     }
 
     protected void onTake(Player pPlayer, ItemStack pStack) {
-        int cost = 1;
-        int lapisCost = 1;
+        int cost = this.levelCost.get();
+        int lapisCost = this.fuelCost.get();
         // Clear the old tool
         // Reduce the lapis by lapis cost
         this.enchantSlots.setItem(0, ItemStack.EMPTY);
@@ -211,9 +222,12 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
                 this.access.execute((pLevel, pBlockPos) -> {
                     this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
+                    this.levelCost.set(1);
+                    this.fuelCost.set(1);
 
-                    if (!this.enchantmentsFound.isEmpty()) {
-                        Enchantment selection = this.enchantmentsFound.stream().findFirst().get();
+                    if (!this.enchantmentsFound.isEmpty()&& this.selectedEnchantment.get() >= 0) {
+                        Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(this.indexEnchantmentMap.get(this.selectedEnchantment.get()));
+                        assert selection != null;
                         if (selection.canEnchant(this.enchantSlots.getItem(0))) {
                             ItemStack copy = this.enchantSlots.getItem(0).copyWithCount(1);
                             Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
@@ -229,6 +243,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 });
             } else {
                 this.enchantmentsFound.clear();
+                this.levelCost.set(-1);
+                this.fuelCost.set(-1);
                 this.resultSlot.setItem(0, ItemStack.EMPTY);
                 this.broadcastChanges();
             }
@@ -250,10 +266,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
         return this.enchantmentsFound
                 .stream()
-                .filter(enchantment ->
-                        {
-                            return enchantment.canEnchant(itemStack);
-                        })
+                .filter(enchantment -> enchantment.canEnchant(itemStack))
                 .sorted((a, b) -> {
                     String aName = Component.translatable(a.getDescriptionId()).getString();
                     String bName = Component.translatable(b.getDescriptionId()).getString();
@@ -267,6 +280,14 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         return fuelStack.isEmpty() ? 0 : fuelStack.getCount();
     }
 
+    public int getFuelCost() {
+        return this.fuelCost.get();
+    }
+
+    public int getLevelCost() {
+        return this.levelCost.get();
+    }
+
     public int getEnchantmentTotal() {
         int total = 0;
         for (ResourceLocation location: ForgeRegistries.ENCHANTMENTS.getKeys()) {
@@ -275,6 +296,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         }
         return total;
+    }
+
+    public void selectEnchantment(int i) {
+        this.selectedEnchantment.set(i);
+        this.broadcastChanges();
+    }
+
+    public int getSelectedEnchantment() {
+      return this.selectedEnchantment.get();
     }
 
     /**

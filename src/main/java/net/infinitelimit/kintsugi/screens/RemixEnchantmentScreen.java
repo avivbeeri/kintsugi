@@ -4,14 +4,18 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
+import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -35,6 +39,10 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     private static final ResourceLocation ENCHANTING_TABLE_LOCATION = new ResourceLocation(Kintsugi.MOD_ID, "textures/gui/container/enchanting_table.png");
     /** The ResourceLocation containing the texture for the Book rendered above the enchantment table */
     private static final ResourceLocation ENCHANTING_BOOK_LOCATION = new ResourceLocation("textures/entity/enchanting_table_book.png");
+
+    /** Text for UI **/
+ //   private static final Component COST_TEXT =
+
     /** A Random instance for use with the enchantment gui */
     private final RandomSource random = RandomSource.create();
     private BookModel bookModel;
@@ -49,16 +57,28 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     public float open;
     public float oOpen;
     private ItemStack last = ItemStack.EMPTY;
+    private List<EnchantmentSelectionButton> buttons;
 
     public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
         this.imageWidth = 292;
         this.inventoryLabelX = 123;
+
     }
 
     protected void init() {
         super.init();
         this.bookModel = new BookModel(this.minecraft.getEntityModels().bakeLayer(ModelLayers.BOOK));
+        this.buttons = new ArrayList<>();
+        int pX = (this.width - this.imageWidth) / 2;
+        int pY = (this.height - this.imageHeight) / 2;
+        EnchantmentSelectionButton button = new EnchantmentSelectionButton(pX + 5, pY + 18, 0, (pButton) -> {
+            if (pButton instanceof EnchantmentSelectionButton selectButton) {
+                this.menu.selectEnchantment(selectButton.index);
+            }
+        });
+        this.addRenderableWidget(button);
+        this.buttons.add(button);
     }
 
     public void containerTick() {
@@ -107,7 +127,11 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         for (int i = 0; i < total; i++) {
             int maxWidth = 104;
             Enchantment enchantment = enchantments.get(i);
-            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            if (this.menu.getSelectedEnchantment() == i) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166+19, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            }
             FormattedText formattedtext = Component.translatable(enchantment.getDescriptionId());
             int color = enchantment.isCurse() ? 0xFF0000 :  0xffff80;
             pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 20 + 19 * i, maxWidth, color);
@@ -158,6 +182,13 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         String s = "" + this.menu.getEnchantmentTotal();
         int color = 0xa221ff;
         pGuiGraphics.drawString(this.font, s,  pX, pY, color);
+
+        boolean flag = this.minecraft.player.getAbilities().instabuild;
+        if (!flag && this.menu.getLevelCost() >= 0) {
+            color = 0x685e4a;
+            FormattedText text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
+            pGuiGraphics.drawWordWrap(font, text, pX + 181, pY + 58, 102, color);
+        }
     }
 
     private void renderBook(GuiGraphics pGuiGraphics, int pX, int pY, float pPartialTick) {
@@ -195,51 +226,15 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
-        boolean flag = this.minecraft.player.getAbilities().instabuild;
-        /*
-        int goldCount = this.menu.getGoldCount();
 
-        for(int i = 0; i < 3; ++i) {
-            int cost = (this.menu).costs[i];
-            Enchantment enchantment = Enchantment.byId((this.menu).enchantClue[i]);
-            int levelClue = (this.menu).levelClue[i];
-            int i1 = i + 1;
-            if (this.isHovering(60, 14 + 19 * i, 108, 17, (double)pMouseX, (double)pMouseY) && cost > 0) {
-                List<Component> list = Lists.newArrayList();
-                list.add((Component.translatable("container.enchant.clue", enchantment == null ? "" : enchantment.getFullname(levelClue))).withStyle(ChatFormatting.WHITE));
-                if (enchantment == null) {
-                    list.add(Component.literal(""));
-                    list.add(Component.translatable("forge.container.enchant.limitedEnchantability").withStyle(ChatFormatting.RED));
-                } else if (!flag) {
-                    list.add(CommonComponents.EMPTY);
-                    if (this.minecraft.player.experienceLevel < cost) {
-                        list.add(Component.translatable("container.enchant.level.requirement", (this.menu).costs[i]).withStyle(ChatFormatting.RED));
-                    } else {
-                        MutableComponent mutablecomponent;
-                        if (i1 == 1) {
-                            mutablecomponent = Component.translatable("container.enchant.lapis.one");
-                        } else {
-                            mutablecomponent = Component.translatable("container.enchant.lapis.many", i1);
-                        }
 
-                        list.add(mutablecomponent.withStyle(goldCount >= i1 ? ChatFormatting.GRAY : ChatFormatting.RED));
-                        MutableComponent mutablecomponent1;
-                        if (i1 == 1) {
-                            mutablecomponent1 = Component.translatable("container.enchant.level.one");
-                        } else {
-                            mutablecomponent1 = Component.translatable("container.enchant.level.many", i1);
-                        }
-
-                        list.add(mutablecomponent1.withStyle(ChatFormatting.GRAY));
-                    }
-                }
-
-                pGuiGraphics.renderComponentTooltip(this.font, list, pMouseX, pMouseY);
-                break;
+        for(EnchantmentSelectionButton button : this.buttons) {
+            if (button.isHoveredOrFocused()) {
+                button.renderToolTip(pGuiGraphics, pMouseX, pMouseY);
             }
 
+            button.visible = button.index < this.menu.getAvailableEnchantments().size();
         }
-         */
     }
 
     public void tickBook() {
@@ -269,5 +264,37 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         f1 = Mth.clamp(f1, -0.2F, 0.2F);
         this.flipA += (f1 - this.flipA) * 0.9F;
         this.flip += this.flipA;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    static class EnchantmentSelectionButton extends Button {
+        final int index;
+        public EnchantmentSelectionButton(int pX, int pY, int pIndex, Button.OnPress pOnPress) {
+            super(pX, pY, 88, 20, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
+            this.index = pIndex;
+            this.visible = false;
+        }
+
+        public void renderToolTip(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
+            /*
+            if (this.isHovered && RemixEnchantmentMenu.this.menu.getOffers().size() > this.index + MerchantScreen.this.scrollOff) {
+                if (pMouseX < this.getX() + 20) {
+                    ItemStack itemstack = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostA();
+                    pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack, pMouseX, pMouseY);
+                } else if (pMouseX < this.getX() + 50 && pMouseX > this.getX() + 30) {
+                    ItemStack itemstack2 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostB();
+                    if (!itemstack2.isEmpty()) {
+                        pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack2, pMouseX, pMouseY);
+                    }
+                } else if (pMouseX > this.getX() + 65) {
+                    ItemStack itemstack1 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getResult();
+                    pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack1, pMouseX, pMouseY);
+                }
+            }
+
+             */
+
+        }
+
     }
 }
