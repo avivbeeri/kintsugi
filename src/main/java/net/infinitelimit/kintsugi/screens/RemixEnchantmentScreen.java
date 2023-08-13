@@ -2,6 +2,7 @@ package net.infinitelimit.kintsugi.screens;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -70,15 +72,11 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         super.init();
         this.bookModel = new BookModel(this.minecraft.getEntityModels().bakeLayer(ModelLayers.BOOK));
         this.buttons = new ArrayList<>();
-        int pX = (this.width - this.imageWidth) / 2;
-        int pY = (this.height - this.imageHeight) / 2;
-        EnchantmentSelectionButton button = new EnchantmentSelectionButton(pX + 5, pY + 18, 0, (pButton) -> {
-            if (pButton instanceof EnchantmentSelectionButton selectButton) {
-                this.menu.selectEnchantment(selectButton.index);
-            }
-        });
-        this.addRenderableWidget(button);
-        this.buttons.add(button);
+    }
+
+    public void onEnchantmentClick(int i) {
+        this.menu.clickMenuButton(this.minecraft.player, i);
+        this.minecraft.gameMode.handleInventoryButtonClick((this.menu).containerId, i);
     }
 
     public void containerTick() {
@@ -95,23 +93,19 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
      * @param pButton the button that was clicked.
      */
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        return super.mouseClicked(pMouseX, pMouseY, pButton);
-        /*
-        int i = (this.width - this.imageWidth) / 2;
-        int j = (this.height - this.imageHeight) / 2;
+        int pX = (this.width - this.imageWidth) / 2;
+        int pY = (this.height - this.imageHeight) / 2;
+        for (int k = 0; k < this.menu.getAvailableEnchantments().size(); k++) {
+            double d0 = pMouseX - (double) (pX + 4);
+            double d1 = pMouseY - (double) (pY + 18 + 19 * k);
 
-        for(int k = 0; k < 3; ++k) {
-            double d0 = pMouseX - (double)(i + 60);
-            double d1 = pMouseY - (double)(j + 14 + 19 * k);
-            if (d0 >= 0.0D && d1 >= 0.0D && d0 < 108.0D && d1 < 19.0D && this.menu.clickMenuButton(this.minecraft.player, k)) {
-                this.minecraft.gameMode.handleInventoryButtonClick((this.menu).containerId, k);
+            if (d0 >= 0.0D && d1 >= 0.0D && d0 < 104.0D && d1 < 19.0D) {
+                this.onEnchantmentClick(k);
                 return true;
             }
         }
 
         return super.mouseClicked(pMouseX, pMouseY, pButton);
-
-         */
     }
 
     protected void renderBg(GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
@@ -136,47 +130,6 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             int color = enchantment.isCurse() ? 0xFF0000 :  0xffff80;
             pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 20 + 19 * i, maxWidth, color);
         }
-
-        /*
-
-        EnchantmentNames.getInstance().initSeed((long)this.menu.getEnchantmentSeed());
-        int goldCount = this.menu.getGoldCount();
-
-        for(int i = 0; i < 3; ++i) {
-
-
-            int cost = (this.menu).costs[i];
-            if (cost == 0) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
-            } else {
-                String s = "" + cost;
-                int maxWidth = 86 - this.font.width(s);
-                FormattedText formattedtext = EnchantmentNames.getInstance().getRandomName(this.font, maxWidth);
-                int color = 0x685e4a;
-                if (((goldCount < i + 1 || this.minecraft.player.experienceLevel < cost) && !this.minecraft.player.getAbilities().instabuild) || this.menu.enchantClue[i] == -1) { // Forge: render buttons as disabled when enchantable but enchantability not met on lower levels
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 185, 108, 19);
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 239, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 16 + 19 * i, maxWidth, (color & 16711422) >> 1);
-                    color = 0x407f10;
-                } else {
-                    int j2 = pMouseX - (pX + 60);
-                    int k2 = pMouseY - (pY + 14 + 19 * i);
-                    if (j2 >= 0 && k2 >= 0 && j2 < 108 && k2 < 19) {
-                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 204, 108, 19);
-                        color = 0xffff80;
-                    } else {
-                        pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 14 + 19 * i, 0, 166, 108, 19);
-                    }
-
-                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + 1, pY + 15 + 19 * i, 16 * i, 223, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 16 + 19 * i, maxWidth, color);
-                    color = 0x80ff20;
-                }
-
-                pGuiGraphics.drawString(this.font, s, textXOffset + 86 - this.font.width(s), pY + 16 + 19 * i + 7, color);
-            }
-        }
-        */
 
         // draw render power to test
         String s = "" + this.menu.getEnchantmentTotal();
@@ -267,12 +220,29 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     }
 
     @OnlyIn(Dist.CLIENT)
-    static class EnchantmentSelectionButton extends Button {
+    class EnchantmentSelectionButton extends Button {
         final int index;
         public EnchantmentSelectionButton(int pX, int pY, int pIndex, Button.OnPress pOnPress) {
-            super(pX, pY, 88, 20, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
+            super(pX, pY, 104, 19, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
             this.index = pIndex;
+            Enchantment enchantment = RemixEnchantmentScreen.this.menu.getAvailableEnchantments().get(pIndex);
+            setMessage(Component.translatable(enchantment.getDescriptionId()));
             this.visible = false;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
+            Minecraft minecraft = Minecraft.getInstance();
+            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
+            RenderSystem.enableBlend();
+            RenderSystem.enableDepthTest();
+            pGuiGraphics.blitNineSliced(ENCHANTING_TABLE_LOCATION,
+                    this.getX(), this.getY(), this.getWidth(), this.getHeight(),
+                    4, 4, 104, 19,
+                    0, 166);
+            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            int i = getFGColor();
+            this.renderString(pGuiGraphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
         }
 
         public void renderToolTip(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
