@@ -19,7 +19,10 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
@@ -228,17 +231,19 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsFound.clear();
                 this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
-                this.levelCost.set(1);
-                this.fuelCost.set(1);
+                int maxLevel = getMaxEnchantmentLevel(itemStack);
 
                 if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
+                    int targetLevel = Math.min(Math.min(maxLevel, selection.getMaxLevel()), fuelStack.getCount());
+                    this.levelCost.set(1);
+                    this.fuelCost.set(targetLevel);
                     if (selection.canEnchant(this.enchantSlots.getItem(0))) {
                         ItemStack copy = this.enchantSlots.getItem(0).copyWithCount(1);
                         Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
-                        allEnchantments.put(selection, 1);
+                        allEnchantments.put(selection, targetLevel);
                         EnchantmentHelper.setEnchantments(allEnchantments, copy);
                         this.resultSlot.setItem(0, copy);
                     }
@@ -256,6 +261,31 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.resultSlot.setItem(0, ItemStack.EMPTY);
             this.broadcastChanges();
         }
+    }
+
+    private int getMaxEnchantmentLevel(ItemStack itemStack) {
+        int maxLevel = 1;
+
+        if (this.enchantmentsFound.size() >= 3) {
+            maxLevel++;
+        }
+        if (this.enchantmentsFound.size() >= 3 + 6) {
+            maxLevel++;
+        }
+        if (this.enchantmentsFound.size() >= 3 + 6 + 9) {
+            maxLevel++;
+        }
+        if (this.enchantmentsFound.size() >= 3 + 6 + 9 + 12) {
+            maxLevel++;
+        }
+
+        Item item = itemStack.getItem();
+        if (item instanceof TieredItem tieredItem) {
+            if (tieredItem.getTier().equals(Tiers.GOLD)) {
+                 maxLevel++;
+            }
+        }
+        return maxLevel;
     }
 
     public void refreshFoundEnchantments() {
