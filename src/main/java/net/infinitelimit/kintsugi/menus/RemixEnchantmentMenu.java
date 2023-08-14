@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -26,7 +25,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
@@ -37,6 +35,8 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.minecraft.world.item.enchantment.Enchantments;
+
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
@@ -58,17 +58,21 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             RemixEnchantmentMenu.this.slotsChanged(this);
         }
     };
-    private final DataSlot enchantmentPower = DataSlot.standalone();
+    private final DataSlot nearbyEnchantmentCount = DataSlot.standalone();
     private final DataSlot fuelCost = DataSlot.standalone();
     private final DataSlot levelCost = DataSlot.standalone();
     private final DataSlot selectedEnchantment = DataSlot.standalone();
     private final DataSlot maxPower = DataSlot.standalone();
     private final Map<ResourceLocation, Integer> enchantmentIndexMap;
-    private final Map<Integer, ResourceLocation> indexEnchantmentMap;
-    public final Set<Enchantment> enchantmentsFound = new HashSet<>();
+    public final Set<Enchantment> enchantmentsNearby = new HashSet<>();
     private final ResultContainer resultSlot = new ResultContainer();
-
     private Item lastItem = Items.AIR;
+    private final Set<Enchantment> DEFAULT_ENCHANTMENTS = Set.of(
+            Enchantments.UNBREAKING,
+            Enchantments.BLOCK_EFFICIENCY,
+            Enchantments.SILK_TOUCH,
+            Enchantments.POWER_ARROWS,
+            Enchantments.ALL_DAMAGE_PROTECTION);
 
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -89,14 +93,18 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
         List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream().toList();
         enchantmentIndexMap = new Object2IntArrayMap<>();
-        indexEnchantmentMap = new Int2ObjectArrayMap<>();
+
 
         int index = 0;
         for (ResourceLocation location: enchantmentKeys) {
             this.enchantmentAvailability.set(index, 0);
-            indexEnchantmentMap.put(index, location);
             enchantmentIndexMap.put(location, index);
             index++;
+        }
+
+        // Set the default enchantments
+        for (Enchantment enchantment: DEFAULT_ENCHANTMENTS) {
+            this.enchantmentAvailability.set(enchantmentIndexMap.get(EnchantmentHelper.getEnchantmentId(enchantment)), 1);
         }
 
         this.addDataSlots(enchantmentAvailability);
@@ -148,20 +156,20 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         });
 
         addPlayerInventory(pPlayerInventory);
-        this.addDataSlot(this.enchantmentPower).set(0);
+        this.addDataSlot(this.nearbyEnchantmentCount).set(0);
 
         this.access.execute((pLevel, pBlockPos) -> {
             if (pLevel.isClientSide()) {
-                this.refreshFoundEnchantments();
+                this.refreshNearbyEnchantments();
                 return;
             }
-            enchantmentsFound.addAll(calculateFoundEnchantments(pLevel, pBlockPos));
-            int power = this.enchantmentsFound.size();
-            this.enchantmentPower.set(enchantmentsFound.size());
+            enchantmentsNearby.addAll(calculateNearbyEnchantments(pLevel, pBlockPos));
+            int power = this.enchantmentsNearby.size();
+            this.nearbyEnchantmentCount.set(enchantmentsNearby.size());
             this.broadcastChanges();
 
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Books found: " + power));
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments found: " + enchantmentsFound.size()));
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Books nearby: " + power));
+            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments nearby: " + getNearbyEnchantmentCount()));
         });
     }
 
@@ -198,8 +206,18 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.broadcastChanges();
     }
 
-    private Set<Enchantment> calculateFoundEnchantments(Level pLevel, BlockPos pBlockPos) {
-        Set<Enchantment> enchantments = new HashSet<>();
+    private Set<Enchantment> calculateNearbyEnchantments(Level pLevel, BlockPos pBlockPos) {
+        Set<Enchantment> enchantments = new HashSet<>(DEFAULT_ENCHANTMENTS);
+        int count = 0;
+
+        for (int i = 0; i < this.enchantmentAvailability.getCount(); i++) {
+            this.enchantmentAvailability.set(i, 0);
+        }
+        // Set the default enchantments
+        for (Enchantment enchantment: DEFAULT_ENCHANTMENTS) {
+            this.enchantmentAvailability.set(enchantmentIndexMap.get(EnchantmentHelper.getEnchantmentId(enchantment)), 1);
+        }
+
         List<ChiseledBookShelfBlockEntity> bookshelves = EnchantmentTableBlock.BOOKSHELF_OFFSETS.stream()
                 .filter(offsetPos -> EnchantmentTableBlock.isValidBookShelf(pLevel, pBlockPos, offsetPos))
                 .map(offsetPos -> pLevel.getBlockEntity(pBlockPos.offset(offsetPos)))
@@ -215,14 +233,20 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                         if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
                             ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
                             this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
-
+                            
                             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
+                            if (!DEFAULT_ENCHANTMENTS.contains(enchantment)) {
+                                count = count + 1;
+                            }
                             enchantments.add(enchantment);
                         }
                     }
                 }
             }
         }
+        this.nearbyEnchantmentCount.set(count);
+        this.broadcastChanges();
+
         return enchantments;
     }
 
@@ -252,10 +276,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private void calculateResultItem(ItemStack itemStack, ItemStack fuelStack) {
         if (!itemStack.isEmpty()) {
             this.access.execute((pLevel, pBlockPos) -> {
-                this.enchantmentsFound.clear();
-                this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
+                this.enchantmentsNearby.clear();
+                this.enchantmentsNearby.addAll(this.calculateNearbyEnchantments(pLevel, pBlockPos));
 
-                if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
+                if (!this.enchantmentsNearby.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
@@ -273,12 +297,13 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 this.broadcastChanges();
             });
         } else {
+            this.enchantmentsNearby.clear();
             this.maxPower.set(0);
         }
 
         if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
             this.access.execute((pLevel, pBlockPos) -> {
-                if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
+                if (!this.enchantmentsNearby.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
@@ -303,7 +328,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 this.broadcastChanges();
             });
         } else {
-            this.enchantmentsFound.clear();
             this.levelCost.set(-1);
             this.fuelCost.set(-1);
             this.resultSlot.setItem(0, ItemStack.EMPTY);
@@ -313,17 +337,18 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     private int getMaxEnchantmentLevel(ItemStack itemStack) {
         int maxLevel = 1;
+        int count = this.getNearbyEnchantmentCount();
 
-        if (this.enchantmentsFound.size() >= 3) {
+        if (count >= 3) {
             maxLevel++;
         }
-        if (this.enchantmentsFound.size() >= 3 + 6) {
+        if (count >= 3 + 6) {
             maxLevel++;
         }
-        if (this.enchantmentsFound.size() >= 3 + 6 + 9) {
+        if (count >= 3 + 6 + 9) {
             maxLevel++;
         }
-        if (this.enchantmentsFound.size() >= 3 + 6 + 9 + 12) {
+        if (count >= 3 + 6 + 9 + 12) {
             maxLevel++;
         }
 
@@ -340,11 +365,12 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         return maxLevel;
     }
 
-    public void refreshFoundEnchantments() {
-        this.enchantmentsFound.clear();
+    public void refreshNearbyEnchantments() {
+        this.enchantmentsNearby.clear();
+        this.enchantmentsNearby.addAll(DEFAULT_ENCHANTMENTS);
         for (ResourceLocation location: enchantmentIndexMap.keySet()) {
             if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
-                this.enchantmentsFound.add(ForgeRegistries.ENCHANTMENTS.getValue(location));
+                this.enchantmentsNearby.add(ForgeRegistries.ENCHANTMENTS.getValue(location));
             }
         }
     }
@@ -359,11 +385,11 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     }
 
     public List<Enchantment> getAvailableEnchantments() {
-        this.refreshFoundEnchantments();
+        this.refreshNearbyEnchantments();
         ItemStack itemStack = this.getSlot(0).getItem();
         boolean isBook = itemStack.is(Items.BOOK);
 
-        return this.enchantmentsFound
+        return this.enchantmentsNearby
                 .stream()
                 .filter(enchantment -> isBook || enchantment.canEnchant(itemStack))
                 .sorted((a, b) -> {
@@ -387,14 +413,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         return this.levelCost.get();
     }
 
-    public int getEnchantmentTotal() {
-        int total = 0;
-        for (ResourceLocation location: ForgeRegistries.ENCHANTMENTS.getKeys()) {
-            if (this.enchantmentAvailability.get(enchantmentIndexMap.get(location)) == 1) {
-                total++;
-            }
-        }
-        return total;
+    public int getNearbyEnchantmentCount() {
+        return this.nearbyEnchantmentCount.get();
     }
 
     public void selectEnchantment(int i) {

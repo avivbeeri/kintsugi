@@ -143,14 +143,9 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 198 + 12 * i, pY + 53, k * 10, 234, 10, 8, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         }
 
-        // draw render power to test
-        String s = "" + this.menu.getEnchantmentTotal();
-        int color = 0xa221ff;
-        pGuiGraphics.drawString(this.font, s,  pX, pY, color);
-
         boolean flag = this.minecraft.player.getAbilities().instabuild;
         if (!flag && this.menu.getLevelCost() >= 0) {
-            color = 0x685e4a;
+            int color = 0x685e4a;
             FormattedText text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
             pGuiGraphics.drawWordWrap(font, text, pX + 181, pY + 58, 102, color);
         }
