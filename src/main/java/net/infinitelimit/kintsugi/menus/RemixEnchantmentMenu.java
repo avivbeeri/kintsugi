@@ -62,10 +62,13 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private final DataSlot fuelCost = DataSlot.standalone();
     private final DataSlot levelCost = DataSlot.standalone();
     private final DataSlot selectedEnchantment = DataSlot.standalone();
+    private final DataSlot maxPower = DataSlot.standalone();
     private final Map<ResourceLocation, Integer> enchantmentIndexMap;
     private final Map<Integer, ResourceLocation> indexEnchantmentMap;
     public final Set<Enchantment> enchantmentsFound = new HashSet<>();
     private final ResultContainer resultSlot = new ResultContainer();
+
+    private Item lastItem = Items.AIR;
 
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
@@ -98,6 +101,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
         this.addDataSlots(enchantmentAvailability);
         this.addDataSlot(selectedEnchantment).set(-1);
+        this.addDataSlot(maxPower).set(0);
 
         this.addSlot(new Slot(this.enchantSlots, 0, 178, 25) {
             /**
@@ -250,11 +254,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsFound.clear();
                 this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
-                this.broadcastChanges();
-            });
-        };
-        if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
-            this.access.execute((pLevel, pBlockPos) -> {
+
                 if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
@@ -262,7 +262,28 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
                     int maxLevel = getMaxEnchantmentLevel(itemStack);
                     maxLevel = Math.min(maxLevel, selection.getMaxLevel());
-                    int targetLevel = Mth.clamp(fuelStack.getCount(), 1, maxLevel);
+                    this.maxPower.set(maxLevel);
+                } else {
+                    this.maxPower.set(0);
+                }
+                if (this.lastItem != itemStack.getItem()) {
+                    this.selectedEnchantment.set(-1);
+                }
+                this.lastItem = itemStack.getItem();
+                this.broadcastChanges();
+            });
+        } else {
+            this.maxPower.set(0);
+        }
+
+        if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
+            this.access.execute((pLevel, pBlockPos) -> {
+                if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
+                    ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
+                    Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
+                    assert selection != null;
+
+                    int targetLevel = Mth.clamp(fuelStack.getCount(), 1, this.maxPower.get());
                     this.levelCost.set(1);
                     this.fuelCost.set(targetLevel);
                     if (selection.canEnchant(itemStack) || itemStack.is(Items.ENCHANTED_BOOK)) {
@@ -283,9 +304,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             });
         } else {
             this.enchantmentsFound.clear();
-            if (itemStack.isEmpty()) {
-                this.selectedEnchantment.set(-1);
-            }
             this.levelCost.set(-1);
             this.fuelCost.set(-1);
             this.resultSlot.setItem(0, ItemStack.EMPTY);
@@ -455,6 +473,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
 
         return itemstack;
+    }
+
+    public int getMaxPower() {
+        return this.maxPower.get();
     }
 }
 

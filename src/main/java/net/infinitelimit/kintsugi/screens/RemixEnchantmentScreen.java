@@ -126,9 +126,21 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             } else {
                 pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
+
             FormattedText formattedtext = Component.translatable(enchantment.getDescriptionId());
             int color = enchantment.isCurse() ? 0xFF0000 :  0xffff80;
             pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 20 + 19 * i, maxWidth, color);
+        }
+
+        int range = this.menu.getMaxPower();
+        for (int i = 0; i < range; i++) {
+            int k;
+            if (i < this.menu.getFuelCount()) {
+              k = 0;
+            } else {
+              k = 1;
+            }
+            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 198 + 12 * i, pY + 53, k * 10, 234, 10, 8, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         }
 
         // draw render power to test
