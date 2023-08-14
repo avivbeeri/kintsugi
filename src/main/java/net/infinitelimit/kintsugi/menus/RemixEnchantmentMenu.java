@@ -9,11 +9,16 @@ import java.util.stream.Collectors;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -23,12 +28,15 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.ArmorMaterials;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
@@ -91,7 +99,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlots(enchantmentAvailability);
         this.addDataSlot(selectedEnchantment).set(-1);
 
-        this.addSlot(new Slot(this.enchantSlots, 0, 182, 37) {
+        this.addSlot(new Slot(this.enchantSlots, 0, 178, 25) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -107,7 +115,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 return 1;
             }
         });
-        this.addSlot(new Slot(this.enchantSlots, 1, 208, 37) {
+        this.addSlot(new Slot(this.enchantSlots, 1, 178, 48) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -116,7 +124,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addSlot(new Slot(this.resultSlot, 1, 250, 37) {
+        this.addSlot(new Slot(this.resultSlot, 1, 248, 25) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -173,7 +181,16 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         if (fuelStack.isEmpty()) {
             this.enchantSlots.setItem(1, ItemStack.EMPTY);
         }
-        pPlayer.giveExperienceLevels(-cost);
+
+        pPlayer.onEnchantmentPerformed(pStack, cost);
+        pPlayer.awardStat(Stats.ENCHANT_ITEM);
+        if (pPlayer instanceof ServerPlayer) {
+            CriteriaTriggers.ENCHANTED_ITEM.trigger((ServerPlayer) pPlayer, pStack, cost);
+        }
+        this.access.execute((pLevel, pBlockPos) -> {
+            pLevel.playSound(null, pBlockPos, SoundEvents.ENCHANTMENT_TABLE_USE, SoundSource.BLOCKS, 1.0F, pLevel.random.nextFloat() * 0.1F + 0.9F);
+        });
+
         this.broadcastChanges();
     }
 
@@ -217,7 +234,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-
     /**
      * Callback for when the crafting matrix is changed.
      */
@@ -230,12 +246,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     }
 
     private void calculateResultItem(ItemStack itemStack, ItemStack fuelStack) {
-        if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
-
+        if (!itemStack.isEmpty()) {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsFound.clear();
                 this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
-
+                this.broadcastChanges();
+            });
+        };
+        if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
+            this.access.execute((pLevel, pBlockPos) -> {
                 if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
@@ -246,12 +265,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     int targetLevel = Mth.clamp(fuelStack.getCount(), 1, maxLevel);
                     this.levelCost.set(1);
                     this.fuelCost.set(targetLevel);
-                    if (selection.canEnchant(this.enchantSlots.getItem(0))) {
-                        ItemStack copy = this.enchantSlots.getItem(0).copyWithCount(1);
+                    if (selection.canEnchant(itemStack) || itemStack.is(Items.ENCHANTED_BOOK)) {
+                        ItemStack copy = itemStack.copyWithCount(1);
                         Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
                         allEnchantments.put(selection, targetLevel);
                         EnchantmentHelper.setEnchantments(allEnchantments, copy);
                         this.resultSlot.setItem(0, copy);
+                    } else if (itemStack.is(Items.BOOK)) {
+                        this.resultSlot.setItem(0, new ItemStack(Items.ENCHANTED_BOOK));
+                        EnchantedBookItem.addEnchantment(this.resultSlot.getItem(0), new EnchantmentInstance(selection, targetLevel));
                     }
                 } else {
                     this.resultSlot.setItem(0, ItemStack.EMPTY);
@@ -321,10 +343,11 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public List<Enchantment> getAvailableEnchantments() {
         this.refreshFoundEnchantments();
         ItemStack itemStack = this.getSlot(0).getItem();
+        boolean isBook = itemStack.is(Items.BOOK);
 
         return this.enchantmentsFound
                 .stream()
-                .filter(enchantment -> enchantment.canEnchant(itemStack))
+                .filter(enchantment -> isBook || enchantment.canEnchant(itemStack))
                 .sorted((a, b) -> {
                     String aName = Component.translatable(a.getDescriptionId()).getString();
                     String bName = Component.translatable(b.getDescriptionId()).getString();
