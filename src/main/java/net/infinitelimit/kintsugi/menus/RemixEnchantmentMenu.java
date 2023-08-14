@@ -14,11 +14,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.ArmorMaterials;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TieredItem;
@@ -35,6 +39,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private final ContainerData enchantmentAvailability;
 
+    private final ContainerLevelAccess access;
     private final Container enchantSlots = new SimpleContainer(2) {
         /**
          * For block entities, ensures the chunk containing the block entity is saved to disk later - the game won't think
@@ -45,7 +50,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             RemixEnchantmentMenu.this.slotsChanged(this);
         }
     };
-    private final ContainerLevelAccess access;
     private final DataSlot enchantmentPower = DataSlot.standalone();
     private final DataSlot fuelCost = DataSlot.standalone();
     private final DataSlot levelCost = DataSlot.standalone();
@@ -231,13 +235,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsFound.clear();
                 this.enchantmentsFound.addAll(this.calculateFoundEnchantments(pLevel, pBlockPos));
-                int maxLevel = getMaxEnchantmentLevel(itemStack);
 
                 if (!this.enchantmentsFound.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
-                    int targetLevel = Math.min(Math.min(maxLevel, selection.getMaxLevel()), fuelStack.getCount());
+
+                    int maxLevel = getMaxEnchantmentLevel(itemStack);
+                    maxLevel = Math.min(maxLevel, selection.getMaxLevel());
+                    int targetLevel = Mth.clamp(fuelStack.getCount(), 1, maxLevel);
                     this.levelCost.set(1);
                     this.fuelCost.set(targetLevel);
                     if (selection.canEnchant(this.enchantSlots.getItem(0))) {
@@ -255,7 +261,9 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             });
         } else {
             this.enchantmentsFound.clear();
-            this.selectedEnchantment.set(-1);
+            if (itemStack.isEmpty()) {
+                this.selectedEnchantment.set(-1);
+            }
             this.levelCost.set(-1);
             this.fuelCost.set(-1);
             this.resultSlot.setItem(0, ItemStack.EMPTY);
@@ -283,6 +291,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         if (item instanceof TieredItem tieredItem) {
             if (tieredItem.getTier().equals(Tiers.GOLD)) {
                  maxLevel++;
+            }
+        } else if (item instanceof ArmorItem armorItem) {
+            if (armorItem.getMaterial().equals(ArmorMaterials.GOLD)) {
+                maxLevel++;
             }
         }
         return maxLevel;
