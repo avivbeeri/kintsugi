@@ -1,12 +1,17 @@
 package net.infinitelimit.kintsugi.item;
 
 import net.infinitelimit.kintsugi.Kintsugi;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ModCreativeModeTabs {
@@ -15,7 +20,11 @@ public class ModCreativeModeTabs {
     public static final RegistryObject<CreativeModeTab> KINTSUGI_TAB = CREATIVE_MODE_TABS.register("book_tab", () -> CreativeModeTab.builder()
             .icon(() -> new ItemStack(ModItems.POWER_BOOK.get())).title(Component.translatable("creativetab.kintsugi"))
             .displayItems((pParameters, pOutput) -> {
-                pOutput.accept(ModItems.POWER_BOOK.get());
+                ForgeRegistries.ENCHANTMENTS.getValues()
+                        .stream()
+                        .sorted()
+                        .forEach(enchantment ->
+                                pOutput.accept(PowerBookItem.createForEnchantment(enchantment)));
             })
             .build());
 
