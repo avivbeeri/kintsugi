@@ -1,26 +1,21 @@
 package net.infinitelimit.kintsugi.screens;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.gui.screens.inventory.EnchantmentNames;
-import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -31,7 +26,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -63,7 +57,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     public float open;
     public float oOpen;
     private ItemStack last = ItemStack.EMPTY;
-    private List<EnchantmentSelectionButton> buttons;
+    private boolean isDragging = false;
 
     public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -75,7 +69,6 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     protected void init() {
         super.init();
         this.bookModel = new BookModel(this.minecraft.getEntityModels().bakeLayer(ModelLayers.BOOK));
-        this.buttons = new ArrayList<>();
     }
 
     public void onEnchantmentClick(int i) {
@@ -100,6 +93,13 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         int pX = (this.width - this.imageWidth) / 2;
         int pY = (this.height - this.imageHeight) / 2;
         List<Enchantment> enchantments = this.menu.getAvailableEnchantments();
+
+        this.isDragging = false;
+        if (this.canScroll(enchantments.size()) && pMouseX > (double)(pX + 118) && pMouseX < (double)(pX + 118 + 6) && pMouseY > (double)(pY + 18) && pMouseY <= (double)(pY + 18 + 139 + 1)) {
+            this.isDragging = true;
+            return true;
+        }
+
         Set<Enchantment> itemEnchantments = this.menu.slots.get(0).getItem().getAllEnchantments().keySet();
 
         for (int k = 0; k < enchantments.size(); k++) {
@@ -130,6 +130,11 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         int textXOffset = xOffset + 2;
 
         List<Enchantment> enchantments = this.menu.getAvailableEnchantments();
+        if (!canScroll(enchantments.size())) {
+            this.scrollOffset = 0;
+        }
+        int yOffset = -(this.scrollOffset * BUTTON_HEIGHT);
+
         Set<Enchantment> itemEnchantments = this.menu.slots.get(0).getItem().getAllEnchantments().keySet();
         int total = enchantments.size();
         
@@ -144,25 +149,25 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             proposed.add(enchantment);
 
             if (this.menu.getSelectedEnchantment() == i) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + yOffset + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             } else if (!RemixEnchantmentMenu.calculateCompatibility(proposed)) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-            } else if (pMouseY >= pY + 18 + BUTTON_HEIGHT * i && pMouseY < pY + 18 + BUTTON_HEIGHT * (i + 1) && pMouseX >= xOffset && pMouseX < xOffset + BUTTON_WIDTH) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, 0, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + yOffset + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else if (pMouseY >= pY + yOffset + 18 + BUTTON_HEIGHT * i && pMouseY < pY + yOffset + 18 + BUTTON_HEIGHT * (i + 1) && pMouseX >= xOffset && pMouseX < xOffset + BUTTON_WIDTH) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + yOffset + 18 + BUTTON_HEIGHT * i, 0, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             } else {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, 0, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + yOffset + 18 + BUTTON_HEIGHT * i, 0, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
 
             if (!RemixEnchantmentMenu.calculateCompatibility(proposed)) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + BUTTON_WIDTH - 9, pY + 18 + BUTTON_HEIGHT * (i + 1) - 9, 0, 240, 7, 7, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + BUTTON_WIDTH - 9, pY + yOffset + 18 + BUTTON_HEIGHT * (i + 1) - 9, 0, 240, 7, 7, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
 
             MutableComponent formattedText = Component.translatable(enchantment.getDescriptionId());
 
             int color = 0x685e4a;
-            pGuiGraphics.drawWordWrap(this.font, formattedText, textXOffset, pY + 20 + BUTTON_HEIGHT * i, maxWidth, color);
+            pGuiGraphics.drawWordWrap(this.font, formattedText, textXOffset, pY + yOffset + 20 + BUTTON_HEIGHT * i, maxWidth, color);
             FormattedText runes = formattedText.withStyle(ROOT_STYLE);
-            pGuiGraphics.drawWordWrap(font, runes, textXOffset,  pY + 20 + BUTTON_HEIGHT * i + 9, 102, color);
+            pGuiGraphics.drawWordWrap(font, runes, textXOffset,  pY + yOffset + 20 + BUTTON_HEIGHT * i + 9, 102, color);
         }
 
         int range = this.menu.getMaxPower();
@@ -215,6 +220,30 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         Lighting.setupFor3DItems();
     }
 
+    private void renderScroller(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, List<Enchantment> enchantments) {
+        int pX = (this.width - this.imageWidth) / 2;
+        int pY = (this.height - this.imageHeight) / 2;
+        int offscreenCount = enchantments.size() + 1 - 7;
+
+        if (offscreenCount >= 1) {
+            int j = 139 - (27 + (offscreenCount - 1) * 139 / offscreenCount);
+            int k = 1 + j / offscreenCount + 139 / offscreenCount;
+            int l = 113;
+            int scrollPosition = Math.min(l, this.scrollOffset * k);
+            if (this.scrollOffset == offscreenCount - 1) {
+                scrollPosition = l;
+            }
+
+            if (isDragging || this.canScroll(enchantments.size()) && pMouseX > (double)(pX + 118) && pMouseX < (double)(pX + 118 + 6) && pMouseY > (double)(pY + 18) && pMouseY <= (double)(pY + 18 + 139 + 1)) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 118, pY + 18 + scrollPosition, 0, 6, 206, 6, 27,  TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 118, pY + 18 + scrollPosition, 0, 0, 206, 6, 27,  TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            }
+        } else {
+            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 118, pY + 18, 0, 6, 206, 6, 27,  TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        }
+    }
+
     /**
      * Renders the graphical user interface (GUI) element.
      * @param pGuiGraphics the GuiGraphics object used for rendering.
@@ -224,18 +253,12 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
      */
     public void render(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
         pPartialTick = this.minecraft.getFrameTime();
+
         this.renderBackground(pGuiGraphics);
         super.render(pGuiGraphics, pMouseX, pMouseY, pPartialTick);
         this.renderTooltip(pGuiGraphics, pMouseX, pMouseY);
 
-
-        for(EnchantmentSelectionButton button : this.buttons) {
-            if (button.isHoveredOrFocused()) {
-                button.renderToolTip(pGuiGraphics, pMouseX, pMouseY);
-            }
-
-            button.visible = button.index < this.menu.getAvailableEnchantments().size();
-        }
+        this.renderScroller(pGuiGraphics, pMouseX, pMouseY, this.menu.getAvailableEnchantments());
     }
 
     public void tickBook() {
@@ -267,52 +290,55 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         this.flip += this.flipA;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    class EnchantmentSelectionButton extends Button {
-        final int index;
-        public EnchantmentSelectionButton(int pX, int pY, int pIndex, Button.OnPress pOnPress) {
-            super(pX, pY, BUTTON_WIDTH, BUTTON_HEIGHT, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
-            this.index = pIndex;
-            Enchantment enchantment = RemixEnchantmentScreen.this.menu.getAvailableEnchantments().get(pIndex);
-            setMessage(Component.translatable(enchantment.getDescriptionId()));
-            this.visible = false;
+    private boolean canScroll(int pNumEnchantments) {
+        return pNumEnchantments > 7;
+    }
+    /**
+     * Called when the mouse wheel is scrolled within the GUI element.
+     * <p>
+     * @return {@code true} if the event is consumed, {@code false} otherwise.
+     * @param pMouseX the X coordinate of the mouse.
+     * @param pMouseY the Y coordinate of the mouse.
+     * @param pDelta the scrolling delta.
+     */
+    public boolean mouseScrolled(double pMouseX, double pMouseY, double pDelta) {
+        int i = this.menu.getAvailableEnchantments().size();
+        if (this.canScroll(i)) {
+            int j = i - 7;
+            this.scrollOffset = Mth.clamp((int)Math.round((double)this.scrollOffset - pDelta), 0, j);
         }
 
-        @Override
-        protected void renderWidget(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY, float pPartialTick) {
-            Minecraft minecraft = Minecraft.getInstance();
-            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, this.alpha);
-            RenderSystem.enableBlend();
-            RenderSystem.enableDepthTest();
-            pGuiGraphics.blitNineSliced(ENCHANTING_TABLE_LOCATION,
-                    this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                    4, 4, BUTTON_WIDTH, BUTTON_HEIGHT,
-                    0, 166);
-            pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
-            int i = getFGColor();
-            this.renderString(pGuiGraphics, minecraft.font, i | Mth.ceil(this.alpha * 255.0F) << 24);
+        return true;
+    }
+
+    /**
+     * Called when the mouse is dragged within the GUI element.
+     * <p>
+     * @return {@code true} if the event is consumed, {@code false} otherwise.
+     * @param pMouseX the X coordinate of the mouse.
+     * @param pMouseY the Y coordinate of the mouse.
+     * @param pButton the button that is being dragged.
+     * @param pDragX the X distance of the drag.
+     * @param pDragY the Y distance of the drag.
+     */
+    public boolean mouseDragged(double pMouseX, double pMouseY, int pButton, double pDragX, double pDragY) {
+        int count = this.menu.getAvailableEnchantments().size();
+        if (this.isDragging) {
+            int j = this.topPos + 18;
+            int k = j + 139;
+            int l = count - 7;
+            float f = ((float)pMouseY - (float)j - 13.5F) / ((float)(k - j) - 27.0F);
+            f = f * (float)l + 0.5F;
+            this.scrollOffset = Mth.clamp((int)f, 0, l);
+            return true;
+        } else {
+            return super.mouseDragged(pMouseX, pMouseY, pButton, pDragX, pDragY);
         }
+    }
 
-        public void renderToolTip(GuiGraphics pGuiGraphics, int pMouseX, int pMouseY) {
-            /*
-            if (this.isHovered && RemixEnchantmentMenu.this.menu.getOffers().size() > this.index + MerchantScreen.this.scrollOff) {
-                if (pMouseX < this.getX() + 20) {
-                    ItemStack itemstack = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostA();
-                    pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack, pMouseX, pMouseY);
-                } else if (pMouseX < this.getX() + 50 && pMouseX > this.getX() + 30) {
-                    ItemStack itemstack2 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getCostB();
-                    if (!itemstack2.isEmpty()) {
-                        pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack2, pMouseX, pMouseY);
-                    }
-                } else if (pMouseX > this.getX() + 65) {
-                    ItemStack itemstack1 = MerchantScreen.this.menu.getOffers().get(this.index + MerchantScreen.this.scrollOff).getResult();
-                    pGuiGraphics.renderTooltip(MerchantScreen.this.font, itemstack1, pMouseX, pMouseY);
-                }
-            }
-
-             */
-
-        }
-
+    @Override
+    public boolean mouseReleased(double pMouseX, double pMouseY, int pButton) {
+        this.isDragging = false;
+        return super.mouseReleased(pMouseX, pMouseY, pButton);
     }
 }

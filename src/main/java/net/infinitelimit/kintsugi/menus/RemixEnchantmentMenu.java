@@ -62,6 +62,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             Enchantments.BLOCK_EFFICIENCY,
             Enchantments.SILK_TOUCH,
             Enchantments.POWER_ARROWS,
+            Enchantments.SHARPNESS,
             Enchantments.ALL_DAMAGE_PROTECTION);
 
     private final ResultContainer resultSlot = new ResultContainer();
@@ -408,6 +409,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
         return super.clickMenuButton(pPlayer, pId);
     }
+
+
 
     public List<Enchantment> getAvailableEnchantments() {
         this.refreshNearbyEnchantments();
