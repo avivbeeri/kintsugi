@@ -4,7 +4,6 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "kintsugi.refmap.json",
   "mixins": [
-    "MixinItem",
     "MixinEnchantmentTableBlock"
   ],
   "client": [
