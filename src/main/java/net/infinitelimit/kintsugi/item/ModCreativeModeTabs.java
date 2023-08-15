@@ -14,6 +14,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
+import java.util.Comparator;
+
 public class ModCreativeModeTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, Kintsugi.MOD_ID);
 
@@ -22,7 +24,7 @@ public class ModCreativeModeTabs {
             .displayItems((pParameters, pOutput) -> {
                 ForgeRegistries.ENCHANTMENTS.getValues()
                         .stream()
-                        .sorted()
+                        .sorted(Comparator.comparing(a -> Component.translatable(a.getDescriptionId()).getString()))
                         .forEach(enchantment ->
                                 pOutput.accept(PowerBookItem.createForEnchantment(enchantment)));
             })

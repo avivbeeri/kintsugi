@@ -45,6 +45,26 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private final ContainerData enchantmentAvailability;
 
     private final ContainerLevelAccess access;
+
+    private final DataSlot nearbyEnchantmentCount = DataSlot.standalone();
+    private final DataSlot fuelCost = DataSlot.standalone();
+    private final DataSlot levelCost = DataSlot.standalone();
+    private final DataSlot selectedEnchantment = DataSlot.standalone();
+    private final DataSlot maxPower = DataSlot.standalone();
+    private final DataSlot valid = DataSlot.standalone();
+
+    private final Map<ResourceLocation, Integer> enchantmentIndexMap;
+    public final Set<Enchantment> enchantmentsNearby = new HashSet<>();
+
+    private Item lastItem = Items.AIR;
+    private final Set<Enchantment> DEFAULT_ENCHANTMENTS = Set.of(
+            Enchantments.UNBREAKING,
+            Enchantments.BLOCK_EFFICIENCY,
+            Enchantments.SILK_TOUCH,
+            Enchantments.POWER_ARROWS,
+            Enchantments.ALL_DAMAGE_PROTECTION);
+
+    private final ResultContainer resultSlot = new ResultContainer();
     private final Container enchantSlots = new SimpleContainer(2) {
         /**
          * For block entities, ensures the chunk containing the block entity is saved to disk later - the game won't think
@@ -55,22 +75,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             RemixEnchantmentMenu.this.slotsChanged(this);
         }
     };
-    private final DataSlot nearbyEnchantmentCount = DataSlot.standalone();
-    private final DataSlot fuelCost = DataSlot.standalone();
-    private final DataSlot levelCost = DataSlot.standalone();
-    private final DataSlot selectedEnchantment = DataSlot.standalone();
-    private final DataSlot maxPower = DataSlot.standalone();
-    private final Map<ResourceLocation, Integer> enchantmentIndexMap;
-    public final Set<Enchantment> enchantmentsNearby = new HashSet<>();
-    private final ResultContainer resultSlot = new ResultContainer();
-    private Item lastItem = Items.AIR;
-    private final Set<Enchantment> DEFAULT_ENCHANTMENTS = Set.of(
-            Enchantments.UNBREAKING,
-            Enchantments.BLOCK_EFFICIENCY,
-            Enchantments.SILK_TOUCH,
-            Enchantments.POWER_ARROWS,
-            Enchantments.ALL_DAMAGE_PROTECTION);
-
 
     public RemixEnchantmentMenu(int pContainerId, Inventory pPlayerInventory) {
         this(pContainerId, pPlayerInventory, ContainerLevelAccess.NULL);
@@ -107,6 +111,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlots(enchantmentAvailability);
         this.addDataSlot(selectedEnchantment).set(-1);
         this.addDataSlot(maxPower).set(0);
+        this.addDataSlot(valid).set(1);
 
         this.addSlot(new Slot(this.enchantSlots, 0, 178, 25) {
             /**
@@ -286,32 +291,44 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsNearby.clear();
                 this.enchantmentsNearby.addAll(this.calculateNearbyEnchantments(pLevel, pBlockPos));
+                if (this.lastItem != itemStack.getItem()) {
+                    this.selectedEnchantment.set(-1);
+                }
+                this.lastItem = itemStack.getItem();
 
                 if (!this.enchantmentsNearby.isEmpty() && this.selectedEnchantment.get() >= 0) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
 
+                    Set<Enchantment> currentEnchantments = new HashSet<>(itemStack.getAllEnchantments().keySet());
+                    currentEnchantments.add(selection);
+                    if (!calculateCompatibility(currentEnchantments)) {
+                        this.valid.set(0);
+                    } else {
+                        this.valid.set(1);
+                    }
+
                     int maxLevel = getMaxEnchantmentLevel(itemStack);
                     maxLevel = Math.min(maxLevel, selection.getMaxLevel());
                     this.maxPower.set(maxLevel);
                 } else {
                     this.maxPower.set(0);
+                    this.valid.set(1);
                 }
-                if (this.lastItem != itemStack.getItem()) {
-                    this.selectedEnchantment.set(-1);
-                }
-                this.lastItem = itemStack.getItem();
+
+
                 this.broadcastChanges();
             });
         } else {
             this.enchantmentsNearby.clear();
             this.maxPower.set(0);
+            this.valid.set(1);
         }
 
         if (!itemStack.isEmpty() && !fuelStack.isEmpty()) {
             this.access.execute((pLevel, pBlockPos) -> {
-                if (!this.enchantmentsNearby.isEmpty() && this.selectedEnchantment.get() >= 0) {
+                if (!this.enchantmentsNearby.isEmpty() && this.selectedEnchantment.get() >= 0 && this.getValidity()) {
                     ResourceLocation enchantmentId = EnchantmentHelper.getEnchantmentId(this.getAvailableEnchantments().get(this.selectedEnchantment.get()));
                     Enchantment selection = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
                     assert selection != null;
@@ -419,6 +436,10 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
 
     public int getLevelCost() {
         return this.levelCost.get();
+    }
+
+    public boolean getValidity() {
+        return this.valid.get() == 1;
     }
 
     public int getNearbyEnchantmentCount() {
