@@ -109,6 +109,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.enchantmentAvailability.set(enchantmentIndexMap.get(EnchantmentHelper.getEnchantmentId(enchantment)), 1);
         }
 
+        this.addDataSlot(fuelCost);
+        this.addDataSlot(levelCost);
         this.addDataSlots(enchantmentAvailability);
         this.addDataSlot(selectedEnchantment).set(-1);
         this.addDataSlot(maxPower).set(0);

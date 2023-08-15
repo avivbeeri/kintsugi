@@ -191,8 +191,10 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         if (!flag && this.menu.getLevelCost() >= 0) {
             int color = 0x685e4a;
             MutableComponent text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
+            int leftX = pX + this.imageWidth - 8 - this.font.width(text) - 2;
+            pGuiGraphics.fill(leftX - 2, pY + 66, pX + this.imageWidth - 8, pY + 78, 0x4f000000);
+            pGuiGraphics.drawWordWrap(font, text, leftX, pY + 68, 102, color);
 
-            pGuiGraphics.drawWordWrap(font, text, pX + 185, pY + 68, 102, color);
 
         }
     }
