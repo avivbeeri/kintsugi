@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import net.infinitelimit.kintsugi.KnowledgeHelper;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -41,6 +42,8 @@ import net.minecraft.world.level.block.EnchantmentTableBlock;
 import net.minecraft.world.level.block.entity.ChiseledBookShelfBlockEntity;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import static net.infinitelimit.kintsugi.KnowledgeHelper.DEFAULT_ENCHANTMENTS;
+
 public class RemixEnchantmentMenu extends AbstractContainerMenu {
     private final ContainerData enchantmentAvailability;
 
@@ -57,13 +60,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public final Set<Enchantment> enchantmentsNearby = new HashSet<>();
 
     private Item lastItem = Items.AIR;
-    private final Set<Enchantment> DEFAULT_ENCHANTMENTS = Set.of(
-            Enchantments.UNBREAKING,
-            Enchantments.BLOCK_EFFICIENCY,
-            Enchantments.SILK_TOUCH,
-            Enchantments.POWER_ARROWS,
-            Enchantments.SHARPNESS,
-            Enchantments.ALL_DAMAGE_PROTECTION);
 
     private final ResultContainer resultSlot = new ResultContainer();
     private final Container enchantSlots = new SimpleContainer(2) {
@@ -337,8 +333,9 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     assert selection != null;
 
                     int targetLevel = Mth.clamp(fuelStack.getCount(), 1, this.maxPower.get());
-                    this.levelCost.set(1);
+                    this.levelCost.set(this.calculateLevelCost(itemStack, selection, targetLevel));
                     this.fuelCost.set(targetLevel);
+
                     if (selection.canEnchant(itemStack) || itemStack.is(Items.ENCHANTED_BOOK)) {
                         ItemStack copy = itemStack.copyWithCount(1);
                         Map<Enchantment, Integer> allEnchantments = copy.getAllEnchantments();
@@ -361,6 +358,36 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.resultSlot.setItem(0, ItemStack.EMPTY);
             this.broadcastChanges();
         }
+    }
+
+    private int calculateLevelCost(ItemStack itemStack, Enchantment selection, int level) {
+        int cost = 1;
+
+        // 1) Figure out the base cost for this enchantment.
+        for (int category = 1; category < 5; category++) {
+            if (KnowledgeHelper.ENCHANTMENT_CATEGORIES.get(category).contains(selection)) {
+                cost = category;
+                break;
+            }
+        }
+
+        Map<Enchantment, Integer> itemEnchantments = itemStack.getAllEnchantments();
+        // 2) Add 1 for every previous enchantment added.
+        // If the enchantment is already present?
+        if (itemEnchantments.containsKey(selection)) {
+            // calculate difference
+            level = level - itemEnchantments.get(selection);
+            cost += itemEnchantments.size() - 1;
+        } else {
+            level = level - 1; // the first level is free
+            cost += itemEnchantments.size();
+        }
+
+        // 3) Add 1 for each level of the enchantment added, after the first.
+        // If we are upgrading the level of an existing enchantment, pay the difference instead.
+        cost += level;
+
+        return cost;
     }
 
     private int getMaxEnchantmentLevel(ItemStack itemStack) {
