@@ -7,7 +7,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.menus.RemixEnchantmentMenu;
@@ -42,6 +45,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     /** Text for UI **/
     private static final ResourceLocation ALT_FONT = new ResourceLocation("minecraft", "alt");
     private static final Style ROOT_STYLE = Style.EMPTY.withFont(ALT_FONT);
+    private static final int BUTTON_HEIGHT = 20;
+    private static final int BUTTON_WIDTH = 112;
 
     /** A Random instance for use with the enchantment gui */
     private final RandomSource random = RandomSource.create();
@@ -49,6 +54,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     private static final int TEXTURE_WIDTH = 512;
     private static final int TEXTURE_HEIGHT = 256;
 
+    private int scrollOffset = 0;
     public int time;
     public float flip;
     public float oFlip;
@@ -61,8 +67,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
 
     public RemixEnchantmentScreen(RemixEnchantmentMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
-        this.imageWidth = 292;
-        this.inventoryLabelX = 123;
+        this.imageWidth = 300;
+        this.inventoryLabelX = 131;
 
     }
 
@@ -94,11 +100,19 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         int pX = (this.width - this.imageWidth) / 2;
         int pY = (this.height - this.imageHeight) / 2;
         List<Enchantment> enchantments = this.menu.getAvailableEnchantments();
-        for (int k = 0; k < enchantments.size(); k++) {
-            double d0 = pMouseX - (double) (pX + 4);
-            double d1 = pMouseY - (double) (pY + 18 + 19 * k);
+        Set<Enchantment> itemEnchantments = this.menu.slots.get(0).getItem().getAllEnchantments().keySet();
 
-            if (d0 >= 0.0D && d1 >= 0.0D && d0 < 104.0D && d1 < 19.0D) {
+        for (int k = 0; k < enchantments.size(); k++) {
+            if (k < this.scrollOffset || k >= this.scrollOffset + 7) {
+                continue;
+            }
+            Set<Enchantment> proposed = new HashSet<>(itemEnchantments);
+            proposed.add(enchantments.get(k));
+
+            double d0 = pMouseX - (double) (pX + 4);
+            double d1 = pMouseY - (double) (pY + 18 + BUTTON_HEIGHT * (k - this.scrollOffset));
+
+            if (d0 >= 0.0D && d1 >= 0.0D && d0 < BUTTON_WIDTH && d1 < BUTTON_HEIGHT && RemixEnchantmentMenu.calculateCompatibility(proposed)) {
                 this.onEnchantmentClick(k);
                 return true;
             }
@@ -111,37 +125,49 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         int pX = (this.width - this.imageWidth) / 2;
         int pY = (this.height - this.imageHeight) / 2;
         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX, pY, 0, 0F, 0F,  this.imageWidth, this.imageHeight, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-        this.renderBook(pGuiGraphics, pX + 114, pY + 15, pPartialTick);
+        this.renderBook(pGuiGraphics, pX + 122, pY + 15, pPartialTick);
         int xOffset = pX + 5;
         int textXOffset = xOffset + 2;
 
         List<Enchantment> enchantments = this.menu.getAvailableEnchantments();
-        int selectedIndex = this.menu.getSelectedEnchantment();
-        Enchantment selectedEnchantment = selectedIndex >= 0 && selectedIndex < enchantments.size() ? enchantments.get(selectedIndex) : null;
+        Set<Enchantment> itemEnchantments = this.menu.slots.get(0).getItem().getAllEnchantments().keySet();
         int total = enchantments.size();
-
+        
         for (int i = 0; i < total; i++) {
-            int maxWidth = 104;
+            if (i < this.scrollOffset || i >= this.scrollOffset + 7) {
+                continue;
+            }
+            int maxWidth = BUTTON_WIDTH - 2;
             Enchantment enchantment = enchantments.get(i);
+
+            Set<Enchantment> proposed = new HashSet<>(itemEnchantments);
+            proposed.add(enchantment);
+
             if (this.menu.getSelectedEnchantment() == i) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 104, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-            } else if (pMouseY >= pY + 18 + 19 * i && pMouseY < pY + 18 + 19 * (i + 1) && pMouseX >= xOffset && pMouseX < xOffset + 104) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166 + 19, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-            } else if (selectedEnchantment != null && selectedEnchantment != enchantment && !selectedEnchantment.isCompatibleWith(enchantment)) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 104, 166 + 19, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else if (!RemixEnchantmentMenu.calculateCompatibility(proposed)) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, BUTTON_WIDTH, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else if (pMouseY >= pY + 18 + BUTTON_HEIGHT * i && pMouseY < pY + 18 + BUTTON_HEIGHT * (i + 1) && pMouseX >= xOffset && pMouseX < xOffset + BUTTON_WIDTH) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, 0, 166 + BUTTON_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             } else {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + BUTTON_HEIGHT * i, 0, 166, BUTTON_WIDTH, BUTTON_HEIGHT, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            }
+
+            if (!RemixEnchantmentMenu.calculateCompatibility(proposed)) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset + BUTTON_WIDTH - 9, pY + 18 + BUTTON_HEIGHT * (i + 1) - 9, 0, 240, 7, 7, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
 
             MutableComponent formattedText = Component.translatable(enchantment.getDescriptionId());
 
             int color = 0x685e4a;
-            pGuiGraphics.drawWordWrap(this.font, formattedText, textXOffset, pY + 20 + 19 * i, maxWidth, color);
+            pGuiGraphics.drawWordWrap(this.font, formattedText, textXOffset, pY + 20 + BUTTON_HEIGHT * i, maxWidth, color);
             FormattedText runes = formattedText.withStyle(ROOT_STYLE);
-            pGuiGraphics.drawWordWrap(font, runes, textXOffset,  pY + 20 + 19 * i + 8, 102, color);
+            pGuiGraphics.drawWordWrap(font, runes, textXOffset,  pY + 20 + BUTTON_HEIGHT * i + 9, 102, color);
         }
 
         int range = this.menu.getMaxPower();
+
+        // Lapis Arrows
         for (int i = 0; i < range; i++) {
             int k;
             if (i < this.menu.getFuelCount()) {
@@ -149,11 +175,11 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             } else {
               k = 1;
             }
-            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 198 + 12 * i, pY + 53, k * 10, 234, 10, 8, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 206 + 12 * i, pY + 53, k * 10, 234, 10, 6, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         }
 
         if (!this.menu.getValidity()) {
-            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 208, pY + 22, 292, 0, 28, 21, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 216, pY + 22, imageWidth, 0, 28, 21, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         }
 
         boolean flag = this.minecraft.player.getAbilities().instabuild;
@@ -161,7 +187,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             int color = 0x685e4a;
             MutableComponent text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
 
-            pGuiGraphics.drawWordWrap(font, text, pX + 181, pY + 58, 102, color);
+            pGuiGraphics.drawWordWrap(font, text, pX + 185, pY + 68, 102, color);
 
         }
     }
@@ -245,7 +271,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     class EnchantmentSelectionButton extends Button {
         final int index;
         public EnchantmentSelectionButton(int pX, int pY, int pIndex, Button.OnPress pOnPress) {
-            super(pX, pY, 104, 19, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
+            super(pX, pY, BUTTON_WIDTH, BUTTON_HEIGHT, CommonComponents.EMPTY, pOnPress, DEFAULT_NARRATION);
             this.index = pIndex;
             Enchantment enchantment = RemixEnchantmentScreen.this.menu.getAvailableEnchantments().get(pIndex);
             setMessage(Component.translatable(enchantment.getDescriptionId()));
@@ -260,7 +286,7 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             RenderSystem.enableDepthTest();
             pGuiGraphics.blitNineSliced(ENCHANTING_TABLE_LOCATION,
                     this.getX(), this.getY(), this.getWidth(), this.getHeight(),
-                    4, 4, 104, 19,
+                    4, 4, BUTTON_WIDTH, BUTTON_HEIGHT,
                     0, 166);
             pGuiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
             int i = getFGColor();

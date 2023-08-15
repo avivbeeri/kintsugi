@@ -113,7 +113,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlot(maxPower).set(0);
         this.addDataSlot(valid).set(1);
 
-        this.addSlot(new Slot(this.enchantSlots, 0, 178, 25) {
+        this.addSlot(new Slot(this.enchantSlots, 0, 186, 25) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -129,7 +129,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 return 1;
             }
         });
-        this.addSlot(new Slot(this.enchantSlots, 1, 178, 48) {
+        this.addSlot(new Slot(this.enchantSlots, 1, 186, 48) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -138,7 +138,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addSlot(new Slot(this.resultSlot, 1, 248, 25) {
+        this.addSlot(new Slot(this.resultSlot, 1, 256, 25) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -157,7 +157,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        addPlayerInventory(pPlayerInventory);
+        addPlayerInventory(pPlayerInventory, 132, 84);
         this.addDataSlot(this.nearbyEnchantmentCount).set(0);
 
         this.access.execute((pLevel, pBlockPos) -> {
@@ -252,15 +252,15 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         return enchantments;
     }
 
-    private void addPlayerInventory(Inventory pPlayerInventory) {
+    private void addPlayerInventory(Inventory pPlayerInventory, int pX, int pY) {
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, 124 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(pPlayerInventory, j + i * 9 + 9, pX + j * 18, pY + i * 18));
             }
         }
 
         for(int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(pPlayerInventory, k, 124 + k * 18, 142));
+            this.addSlot(new Slot(pPlayerInventory, k, pX + k * 18, pY + 58));
         }
     }
 
@@ -275,8 +275,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
-    private boolean calculateCompatibility(Collection<Enchantment> enchantments) {
-        for(Enchantment enchantment1 : enchantments) {
+    public static boolean calculateCompatibility(Collection<Enchantment> enchantments) {
+        for (Enchantment enchantment1 : enchantments) {
             for (Enchantment enchantment2 : enchantments) {
                 if (enchantment1 != enchantment2 && !enchantment1.isCompatibleWith(enchantment2)) {
                     return false;
