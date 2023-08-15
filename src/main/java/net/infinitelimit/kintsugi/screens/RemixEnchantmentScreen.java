@@ -21,10 +21,7 @@ import net.minecraft.client.gui.screens.inventory.MerchantScreen;
 import net.minecraft.client.model.BookModel;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -43,7 +40,8 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
     private static final ResourceLocation ENCHANTING_BOOK_LOCATION = new ResourceLocation("textures/entity/enchanting_table_book.png");
 
     /** Text for UI **/
- //   private static final Component COST_TEXT =
+    private static final ResourceLocation ALT_FONT = new ResourceLocation("minecraft", "alt");
+    private static final Style ROOT_STYLE = Style.EMPTY.withFont(ALT_FONT);
 
     /** A Random instance for use with the enchantment gui */
     private final RandomSource random = RandomSource.create();
@@ -122,14 +120,19 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
             int maxWidth = 104;
             Enchantment enchantment = enchantments.get(i);
             if (this.menu.getSelectedEnchantment() == i) {
-                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166+19, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 104, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+            } else if (pMouseY >= pY + 18 + 19 * i && pMouseY < pY + 18 + 19 * (i + 1) && pMouseX >= xOffset && pMouseX < xOffset + 104) {
+                pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166 + 19, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             } else {
                 pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, xOffset, pY + 18 + 19 * i, 0, 166, 104, 19, TEXTURE_WIDTH, TEXTURE_HEIGHT);
             }
 
-            FormattedText formattedtext = Component.translatable(enchantment.getDescriptionId());
-            int color = enchantment.isCurse() ? 0xFF0000 :  0xffff80;
-            pGuiGraphics.drawWordWrap(this.font, formattedtext, textXOffset, pY + 20 + 19 * i, maxWidth, color);
+            MutableComponent formattedText = Component.translatable(enchantment.getDescriptionId());
+
+            int color = 0x685e4a;
+            pGuiGraphics.drawWordWrap(this.font, formattedText, textXOffset, pY + 20 + 19 * i, maxWidth, color);
+            FormattedText runes = formattedText.withStyle(ROOT_STYLE);
+            pGuiGraphics.drawWordWrap(font, runes, textXOffset,  pY + 20 + 19 * i + 7, 102, color);
         }
 
         int range = this.menu.getMaxPower();
@@ -146,8 +149,10 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         boolean flag = this.minecraft.player.getAbilities().instabuild;
         if (!flag && this.menu.getLevelCost() >= 0) {
             int color = 0x685e4a;
-            FormattedText text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
+            MutableComponent text = Component.translatable("container.kintsugi.enchant.levelcost", this.menu.getLevelCost());
+
             pGuiGraphics.drawWordWrap(font, text, pX + 181, pY + 58, 102, color);
+
         }
     }
 

@@ -102,28 +102,28 @@ public class RemixEnchantmentScreenBackup extends AbstractContainerScreen<RemixE
                 String s = "" + k1;
                 int l1 = 86 - this.font.width(s);
                 FormattedText formattedtext = EnchantmentNames.getInstance().getRandomName(this.font, l1);
-                int i2 = 6839882;
+                int color = 0x685e4a;
                 if (((k < l + 1 || this.minecraft.player.experienceLevel < k1) && !this.minecraft.player.getAbilities().instabuild) || this.menu.enchantClue[l] == -1) { // Forge: render buttons as disabled when enchantable but enchantability not met on lower levels
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 185, 108, 19);
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1 + 1, j + 15 + 19 * l, 16 * l, 239, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, (i2 & 16711422) >> 1);
-                    i2 = 4226832;
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, (color & 0xfefefe) >> 1);
+                    color = 0x407f10;
                 } else {
                     int j2 = pMouseX - (i + 60);
                     int k2 = pMouseY - (j + 14 + 19 * l);
                     if (j2 >= 0 && k2 >= 0 && j2 < 108 && k2 < 19) {
                         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 204, 108, 19);
-                        i2 = 16777088;
+                        color = 16777088;
                     } else {
                         pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1, j + 14 + 19 * l, 0, 166, 108, 19);
                     }
 
                     pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, i1 + 1, j + 15 + 19 * l, 16 * l, 223, 16, 16);
-                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, i2);
-                    i2 = 8453920;
+                    pGuiGraphics.drawWordWrap(this.font, formattedtext, j1, j + 16 + 19 * l, l1, color);
+                    color = 0x80ff20;
                 }
 
-                pGuiGraphics.drawString(this.font, s, j1 + 86 - this.font.width(s), j + 16 + 19 * l + 7, i2);
+                pGuiGraphics.drawString(this.font, s, j1 + 86 - this.font.width(s), j + 16 + 19 * l + 7, color);
             }
         }
 

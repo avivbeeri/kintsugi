@@ -1,9 +1,6 @@
 package net.infinitelimit.kintsugi.menus;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -271,6 +268,17 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             ItemStack fuelStack = pInventory.getItem(1);
             calculateResultItem(itemstack, fuelStack);
         }
+    }
+
+    private boolean calculateCompatibility(Collection<Enchantment> enchantments) {
+        for(Enchantment enchantment1 : enchantments) {
+            for (Enchantment enchantment2 : enchantments) {
+                if (enchantment1 != enchantment2 && !enchantment1.isCompatibleWith(enchantment2)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     private void calculateResultItem(ItemStack itemStack, ItemStack fuelStack) {
