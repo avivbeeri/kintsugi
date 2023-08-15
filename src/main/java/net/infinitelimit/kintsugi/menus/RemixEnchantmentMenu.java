@@ -412,7 +412,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     public List<Enchantment> getAvailableEnchantments() {
         this.refreshNearbyEnchantments();
         ItemStack itemStack = this.getSlot(0).getItem();
-        boolean isBook = itemStack.is(Items.BOOK);
+        boolean isBook = itemStack.is(Items.BOOK) || itemStack.is(Items.ENCHANTED_BOOK);
 
         return this.enchantmentsNearby
                 .stream()

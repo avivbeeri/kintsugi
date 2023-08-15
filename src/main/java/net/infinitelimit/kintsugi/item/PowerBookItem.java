@@ -15,9 +15,11 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Objects;
 
 public class PowerBookItem extends Item {
     public static final String TAG_RITUAL_ENCHANTMENT = "RitualEnchantment";
@@ -34,6 +36,19 @@ public class PowerBookItem extends Item {
     public boolean isEnchantable(ItemStack pStack) {
         return false;
     }
+
+
+    /**
+     * Gets the title name of the book
+     */
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack pStack) {
+        String enchantmentName = Component.translatable(
+                Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(getEnchantment(pStack))).getDescriptionId()
+        ).getString();
+        return Component.translatable(this.getDescriptionId(pStack), enchantmentName);
+    }
+
 
     /**
      * Allows items to add custom lines of information to the mouseover description.

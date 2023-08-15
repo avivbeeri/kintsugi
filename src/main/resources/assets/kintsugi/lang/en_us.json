@@ -1,5 +1,5 @@
 {
-  "item.kintsugi.power_book": "Knowledge Book",
+  "item.kintsugi.power_book": "Knowledge of \"%1$s\"",
   "creativetab.kintsugi": "Enchantment Remix",
   "container.kintsugi.enchant.levelcost": "Enchant cost: %1$s"
 }
