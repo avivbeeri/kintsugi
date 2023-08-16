@@ -361,33 +361,28 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
     }
 
     private int calculateLevelCost(ItemStack itemStack, Enchantment selection, int level) {
-        int cost = 1;
+        int category;
+        int currentEnchantments;
 
         // 1) Figure out the base cost for this enchantment.
-        for (int category = 1; category < 5; category++) {
+        for (category = 0; category < 5; category++) {
             if (KnowledgeHelper.ENCHANTMENT_CATEGORIES.get(category).contains(selection)) {
-                cost = category;
                 break;
             }
         }
 
         Map<Enchantment, Integer> itemEnchantments = itemStack.getAllEnchantments();
         // 2) Add 1 for every previous enchantment added.
-        // If the enchantment is already present?
+        currentEnchantments = itemEnchantments.size();
+
+        // 3) Add 1 for each level of the enchantment added
+        // If we are upgrading the level of an existing enchantment, pay the difference instead.
         if (itemEnchantments.containsKey(selection)) {
             // calculate difference
             level = level - itemEnchantments.get(selection);
-            cost += itemEnchantments.size() - 1;
-        } else {
-            level = level - 1; // the first level is free
-            cost += itemEnchantments.size();
         }
 
-        // 3) Add 1 for each level of the enchantment added, after the first.
-        // If we are upgrading the level of an existing enchantment, pay the difference instead.
-        cost += level;
-
-        return cost;
+        return category + currentEnchantments + level;
     }
 
     private int getMaxEnchantmentLevel(ItemStack itemStack) {
