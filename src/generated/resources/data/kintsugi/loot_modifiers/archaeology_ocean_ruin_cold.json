@@ -1,5 +1,5 @@
 {
-  "type": "kintsugi:power_book",
+  "type": "kintsugi:knowledge_book",
   "conditions": [
     {
       "condition": "forge:loot_table_id",
@@ -10,6 +10,6 @@
     "minecraft:knockback": 0.5,
     "minecraft:punch": 0.5
   },
-  "item": "kintsugi:power_book",
+  "item": "kintsugi:knowledge_book",
   "rate": 0.05
 }

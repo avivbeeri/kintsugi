@@ -2,9 +2,6 @@ package net.infinitelimit.kintsugi.item;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.StringTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -21,9 +18,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 
-public class PowerBookItem extends Item {
+public class KnowledgeBookItem extends Item {
     public static final String TAG_RITUAL_ENCHANTMENT = "RitualEnchantment";
-    public PowerBookItem(Properties pProperties) {
+    public KnowledgeBookItem(Properties pProperties) {
         super(pProperties);
     }
 
@@ -73,7 +70,7 @@ public class PowerBookItem extends Item {
      * Returns the ItemStack of an enchanted version of this item.
      */
     public static ItemStack createForEnchantment(Enchantment pEnchantment) {
-        ItemStack itemstack = new ItemStack(ModItems.POWER_BOOK.get());
+        ItemStack itemstack = new ItemStack(ModItems.KNOWLEDGE_BOOK.get());
         addEnchantment(itemstack, pEnchantment);
         return itemstack;
     }

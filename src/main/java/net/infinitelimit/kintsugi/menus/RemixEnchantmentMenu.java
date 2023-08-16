@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.infinitelimit.kintsugi.KnowledgeHelper;
-import net.infinitelimit.kintsugi.item.PowerBookItem;
+import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -33,7 +33,6 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
-import net.minecraft.world.item.enchantment.Enchantments;
 
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -231,8 +230,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                     ItemStack itemStack = bookshelf.getItem(i);
                     if (!itemStack.isEmpty()) {
                         CompoundTag tag = itemStack.getOrCreateTag();
-                        if (tag.contains(PowerBookItem.TAG_RITUAL_ENCHANTMENT)) {
-                            ResourceLocation enchantmentId = PowerBookItem.getEnchantmentId(tag);
+                        if (tag.contains(KnowledgeBookItem.TAG_RITUAL_ENCHANTMENT)) {
+                            ResourceLocation enchantmentId = KnowledgeBookItem.getEnchantmentId(tag);
                             this.enchantmentAvailability.set(enchantmentIndexMap.get(enchantmentId), 1);
                             
                             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);

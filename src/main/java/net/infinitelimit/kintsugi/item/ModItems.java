@@ -12,8 +12,8 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, Kintsugi.MOD_ID);
 
-    public static final RegistryObject<Item> POWER_BOOK =
-            ITEMS.register("power_book", () -> new PowerBookItem(new Item.Properties().rarity(Rarity.RARE)));
+    public static final RegistryObject<Item> KNOWLEDGE_BOOK =
+            ITEMS.register("knowledge_book", () -> new KnowledgeBookItem(new Item.Properties().rarity(Rarity.RARE)));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

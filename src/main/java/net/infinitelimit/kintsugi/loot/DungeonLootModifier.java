@@ -4,7 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.infinitelimit.kintsugi.item.PowerBookItem;
+import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
@@ -64,7 +64,7 @@ public class DungeonLootModifier extends LootModifier {
             }
 
             if (enchantment != null) {
-                ItemStack itemstack = PowerBookItem.createForEnchantment(enchantment);
+                ItemStack itemstack = KnowledgeBookItem.createForEnchantment(enchantment);
                 generatedLoot.add(itemstack);
             }
         }

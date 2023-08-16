@@ -45,7 +45,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 new LootItemCondition[] {
                         LootTableIdCondition.builder(location).build()
                 },
-                ModItems.POWER_BOOK.get(),
+                ModItems.KNOWLEDGE_BOOK.get(),
                 rate,
                 enchantments
         ));
