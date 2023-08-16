@@ -1,0 +1,15 @@
+{
+  "type": "kintsugi:power_book",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+    }
+  ],
+  "enchantments": {
+    "minecraft:knockback": 0.5,
+    "minecraft:punch": 0.5
+  },
+  "item": "kintsugi:power_book",
+  "rate": 0.05
+}

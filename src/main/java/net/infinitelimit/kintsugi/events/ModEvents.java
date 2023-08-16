@@ -2,23 +2,21 @@ package net.infinitelimit.kintsugi.events;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.infinitelimit.kintsugi.Kintsugi;
-import net.infinitelimit.kintsugi.item.ModItems;
+import net.infinitelimit.kintsugi.datagen.ModLootTableProvider;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
-import net.minecraft.world.entity.npc.VillagerType;
-import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,10 +24,19 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static net.infinitelimit.kintsugi.Kintsugi.MOD_ID;
 
 @Mod.EventBusSubscriber(modid = Kintsugi.MOD_ID)
 public class ModEvents {
+
+    // On the MOD event bus
+    @SubscribeEvent
+    public static void gatherData(GatherDataEvent event) {
+        event.getGenerator().addProvider(event.includeServer(),
+                (DataProvider.Factory<ModLootTableProvider>) pOutput ->
+                        new ModLootTableProvider(pOutput, MOD_ID));
+    }
 
     @SubscribeEvent
     public static void addCustomTrades(VillagerTradesEvent event) {

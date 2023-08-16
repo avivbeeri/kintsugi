@@ -25,22 +25,22 @@ import java.util.function.Supplier;
 public class DungeonLootModifier extends LootModifier {
 
     private final Item item;
-    private final Integer rate;
-    private final Map<String, Float> enchantments;
+    private final Double rate;
+    private final Map<String, Double> enchantments;
 
     public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(
                 inst -> codecStart(inst).and(
                     inst.group(
                         ForgeRegistries.ITEMS.getCodec().fieldOf("item").forGetter(m -> m.item),
-                        Codec.INT.fieldOf("rate").forGetter(m -> m.rate),
-                        Codec.unboundedMap(Codec.STRING, Codec.FLOAT).fieldOf("enchantments").forGetter(m -> m.enchantments)
+                        Codec.DOUBLE.fieldOf("rate").forGetter(m -> m.rate),
+                        Codec.unboundedMap(Codec.STRING, Codec.DOUBLE).fieldOf("enchantments").forGetter(m -> m.enchantments)
                     )
                 ).apply(inst, DungeonLootModifier::new)
               )
           );
 
-    protected DungeonLootModifier(LootItemCondition[] in, Item additionIn, int rate, Map<String, Float> enchantments) {
+    public DungeonLootModifier(LootItemCondition[] in, Item additionIn, double rate, Map<String, Double> enchantments) {
         super(in);
         this.item = additionIn;
         this.rate = rate;
@@ -49,14 +49,14 @@ public class DungeonLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-        if (context.getRandom().nextFloat() < rate) {
-            List<Tuple<Enchantment, Float>> distribution = enchantments.entrySet().stream().map(it ->
+        if (context.getRandom().nextDouble() < rate) {
+            List<Tuple<Enchantment, Double>> distribution = enchantments.entrySet().stream().map(it ->
                     new Tuple<>(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(it.getKey()))), it.getValue())).toList();
 
             Enchantment enchantment = null;
-            float roll = context.getRandom().nextFloat();
-            float total = 0;
-            for (Tuple<Enchantment, Float> tuple: distribution) {
+            double roll = context.getRandom().nextDouble();
+            double total = 0.0;
+            for (Tuple<Enchantment, Double> tuple: distribution) {
                 total += tuple.getB();
                 if (roll <= total) {
                     enchantment = tuple.getA();

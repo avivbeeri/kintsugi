@@ -1,0 +1,4 @@
+// 1.20.1	2023-08-16T13:17:16.413804	Global Loot Modifiers : kintsugi
+7507937f763be79eb69a71a59974c77406d1b77f data/forge/loot_modifiers/global_loot_modifiers.json
+f80976e34f5332bd4d230a4379f759c71b7de088 data/kintsugi/loot_modifiers/archaeology_ocean_ruin_cold.json
+1c3150f6c411db5105841c96d0799ed9139f3f3a data/kintsugi/loot_modifiers/chests_underwater_ruin_big.json
