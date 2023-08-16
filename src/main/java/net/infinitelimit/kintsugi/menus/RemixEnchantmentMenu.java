@@ -91,7 +91,6 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         List<ResourceLocation> enchantmentKeys = ForgeRegistries.ENCHANTMENTS.getKeys().stream().toList();
         enchantmentIndexMap = new Object2IntArrayMap<>();
 
-
         int index = 0;
         for (ResourceLocation location: enchantmentKeys) {
             this.enchantmentAvailability.set(index, 0);
