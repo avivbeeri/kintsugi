@@ -1,6 +1,7 @@
 package net.infinitelimit.kintsugi;
 
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -42,5 +43,10 @@ public class KnowledgeHelper {
         List<Enchantment> validEnchantments = List.copyOf(enchantments);
         int i = pRandom.nextInt(validEnchantments.size());
         return validEnchantments.get(i);
+    }
+
+    public static Enchantment getEnchantmentByVillagerType(VillagerType type, RandomSource pRandom) {
+        // TODO
+        return getRandomEnchantment(pRandom);
     }
 }

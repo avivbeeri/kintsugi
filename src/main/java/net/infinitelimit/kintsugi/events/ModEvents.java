@@ -2,12 +2,14 @@ package net.infinitelimit.kintsugi.events;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.infinitelimit.kintsugi.Kintsugi;
+import net.infinitelimit.kintsugi.KnowledgeHelper;
 import net.infinitelimit.kintsugi.datagen.ModLootTableProvider;
 import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.data.DataProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
@@ -63,10 +65,10 @@ public class ModEvents {
         }
 
         public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRandom) {
-            List<Enchantment> list = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter(Enchantment::isTradeable).toList();
-            Enchantment enchantment = list.get(pRandom.nextInt(list.size()));
+            Enchantment enchantment = KnowledgeHelper.getEnchantmentByVillagerType(((Villager)pTrader).getVariant(), pRandom);
             int i = Mth.nextInt(pRandom, enchantment.getMinLevel(), enchantment.getMaxLevel());
             ItemStack itemstack = KnowledgeBookItem.createForEnchantment(enchantment);
+
             int j = 2 + pRandom.nextInt(5 + i * 10) + 3 * i;
             if (enchantment.isTreasureOnly()) {
                 j *= 2;
@@ -79,6 +81,4 @@ public class ModEvents {
             return new MerchantOffer(new ItemStack(Items.EMERALD, j), itemstack, 1, this.villagerXp, 0.2F);
         }
     }
-
-
 }
