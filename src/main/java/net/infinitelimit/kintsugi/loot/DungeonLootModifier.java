@@ -5,6 +5,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.infinitelimit.kintsugi.item.PowerBookItem;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -17,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class DungeonLootModifier extends LootModifier {
@@ -24,11 +27,7 @@ public class DungeonLootModifier extends LootModifier {
     private final Item item;
     private final Integer rate;
     private final Map<String, Float> enchantments;
-    /*
-    public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
-                    RecordCodecBuilder.create(inst -> codecStart(inst).and(ForgeRegistries.ITEMS.getCodec()
-                                    .fieldOf("item").forGetter(m -> m.item)).apply(inst, DungeonLootModifier::new)));
-*/
+
     public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(
                 inst -> codecStart(inst).and(
@@ -50,12 +49,25 @@ public class DungeonLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
-       // if (context.getRandom().nextFloat() > 0.05) {
-        List<Enchantment> list = ForgeRegistries.ENCHANTMENTS.getValues().stream().filter(Enchantment::isTradeable).toList();
-        Enchantment enchantment = list.get(context.getRandom().nextInt(list.size()));
-        ItemStack itemstack = PowerBookItem.createForEnchantment(enchantment);
-        generatedLoot.add(itemstack);
-        //}
+        if (context.getRandom().nextFloat() < rate) {
+            List<Tuple<Enchantment, Float>> distribution = enchantments.entrySet().stream().map(it ->
+                    new Tuple<>(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(it.getKey()))), it.getValue())).toList();
+
+            Enchantment enchantment = null;
+            float roll = context.getRandom().nextFloat();
+            float total = 0;
+            for (Tuple<Enchantment, Float> tuple: distribution) {
+                total += tuple.getB();
+                if (roll <= total) {
+                    enchantment = tuple.getA();
+                }
+            }
+
+            if (enchantment != null) {
+                ItemStack itemstack = PowerBookItem.createForEnchantment(enchantment);
+                generatedLoot.add(itemstack);
+            }
+        }
 
         return generatedLoot;
     }
