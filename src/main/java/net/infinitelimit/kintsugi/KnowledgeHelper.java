@@ -1,15 +1,13 @@
 package net.infinitelimit.kintsugi;
 
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.registries.ForgeRegistries;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
@@ -37,6 +35,21 @@ public class KnowledgeHelper {
             Enchantments.SHARPNESS,
             Enchantments.ALL_DAMAGE_PROTECTION);
 
+    public static final Set<Enchantment> ANY_VILLAGER_TRADES = Set.of(
+            BINDING_CURSE, VANISHING_CURSE, SWEEPING_EDGE, PUNCH_ARROWS
+    );
+
+    public static final Map<VillagerType, Enchantment> UNIQUE_VILLAGER_ENCHANTS =
+            Map.ofEntries(
+                    Map.entry(VillagerType.DESERT, BLAST_PROTECTION),
+                    Map.entry(VillagerType.JUNGLE, THORNS),
+                    Map.entry(VillagerType.PLAINS, FROST_WALKER),
+                    Map.entry(VillagerType.SNOW, FROST_WALKER),
+                    Map.entry(VillagerType.SAVANNA, FALL_PROTECTION),
+                    Map.entry(VillagerType.SWAMP, BLOCK_FORTUNE),
+                    Map.entry(VillagerType.TAIGA, FROST_WALKER)
+            );
+
     public static Enchantment getRandomEnchantment(RandomSource pRandom) {
         Set<Enchantment> enchantments = new HashSet<>(ForgeRegistries.ENCHANTMENTS.getValues());
         enchantments.removeAll(DEFAULT_ENCHANTMENTS);
@@ -46,7 +59,13 @@ public class KnowledgeHelper {
     }
 
     public static Enchantment getEnchantmentByVillagerType(VillagerType type, RandomSource pRandom) {
-        // TODO
-        return getRandomEnchantment(pRandom);
+        return UNIQUE_VILLAGER_ENCHANTS.get(type);
+    }
+
+    public static Enchantment getRandomVillagerEnchantment(VillagerType type, RandomSource pRandom) {
+        List<Enchantment> villagerEnchants = new ArrayList<>(ANY_VILLAGER_TRADES);
+        villagerEnchants.add(getEnchantmentByVillagerType(type, pRandom));
+        return villagerEnchants.get(pRandom.nextInt(villagerEnchants.size()));
     }
 }
+

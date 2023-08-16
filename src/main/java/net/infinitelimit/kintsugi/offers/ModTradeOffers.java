@@ -31,6 +31,22 @@ public class ModTradeOffers {
         }
     }
 
+    public static class RandomKnowledgeBookForEmeralds implements VillagerTrades.ItemListing {
+        private final int villagerXp;
+
+        public RandomKnowledgeBookForEmeralds(int pVillagerXp) {
+            this.villagerXp = pVillagerXp;
+        }
+
+        public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRandom) {
+            Enchantment enchantment = KnowledgeHelper.getRandomVillagerEnchantment(((Villager)pTrader).getVariant(), pRandom);
+            ItemStack itemstack = KnowledgeBookItem.createForEnchantment(enchantment);
+            int cost = calculateEnchantmentCost(pRandom, enchantment);
+
+            return new MerchantOffer(new ItemStack(Items.EMERALD, cost), itemstack, 1, this.villagerXp, 0.2F);
+        }
+    }
+
     public static class CopyKnowledgeBookForEmeralds implements VillagerTrades.ItemListing {
         private final int villagerXp;
 
