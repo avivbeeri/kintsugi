@@ -6,5 +6,9 @@
       "loot_table_id": "minecraft:chests/underwater_ruin_small"
     }
   ],
-  "item": "kintsugi:power_book"
+  "item": "kintsugi:power_book",
+  "rate": 1,
+  "enchantments": {
+    "punch": 0.5
+  }
 }

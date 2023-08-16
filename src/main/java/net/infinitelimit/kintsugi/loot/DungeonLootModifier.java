@@ -16,18 +16,36 @@ import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class DungeonLootModifier extends LootModifier {
 
     private final Item item;
+    private final Integer rate;
+    private final Map<String, Float> enchantments;
+    /*
     public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
                     RecordCodecBuilder.create(inst -> codecStart(inst).and(ForgeRegistries.ITEMS.getCodec()
                                     .fieldOf("item").forGetter(m -> m.item)).apply(inst, DungeonLootModifier::new)));
+*/
+    public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
+            RecordCodecBuilder.create(
+                inst -> codecStart(inst).and(
+                    inst.group(
+                        ForgeRegistries.ITEMS.getCodec().fieldOf("item").forGetter(m -> m.item),
+                        Codec.INT.fieldOf("rate").forGetter(m -> m.rate),
+                        Codec.unboundedMap(Codec.STRING, Codec.FLOAT).fieldOf("enchantments").forGetter(m -> m.enchantments)
+                    )
+                ).apply(inst, DungeonLootModifier::new)
+              )
+          );
 
-    protected DungeonLootModifier(LootItemCondition[] in, Item additionIn) {
+    protected DungeonLootModifier(LootItemCondition[] in, Item additionIn, int rate, Map<String, Float> enchantments) {
         super(in);
         this.item = additionIn;
+        this.rate = rate;
+        this.enchantments = enchantments;
     }
 
     @Override
