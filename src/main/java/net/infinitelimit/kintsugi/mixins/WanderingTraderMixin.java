@@ -1,21 +1,15 @@
 package net.infinitelimit.kintsugi.mixins;
 
-import net.infinitelimit.kintsugi.offers.CopyKnowledgeBookForEmeralds;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
+import net.infinitelimit.kintsugi.offers.ModTradeOffers;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.entity.npc.WanderingTrader;
-import net.minecraft.world.item.trading.Merchant;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Implements;
-import org.spongepowered.asm.mixin.Interface;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(WanderingTrader.class)
 public abstract class WanderingTraderMixin extends AbstractVillager {
@@ -33,7 +27,7 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
 
     @Overwrite
     protected void updateTrades() {
-        VillagerTrades.ItemListing bookTrade = new CopyKnowledgeBookForEmeralds(1);
+        VillagerTrades.ItemListing bookTrade = new ModTradeOffers.CopyKnowledgeBookForEmeralds(1);
         VillagerTrades.ItemListing[] commonTrades = VillagerTrades.WANDERING_TRADER_TRADES.get(1);
         VillagerTrades.ItemListing[] rareTrades = VillagerTrades.WANDERING_TRADER_TRADES.get(2);
         if (commonTrades != null && rareTrades != null) {
