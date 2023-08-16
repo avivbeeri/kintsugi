@@ -1,10 +1,15 @@
 package net.infinitelimit.kintsugi;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static net.minecraft.world.item.enchantment.Enchantments.*;
 
@@ -30,4 +35,12 @@ public class KnowledgeHelper {
             Enchantments.POWER_ARROWS,
             Enchantments.SHARPNESS,
             Enchantments.ALL_DAMAGE_PROTECTION);
+
+    public static Enchantment getRandomEnchantment(RandomSource pRandom) {
+        Set<Enchantment> enchantments = new HashSet<>(ForgeRegistries.ENCHANTMENTS.getValues());
+        enchantments.removeAll(DEFAULT_ENCHANTMENTS);
+        List<Enchantment> validEnchantments = List.copyOf(enchantments);
+        int i = pRandom.nextInt(validEnchantments.size());
+        return validEnchantments.get(i);
+    }
 }

@@ -46,7 +46,6 @@ public class KnowledgeBookItem extends Item {
         return Component.translatable(this.getDescriptionId(pStack), enchantmentName);
     }
 
-
     /**
      * Allows items to add custom lines of information to the mouseover description.
      */
