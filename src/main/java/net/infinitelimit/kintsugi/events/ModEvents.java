@@ -64,23 +64,7 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onItemFished(ItemFishedEvent event) {
-        /*
-        ItemStack loot = null;
-        if (event.getEntity().getRandom().nextDouble() < 0.05) {
-            if (event.getEntity().getRandom().nextDouble() < 0.5) {
-                loot = KnowledgeBookItem.createForEnchantment(Enchantments.FISHING_LUCK);
-            } else {
-                loot = KnowledgeBookItem.createForEnchantment(Enchantments.FISHING_SPEED);
-            }
-        }
-        LootTable table = event.getEntity().level().getServer().getLootData().getLootTable(BuiltInLootTables.FISHING_JUNK);
-        table.
-        if (loot != null) {
-            event.getDrops().clear();
-            event.getDrops().add(loot);
-        }
 
-         */
     }
 
     @SubscribeEvent
