@@ -1,18 +1,17 @@
 {
   "entries": [
-    "kintsugi:minecraft_gameplay_fishing_treasure",
-    "kintsugi:chests_nether_bridge",
-    "kintsugi:chests_ruined_portal",
-    "kintsugi:chests_abandoned_mineshaft",
-    "kintsugi:chests_pillager_outpost",
-    "kintsugi:chests_bastion_treasure",
-    "kintsugi:chests_stronghold_library",
     "kintsugi:chests_ancient_city",
     "kintsugi:archaeology_ocean_ruin_cold",
     "kintsugi:chests_shipwreck_treasure",
     "kintsugi:chests_woodland_mansion",
+    "kintsugi:chests_nether_bridge",
     "kintsugi:chests_simple_dungeon",
-    "kintsugi:archaeology_ocean_ruin_warm"
+    "kintsugi:chests_ruined_portal",
+    "kintsugi:chests_abandoned_mineshaft",
+    "kintsugi:archaeology_ocean_ruin_warm",
+    "kintsugi:chests_pillager_outpost",
+    "kintsugi:chests_bastion_treasure",
+    "kintsugi:chests_stronghold_library"
   ],
   "replace": false
 }

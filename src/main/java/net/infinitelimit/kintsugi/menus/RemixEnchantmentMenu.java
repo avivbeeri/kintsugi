@@ -163,12 +163,8 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 return;
             }
             enchantmentsNearby.addAll(calculateNearbyEnchantments(pLevel, pBlockPos));
-            int power = this.enchantmentsNearby.size();
             this.nearbyEnchantmentCount.set(enchantmentsNearby.size());
             this.broadcastChanges();
-
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Books nearby: " + power));
-            pPlayerInventory.player.sendSystemMessage(Component.literal("Unique enchantments nearby: " + getNearbyEnchantmentCount()));
         });
     }
 
