@@ -16,9 +16,13 @@ import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +36,27 @@ import static net.infinitelimit.kintsugi.Kintsugi.MOD_ID;
 
 @Mod.EventBusSubscriber(modid = Kintsugi.MOD_ID)
 public class ModEvents {
+
+    @SubscribeEvent
+    public static void onItemFished(ItemFishedEvent event) {
+        /*
+        ItemStack loot = null;
+        if (event.getEntity().getRandom().nextDouble() < 0.05) {
+            if (event.getEntity().getRandom().nextDouble() < 0.5) {
+                loot = KnowledgeBookItem.createForEnchantment(Enchantments.FISHING_LUCK);
+            } else {
+                loot = KnowledgeBookItem.createForEnchantment(Enchantments.FISHING_SPEED);
+            }
+        }
+        LootTable table = event.getEntity().level().getServer().getLootData().getLootTable(BuiltInLootTables.FISHING_JUNK);
+        table.
+        if (loot != null) {
+            event.getDrops().clear();
+            event.getDrops().add(loot);
+        }
+
+         */
+    }
 
     @SubscribeEvent
     public static void addCustomTrades(VillagerTradesEvent event) {
