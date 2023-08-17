@@ -1,5 +1,13 @@
 {
   "item.kintsugi.knowledge_book": "Knowledge of \"%1$s\"",
   "creativetab.kintsugi": "Enchantment Remix",
-  "container.kintsugi.enchant.levelcost": "Enchant cost: %1$s"
+  "container.kintsugi.enchant.levelcost": "Enchant cost: %1$s",
+  "advancements.kintsugi.root.title": "Knowledge",
+  "advancements.kintsugi.root.description": "There is always more to know.",
+  "advancements.kintsugi.acquire.title": "Knowing Is Half the Battle",
+  "advancements.kintsugi.acquire.description": "Find a Book of Knowledge.",
+  "advancements.kintsugi.trade.title": "Everything For A Price",
+  "advancements.kintsugi.trade.description": "Trade for a Book of Knowledge.",
+  "advancements.kintsugi.shelve.title": "The World Is Quiet Here",
+  "advancements.kintsugi.shelve.description": "Place a Book of Knowledge on a bookshelf."
 }

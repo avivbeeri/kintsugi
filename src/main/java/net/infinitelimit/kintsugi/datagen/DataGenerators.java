@@ -1,16 +1,16 @@
 package net.infinitelimit.kintsugi.datagen;
 
 import net.infinitelimit.kintsugi.Kintsugi;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 import static net.infinitelimit.kintsugi.Kintsugi.MOD_ID;
@@ -29,5 +29,7 @@ public class DataGenerators {
 
         BlockTagGenerator blockTagGenerator = generator.addProvider(event.includeServer(), new BlockTagGenerator(output, lookupProvider,  MOD_ID, existingFileHelper));
         generator.addProvider(event.includeServer(), new ItemTagGenerator(output, lookupProvider, blockTagGenerator.contentsGetter(), MOD_ID, existingFileHelper));
+
+        generator.addProvider(event.includeServer(), new ForgeAdvancementProvider(output, lookupProvider, existingFileHelper, List.of(new KnowledgeAdvancements())));
     }
 }

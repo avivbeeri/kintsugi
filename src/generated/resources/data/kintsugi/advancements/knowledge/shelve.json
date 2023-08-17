@@ -1,0 +1,51 @@
+{
+  "parent": "kintsugi:knowledge/acquire",
+  "criteria": {
+    "shelve": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ]
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.kintsugi.shelve.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:chiseled_bookshelf"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.kintsugi.shelve.title"
+    }
+  },
+  "requirements": [
+    [
+      "shelve"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

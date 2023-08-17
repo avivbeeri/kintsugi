@@ -3,14 +3,13 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/pillager_outpost"
     }
   ],
   "enchantments": {
-    "minecraft:channeling": 0.25,
-    "minecraft:impaling": 0.25,
-    "minecraft:loyalty": 0.25,
-    "minecraft:riptide": 0.25
+    "minecraft:multishot": 0.333,
+    "minecraft:piercing": 0.333,
+    "minecraft:quick_charge": 0.333
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.05

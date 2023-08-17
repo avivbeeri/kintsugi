@@ -1,0 +1,38 @@
+{
+  "parent": "kintsugi:knowledge/root",
+  "criteria": {
+    "acquired_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kintsugi:knowledge_book"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.kintsugi.acquire.description"
+    },
+    "frame": "task",
+    "hidden": false,
+    "icon": {
+      "item": "kintsugi:knowledge_book"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.kintsugi.acquire.title"
+    }
+  },
+  "requirements": [
+    [
+      "acquired_book"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -3,14 +3,11 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/abandoned_mineshaft"
     }
   ],
   "enchantments": {
-    "minecraft:channeling": 0.25,
-    "minecraft:impaling": 0.25,
-    "minecraft:loyalty": 0.25,
-    "minecraft:riptide": 0.25
+    "minecraft:bane_of_arthropods": 1.0
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.05

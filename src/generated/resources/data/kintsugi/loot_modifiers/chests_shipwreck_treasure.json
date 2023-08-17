@@ -3,14 +3,13 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/shipwreck_treasure"
     }
   ],
   "enchantments": {
-    "minecraft:channeling": 0.25,
-    "minecraft:impaling": 0.25,
-    "minecraft:loyalty": 0.25,
-    "minecraft:riptide": 0.25
+    "minecraft:aqua_affinity": 0.333,
+    "minecraft:depth_strider": 0.333,
+    "minecraft:respiration": 0.333
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.05

@@ -3,14 +3,13 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/ruined_portal"
     }
   ],
   "enchantments": {
-    "minecraft:channeling": 0.25,
-    "minecraft:impaling": 0.25,
-    "minecraft:loyalty": 0.25,
-    "minecraft:riptide": 0.25
+    "minecraft:fire_aspect": 0.333,
+    "minecraft:fire_protection": 0.333,
+    "minecraft:flame": 0.333
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.05

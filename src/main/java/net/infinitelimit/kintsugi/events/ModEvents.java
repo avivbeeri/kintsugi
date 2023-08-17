@@ -5,6 +5,8 @@ import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.KnowledgeHelper;
 import net.infinitelimit.kintsugi.datagen.ModLootTableProvider;
 import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
+import net.infinitelimit.kintsugi.item.ModItems;
+import net.infinitelimit.kintsugi.loot.FishingLootModifier;
 import net.infinitelimit.kintsugi.offers.ModTradeOffers;
 import net.minecraft.data.DataProvider;
 import net.minecraft.util.Mth;
@@ -20,8 +22,15 @@ import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.EnchantWithLevelsFunction;
+import net.minecraft.world.level.storage.loot.functions.SetItemDamageFunction;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.entity.player.ItemFishedEvent;
 import net.minecraftforge.event.village.VillagerTradesEvent;
 import net.minecraftforge.event.village.WandererTradesEvent;
@@ -36,6 +45,22 @@ import static net.infinitelimit.kintsugi.Kintsugi.MOD_ID;
 
 @Mod.EventBusSubscriber(modid = Kintsugi.MOD_ID)
 public class ModEvents {
+
+    @SubscribeEvent
+    public static void onLootTableLoad(LootTableLoadEvent event) {
+        if (event.getName().equals(BuiltInLootTables.FISHING_TREASURE)) {
+            LootTable table = LootTable.lootTable().withPool(
+                    LootPool.lootPool()
+                            .add(LootItem.lootTableItem(Items.NAME_TAG))
+                            .add(LootItem.lootTableItem(Items.SADDLE))
+                            .add(LootItem.lootTableItem(Items.BOW).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.0F, 0.25F))).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
+                            .add(LootItem.lootTableItem(Items.FISHING_ROD).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.0F, 0.25F))).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
+                            .add(LootItem.lootTableItem(Items.BOOK).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
+                            .add(LootItem.lootTableItem(Items.NAUTILUS_SHELL))
+                            .add(LootItem.lootTableItem(ModItems.KNOWLEDGE_BOOK.get()).apply(FishingLootModifier.AddRitualFunction.addEnchantment(UniformGenerator.between(0.0f, 1.0f))))).build();
+            event.setTable(table);
+        }
+    }
 
     @SubscribeEvent
     public static void onItemFished(ItemFishedEvent event) {

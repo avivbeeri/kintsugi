@@ -3,14 +3,12 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/woodland_mansion"
     }
   ],
   "enchantments": {
-    "minecraft:channeling": 0.25,
-    "minecraft:impaling": 0.25,
-    "minecraft:loyalty": 0.25,
-    "minecraft:riptide": 0.25
+    "minecraft:infinity": 0.5,
+    "minecraft:looting": 0.5
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.05

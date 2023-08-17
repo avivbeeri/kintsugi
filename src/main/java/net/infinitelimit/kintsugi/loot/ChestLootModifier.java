@@ -22,13 +22,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class DungeonLootModifier extends LootModifier {
+public class ChestLootModifier extends LootModifier {
 
     private final Item item;
     private final Double rate;
     private final Map<String, Double> enchantments;
 
-    public static final Supplier<Codec<DungeonLootModifier>> CODEC = Suppliers.memoize(() ->
+    public static final Supplier<Codec<ChestLootModifier>> CODEC = Suppliers.memoize(() ->
             RecordCodecBuilder.create(
                 inst -> codecStart(inst).and(
                     inst.group(
@@ -36,11 +36,11 @@ public class DungeonLootModifier extends LootModifier {
                         Codec.DOUBLE.fieldOf("rate").forGetter(m -> m.rate),
                         Codec.unboundedMap(Codec.STRING, Codec.DOUBLE).fieldOf("enchantments").forGetter(m -> m.enchantments)
                     )
-                ).apply(inst, DungeonLootModifier::new)
+                ).apply(inst, ChestLootModifier::new)
               )
           );
 
-    public DungeonLootModifier(LootItemCondition[] in, Item additionIn, double rate, Map<String, Double> enchantments) {
+    public ChestLootModifier(LootItemCondition[] in, Item additionIn, double rate, Map<String, Double> enchantments) {
         super(in);
         this.item = additionIn;
         this.rate = rate;

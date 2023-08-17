@@ -1,15 +1,13 @@
 package net.infinitelimit.kintsugi.datagen;
 
 import net.infinitelimit.kintsugi.item.ModItems;
-import net.infinitelimit.kintsugi.loot.DungeonLootModifier;
+import net.infinitelimit.kintsugi.loot.ChestLootModifier;
 import net.infinitelimit.kintsugi.loot.FishingLootModifier;
-import net.minecraft.client.particle.FlameParticle;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
@@ -93,10 +91,13 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(MULTISHOT), 0.333)
         ));
 
+
         this.addFishingEntry(Map.ofEntries(
                 Map.entry(eId(FISHING_LUCK), 0.5),
                 Map.entry(eId(FISHING_SPEED), 0.5)
         ));
+
+
     }
 
     private String eId(Enchantment enchantment) {
@@ -104,7 +105,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
     }
 
     private void addChestEntry(ResourceLocation location, double rate, Map<String, Double> enchantments) {
-        this.add(toFileName(location), new DungeonLootModifier(
+        this.add(toFileName(location), new ChestLootModifier(
                 new LootItemCondition[] {
                         LootTableIdCondition.builder(location).build()
                 },
@@ -123,6 +124,8 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 enchantments
         ));
     }
+
+
 
     private static String toFileName(ResourceLocation location) {
         return location.getPath().replace('/', '_').replace(':', '_');

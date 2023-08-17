@@ -1,0 +1,45 @@
+{
+  "parent": "kintsugi:knowledge/root",
+  "criteria": {
+    "acquired_book": {
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "kintsugi:knowledge_book"
+            ]
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "trade": {
+      "conditions": {},
+      "trigger": "minecraft:villager_trade"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.kintsugi.trade.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:emerald"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.kintsugi.trade.title"
+    }
+  },
+  "requirements": [
+    [
+      "trade"
+    ],
+    [
+      "acquired_book"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
