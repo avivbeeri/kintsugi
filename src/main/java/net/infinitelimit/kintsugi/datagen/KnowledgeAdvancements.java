@@ -27,7 +27,7 @@ public class KnowledgeAdvancements implements ForgeAdvancementProvider.Advanceme
     @Override
     public void generate(HolderLookup.Provider registries, Consumer<Advancement> saver, ExistingFileHelper existingFileHelper) {
         Advancement advancementRoot = Advancement.Builder.advancement()
-                .display(ModItems.KNOWLEDGE_BOOK.get(), Component.translatable("advancements.kintsugi.root.title"), Component.translatable("advancements.kintsugi.root.description"), new ResourceLocation("textures/gui/advancements/backgrounds/husbandry.png"), FrameType.TASK, false, false, false)
+                .display(ModItems.KNOWLEDGE_BOOK.get(), Component.translatable("advancements.kintsugi.root.title"), Component.translatable("advancements.kintsugi.root.description"), new ResourceLocation(Kintsugi.MOD_ID,"textures/gui/advancements/backgrounds/book.png"), FrameType.TASK, false, false, false)
                 .addCriterion("book", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.KNOWLEDGE_BOOK.get()))
                 .save(saver, new ResourceLocation(Kintsugi.MOD_ID, "knowledge/root"), existingFileHelper);
 

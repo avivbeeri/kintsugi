@@ -3,14 +3,14 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:chests/nether_bridge"
+      "loot_table_id": "minecraft:chests/bastion_hoglin_stable"
     }
   ],
   "enchantments": {
-    "minecraft:fire_aspect": 0.333,
-    "minecraft:fire_protection": 0.333,
-    "minecraft:flame": 0.333
+    "minecraft:multishot": 0.166,
+    "minecraft:piercing": 0.667,
+    "minecraft:quick_charge": 0.166
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.03
+  "rate": 0.01
 }

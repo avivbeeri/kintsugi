@@ -3,7 +3,7 @@
   "conditions": [
     {
       "condition": "forge:loot_table_id",
-      "loot_table_id": "minecraft:archaeology/ocean_ruin_cold"
+      "loot_table_id": "minecraft:chests/underwater_ruin_big"
     }
   ],
   "enchantments": {
@@ -13,5 +13,5 @@
     "minecraft:riptide": 0.25
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.05
+  "rate": 0.1
 }
