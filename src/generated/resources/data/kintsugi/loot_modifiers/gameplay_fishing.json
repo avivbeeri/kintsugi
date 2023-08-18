@@ -7,8 +7,10 @@
     }
   ],
   "enchantments": {
-    "minecraft:luck_of_the_sea": 0.5,
-    "minecraft:lure": 0.5
+    "minecraft:binding_curse": 0.02,
+    "minecraft:luck_of_the_sea": 0.48,
+    "minecraft:lure": 0.48,
+    "minecraft:vanishing_curse": 0.02
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.3334

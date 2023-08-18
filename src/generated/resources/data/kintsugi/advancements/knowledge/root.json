@@ -15,7 +15,7 @@
   },
   "display": {
     "announce_to_chat": false,
-    "background": "minecraft:textures/gui/advancements/backgrounds/husbandry.png",
+    "background": "kintsugi:textures/gui/advancements/backgrounds/book.png",
     "description": {
       "translate": "advancements.kintsugi.root.description"
     },
