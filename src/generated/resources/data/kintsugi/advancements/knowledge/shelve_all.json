@@ -1,0 +1,980 @@
+{
+  "parent": "kintsugi:knowledge/shelve",
+  "criteria": {
+    "minecraft:aqua_affinity": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:aqua_affinity\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:bane_of_arthropods": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:bane_of_arthropods\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:binding_curse": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:binding_curse\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:blast_protection": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:blast_protection\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:channeling": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:channeling\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:depth_strider": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:depth_strider\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:feather_falling": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:feather_falling\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:fire_aspect": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:fire_aspect\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:fire_protection": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:fire_protection\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:flame": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:flame\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:fortune": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:fortune\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:frost_walker": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:frost_walker\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:impaling": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:impaling\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:infinity": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:infinity\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:knockback": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:knockback\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:looting": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:looting\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:loyalty": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:loyalty\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:luck_of_the_sea": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:luck_of_the_sea\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:lure": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:lure\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:mending": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:mending\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:multishot": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:multishot\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:piercing": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:piercing\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:projectile_protection": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:projectile_protection\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:punch": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:punch\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:quick_charge": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:quick_charge\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:respiration": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:respiration\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:riptide": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:riptide\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:smite": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:smite\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:soul_speed": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:soul_speed\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:sweeping": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:sweeping\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:swift_sneak": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:swift_sneak\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:thorns": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:thorns\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    },
+    "minecraft:vanishing_curse": {
+      "conditions": {
+        "location": [
+          {
+            "condition": "minecraft:location_check",
+            "predicate": {
+              "block": {
+                "blocks": [
+                  "minecraft:chiseled_bookshelf"
+                ]
+              }
+            }
+          },
+          {
+            "condition": "minecraft:match_tool",
+            "predicate": {
+              "items": [
+                "kintsugi:knowledge_book"
+              ],
+              "nbt": "{RitualEnchantment:\"minecraft:vanishing_curse\"}"
+            }
+          }
+        ]
+      },
+      "trigger": "minecraft:item_used_on_block"
+    }
+  },
+  "display": {
+    "announce_to_chat": true,
+    "description": {
+      "translate": "advancements.kintsugi.shelve_all.description"
+    },
+    "frame": "challenge",
+    "hidden": false,
+    "icon": {
+      "item": "minecraft:bookshelf"
+    },
+    "show_toast": true,
+    "title": {
+      "translate": "advancements.kintsugi.shelve_all.title"
+    }
+  },
+  "requirements": [
+    [
+      "minecraft:fire_protection"
+    ],
+    [
+      "minecraft:feather_falling"
+    ],
+    [
+      "minecraft:blast_protection"
+    ],
+    [
+      "minecraft:projectile_protection"
+    ],
+    [
+      "minecraft:respiration"
+    ],
+    [
+      "minecraft:aqua_affinity"
+    ],
+    [
+      "minecraft:thorns"
+    ],
+    [
+      "minecraft:depth_strider"
+    ],
+    [
+      "minecraft:frost_walker"
+    ],
+    [
+      "minecraft:binding_curse"
+    ],
+    [
+      "minecraft:soul_speed"
+    ],
+    [
+      "minecraft:swift_sneak"
+    ],
+    [
+      "minecraft:smite"
+    ],
+    [
+      "minecraft:bane_of_arthropods"
+    ],
+    [
+      "minecraft:knockback"
+    ],
+    [
+      "minecraft:fire_aspect"
+    ],
+    [
+      "minecraft:looting"
+    ],
+    [
+      "minecraft:sweeping"
+    ],
+    [
+      "minecraft:fortune"
+    ],
+    [
+      "minecraft:punch"
+    ],
+    [
+      "minecraft:flame"
+    ],
+    [
+      "minecraft:infinity"
+    ],
+    [
+      "minecraft:luck_of_the_sea"
+    ],
+    [
+      "minecraft:lure"
+    ],
+    [
+      "minecraft:loyalty"
+    ],
+    [
+      "minecraft:impaling"
+    ],
+    [
+      "minecraft:riptide"
+    ],
+    [
+      "minecraft:channeling"
+    ],
+    [
+      "minecraft:multishot"
+    ],
+    [
+      "minecraft:quick_charge"
+    ],
+    [
+      "minecraft:piercing"
+    ],
+    [
+      "minecraft:mending"
+    ],
+    [
+      "minecraft:vanishing_curse"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

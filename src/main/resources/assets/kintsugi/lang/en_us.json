@@ -5,9 +5,11 @@
   "advancements.kintsugi.root.title": "Knowledge",
   "advancements.kintsugi.root.description": "There is always more to know.",
   "advancements.kintsugi.acquire.title": "Knowing Is Half the Battle",
-  "advancements.kintsugi.acquire.description": "Find a Book of Knowledge.",
+  "advancements.kintsugi.acquire.description": "Get a Book of Knowledge.",
   "advancements.kintsugi.trade.title": "Everything For A Price",
   "advancements.kintsugi.trade.description": "Trade for a Book of Knowledge.",
-  "advancements.kintsugi.shelve.title": "The World Is Quiet Here",
-  "advancements.kintsugi.shelve.description": "Place a Book of Knowledge on a bookshelf."
+  "advancements.kintsugi.shelve.title": "Knowledge is Power",
+  "advancements.kintsugi.shelve.description": "Place a Book of Knowledge on a bookshelf.",
+  "advancements.kintsugi.shelve_all.title": "The World Is Quiet Here",
+  "advancements.kintsugi.shelve_all.description": "Place every Book of Knowledge on a bookshelf."
 }

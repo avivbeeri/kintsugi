@@ -1,20 +1,14 @@
 {
   "parent": "kintsugi:knowledge/root",
   "criteria": {
-    "acquired_book": {
-      "conditions": {
-        "items": [
-          {
-            "items": [
-              "kintsugi:knowledge_book"
-            ]
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "trade": {
-      "conditions": {},
+      "conditions": {
+        "item": {
+          "items": [
+            "kintsugi:knowledge_book"
+          ]
+        }
+      },
       "trigger": "minecraft:villager_trade"
     }
   },
@@ -36,9 +30,6 @@
   "requirements": [
     [
       "trade"
-    ],
-    [
-      "acquired_book"
     ]
   ],
   "sends_telemetry_event": true

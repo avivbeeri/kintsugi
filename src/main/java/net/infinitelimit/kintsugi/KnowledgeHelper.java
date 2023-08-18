@@ -1,7 +1,6 @@
 package net.infinitelimit.kintsugi;
 
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -35,6 +34,8 @@ public class KnowledgeHelper {
             Enchantments.SHARPNESS,
             Enchantments.ALL_DAMAGE_PROTECTION);
 
+    public static final Set<Enchantment> KNOWLEDGE_ENCHANTMENTS = getKnowledgeBookEnchantments();
+
     public static final Set<Enchantment> ANY_VILLAGER_TRADES = Set.of(
             BINDING_CURSE, VANISHING_CURSE, SWEEPING_EDGE, PUNCH_ARROWS
     );
@@ -51,9 +52,7 @@ public class KnowledgeHelper {
             );
 
     public static Enchantment getRandomEnchantment(RandomSource pRandom) {
-        Set<Enchantment> enchantments = new HashSet<>(ForgeRegistries.ENCHANTMENTS.getValues());
-        enchantments.removeAll(DEFAULT_ENCHANTMENTS);
-        List<Enchantment> validEnchantments = List.copyOf(enchantments);
+        List<Enchantment> validEnchantments = List.copyOf(KNOWLEDGE_ENCHANTMENTS);
         int i = pRandom.nextInt(validEnchantments.size());
         return validEnchantments.get(i);
     }
@@ -66,6 +65,13 @@ public class KnowledgeHelper {
         List<Enchantment> villagerEnchants = new ArrayList<>(ANY_VILLAGER_TRADES);
         villagerEnchants.add(getEnchantmentByVillagerType(type, pRandom));
         return villagerEnchants.get(pRandom.nextInt(villagerEnchants.size()));
+    }
+
+    private static Set<Enchantment> getKnowledgeBookEnchantments() {
+        return ForgeRegistries.ENCHANTMENTS.getValues()
+                .stream()
+                .filter(enchantment -> !KnowledgeHelper.DEFAULT_ENCHANTMENTS.contains(enchantment))
+                .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 }
 
