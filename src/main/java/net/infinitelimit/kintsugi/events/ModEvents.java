@@ -45,24 +45,6 @@ import static net.minecraft.world.item.enchantment.Enchantments.FISHING_SPEED;
 @Mod.EventBusSubscriber(modid = Kintsugi.MOD_ID)
 public class ModEvents {
 
-    /* // WORKING
-    @SubscribeEvent
-    public static void onLootTableLoad(LootTableLoadEvent event) {
-        if (event.getName().equals(BuiltInLootTables.FISHING_TREASURE)) {
-            LootTable table = LootTable.lootTable().withPool(
-                    LootPool.lootPool()
-                            .add(LootItem.lootTableItem(NAME_TAG))
-                            .add(LootItem.lootTableItem(SADDLE))
-                            .add(LootItem.lootTableItem(Items.BOW).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.0F, 0.25F))).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
-                            .add(LootItem.lootTableItem(Items.FISHING_ROD).apply(SetItemDamageFunction.setDamage(UniformGenerator.between(0.0F, 0.25F))).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
-                            .add(LootItem.lootTableItem(Items.BOOK).apply(EnchantWithLevelsFunction.enchantWithLevels(ConstantValue.exactly(30.0F)).allowTreasure()))
-                            .add(LootItem.lootTableItem(Items.NAUTILUS_SHELL))
-                            .add(LootItem.lootTableItem(ModItems.KNOWLEDGE_BOOK.get()).apply(AddRitualFunction.addEnchantment(UniformGenerator.between(0.0f, 1.0f))))).build();
-            event.setTable(table);
-        }
-    }
-    */
-
     @SubscribeEvent
     public static void addCustomTrades(VillagerTradesEvent event) {
         if (event.getType() == VillagerProfession.LIBRARIAN) {
