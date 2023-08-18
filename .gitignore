@@ -3,3 +3,5 @@
 build/
 run/
 run-data/
+
+.DS_Store
