@@ -1,5 +1,5 @@
-// 1.20.1	2023-08-17T14:39:41.666647	Global Loot Modifiers : kintsugi
-940ad3f0c12da7e87ee28491f7ee50abeb146e74 data/forge/loot_modifiers/global_loot_modifiers.json
+// 1.20.1	2023-08-18T08:14:58.944557473	Global Loot Modifiers : kintsugi
+7ff39e686b752071d0370f7a6419b1069d55cd9d data/forge/loot_modifiers/global_loot_modifiers.json
 c1dc30a587f7dfb0385c8841d9129969d5ab659d data/kintsugi/loot_modifiers/archaeology_ocean_ruin_cold.json
 d601dc0ff412805e0608681e5841b4a3c96d10fd data/kintsugi/loot_modifiers/archaeology_ocean_ruin_warm.json
 885b8f80c33109972b5bffb93b4aaca03f9d1605 data/kintsugi/loot_modifiers/chests_abandoned_mineshaft.json
@@ -12,3 +12,4 @@ dd6f23d0f4c8707da9ed8c9a7d55b2776b0c226d data/kintsugi/loot_modifiers/chests_shi
 9c06e185d2582379e5aac9e68fcaf55b20cb80c7 data/kintsugi/loot_modifiers/chests_simple_dungeon.json
 fcf2e46646f2ad0dfe0212a529740db4e4a669ac data/kintsugi/loot_modifiers/chests_stronghold_library.json
 337e8de3cbdf4dd390d96c66aade35a89b2e7157 data/kintsugi/loot_modifiers/chests_woodland_mansion.json
+a892e41edfbfe8965b39581cf1f3c541402f308a data/kintsugi/loot_modifiers/gameplay_fishing.json

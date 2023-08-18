@@ -2,6 +2,7 @@ package net.infinitelimit.kintsugi.datagen;
 
 import net.infinitelimit.kintsugi.item.ModItems;
 import net.infinitelimit.kintsugi.loot.ChestLootModifier;
+import net.infinitelimit.kintsugi.loot.FishingLootModifier;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -89,10 +90,26 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(QUICK_CHARGE), 0.333),
                 Map.entry(eId(MULTISHOT), 0.333)
         ));
+
+        this.addFishingEntry(0.3334, Map.ofEntries(
+                Map.entry(eId(FISHING_SPEED), 0.5),
+                Map.entry(eId(FISHING_LUCK), 0.5)
+        ));
     }
 
     private String eId(Enchantment enchantment) {
         return Objects.requireNonNull(EnchantmentHelper.getEnchantmentId(enchantment)).toString();
+    }
+
+    private void addFishingEntry(double rate, Map<String, Double> enchantments) {
+        this.add(toFileName(BuiltInLootTables.FISHING), new FishingLootModifier(
+                new LootItemCondition[] {
+                        LootTableIdCondition.builder(BuiltInLootTables.FISHING).build()
+                },
+                ModItems.KNOWLEDGE_BOOK.get(),
+                rate,
+                enchantments
+        ));
     }
 
     private void addChestEntry(ResourceLocation location, double rate, Map<String, Double> enchantments) {

@@ -45,19 +45,6 @@ import static net.minecraft.world.item.enchantment.Enchantments.FISHING_SPEED;
 @Mod.EventBusSubscriber(modid = Kintsugi.MOD_ID)
 public class ModEvents {
 
-    @SubscribeEvent
-    public static void onItemFished(ItemFishedEvent event) {
-        ItemStack stack = event.getDrops().get(0);
-        if (stack.is(ENCHANTED_BOOK)) {
-            float i = event.getEntity().getRandom().nextFloat();
-            if (i < 0.333) {
-                event.getDrops().set(0, KnowledgeBookItem.createForEnchantment(FISHING_LUCK));
-            } else if (i < 0.666) {
-                event.getDrops().set(0, KnowledgeBookItem.createForEnchantment(FISHING_SPEED));
-            }  /* else Book is unchanged */
-        }
-    }
-
     /* // WORKING
     @SubscribeEvent
     public static void onLootTableLoad(LootTableLoadEvent event) {

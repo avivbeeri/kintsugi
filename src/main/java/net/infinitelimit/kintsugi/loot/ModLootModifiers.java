@@ -15,6 +15,10 @@ public class ModLootModifiers {
     public static final RegistryObject<Codec<? extends IGlobalLootModifier>> CHEST_ITEM_MODIFIER =
             LOOT_MODIFIER_SERIALIZERS.register("knowledge_book_chest", ChestLootModifier.CODEC);
 
+    public static final RegistryObject<Codec<? extends IGlobalLootModifier>> FISHING_ITEM_MODIFIER =
+            LOOT_MODIFIER_SERIALIZERS.register("knowledge_book_fishing", FishingLootModifier.CODEC);
+
+
     public static void register(IEventBus bus) {
         LOOT_MODIFIER_SERIALIZERS.register(bus);
     }

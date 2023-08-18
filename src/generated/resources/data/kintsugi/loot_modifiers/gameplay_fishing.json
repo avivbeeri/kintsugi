@@ -1,0 +1,15 @@
+{
+  "type": "kintsugi:knowledge_book_fishing",
+  "conditions": [
+    {
+      "condition": "forge:loot_table_id",
+      "loot_table_id": "minecraft:gameplay/fishing"
+    }
+  ],
+  "enchantments": {
+    "minecraft:luck_of_the_sea": 0.5,
+    "minecraft:lure": 0.5
+  },
+  "item": "kintsugi:knowledge_book",
+  "rate": 0.3334
+}
