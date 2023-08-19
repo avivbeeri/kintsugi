@@ -866,7 +866,7 @@
       "translate": "advancements.kintsugi.shelve_all.description"
     },
     "frame": "challenge",
-    "hidden": false,
+    "hidden": true,
     "icon": {
       "item": "minecraft:bookshelf"
     },

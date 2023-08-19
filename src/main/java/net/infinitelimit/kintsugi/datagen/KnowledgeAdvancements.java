@@ -52,7 +52,7 @@ public class KnowledgeAdvancements implements ForgeAdvancementProvider.Advanceme
 
 
         Advancement.Builder builder = Advancement.Builder.advancement().parent(advancement3)
-                .display(Items.BOOKSHELF, Component.translatable("advancements.kintsugi.shelve_all.title"), Component.translatable("advancements.kintsugi.shelve_all.description"), null, FrameType.CHALLENGE, true, true, false)
+                .display(Items.BOOKSHELF, Component.translatable("advancements.kintsugi.shelve_all.title"), Component.translatable("advancements.kintsugi.shelve_all.description"), null, FrameType.CHALLENGE, true, true, true)
                 .requirements(RequirementsStrategy.AND);
 
        for (Enchantment enchantment: KnowledgeHelper.KNOWLEDGE_ENCHANTMENTS) {
