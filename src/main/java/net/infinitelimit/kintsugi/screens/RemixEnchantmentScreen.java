@@ -196,22 +196,27 @@ public class RemixEnchantmentScreen extends AbstractContainerScreen<RemixEnchant
         }
 
         // Lapis Arrows
-        for (int i = 0; i < range; i++) {
-            int k;
-            if (i < this.menu.getFuelCount()) {
-              k = 0;
-            } else {
-              k = 1;
-            }
-            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 205, pY + 57 - i * 8, k * 12, 233, 12, 7, TEXTURE_WIDTH, TEXTURE_HEIGHT);
-        }
+        if (selection != -1) {
+            for (int i = 4; i >= 0; i--) {
+                int k = -1;
+                if (i < range && i < this.menu.getFuelCount()) {
+                    k = 0;
+                } else if (i < range) {
+                    // do nothing
+                } else if (i < enchantments.get(selection).getMaxLevel()) {
+                    k = 1;
+                } else {
+                    k = 2;
+                }
 
-        if (!this.menu.getValidity()) {
-            pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 216, pY + 22, imageWidth, 0, 28, 21, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                if (k != -1) {
+                    pGuiGraphics.blit(ENCHANTING_TABLE_LOCATION, pX + 206, pY + 57 - i * 8, k * 12, 233, 12, 7, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+                }
+            }
         }
 
         boolean flag = player.getAbilities().instabuild;
-        if (!flag && this.menu.getLevelCost() >= 0) {
+        if (selection != -1 && !flag && this.menu.getLevelCost() >= 0) {
             int color = 0x80ff20; //green
             if (!this.menu.getSlot(2).mayPickup(this.player)) {
                 color = 0xff6060; //red

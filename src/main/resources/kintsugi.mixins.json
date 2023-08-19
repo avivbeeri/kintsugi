@@ -4,10 +4,12 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "kintsugi.refmap.json",
   "mixins": [
-    "MixinEnchantmentTableBlock",
-    "WanderingTraderMixin"
+    "EnchantmentTableBlockMixin",
+    "WanderingTraderMixin",
+    "EnchantTableRendererMixin"
   ],
   "client": [
+    "EnchantTableRendererMixin"
   ],
   "minVersion": "0.8"
 }
