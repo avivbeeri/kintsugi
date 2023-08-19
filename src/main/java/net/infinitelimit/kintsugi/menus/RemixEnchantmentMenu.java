@@ -110,7 +110,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         this.addDataSlot(maxPower).set(0);
         this.addDataSlot(valid).set(1);
 
-        this.addSlot(new Slot(this.enchantSlots, 0, 186, 25) {
+        this.addSlot(new Slot(this.enchantSlots, 0, 186, 26) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -126,7 +126,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
                 return 1;
             }
         });
-        this.addSlot(new Slot(this.enchantSlots, 1, 186, 48) {
+        this.addSlot(new Slot(this.enchantSlots, 1, 186, 47) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -135,7 +135,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             }
         });
 
-        this.addSlot(new Slot(this.resultSlot, 1, 256, 25) {
+        this.addSlot(new Slot(this.resultSlot, 1, 256, 36) {
             /**
              * Check if the stack is allowed to be placed in this slot, used for armor slots as well as furnace fuel.
              */
@@ -268,6 +268,13 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         }
     }
 
+    public static boolean isAtMaximumCapability(Map<Enchantment, Integer> itemEnchantments, Enchantment selection, int range) {
+        if (!itemEnchantments.containsKey(selection)) {
+            return false;
+        }
+        return itemEnchantments.get(selection) >= Math.min(range, selection.getMaxLevel());
+    }
+
     public static boolean calculateCompatibility(Collection<Enchantment> enchantments) {
         for (Enchantment enchantment1 : enchantments) {
             for (Enchantment enchantment2 : enchantments) {
@@ -284,7 +291,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
             this.access.execute((pLevel, pBlockPos) -> {
                 this.enchantmentsNearby.clear();
                 this.enchantmentsNearby.addAll(this.calculateNearbyEnchantments(pLevel, pBlockPos));
-                if (this.lastItem != itemStack.getItem()) {
+                if (this.lastItem != itemStack.getItem() || (this.selectedEnchantment.get() >= 0 && isAtMaximumCapability(itemStack.getAllEnchantments(), this.getAvailableEnchantments().get(this.selectedEnchantment.get()), this.getMaxEnchantmentLevel(itemStack)))) {
                     this.selectedEnchantment.set(-1);
                 }
                 this.lastItem = itemStack.getItem();
@@ -379,7 +386,7 @@ public class RemixEnchantmentMenu extends AbstractContainerMenu {
         return category + currentEnchantments + level;
     }
 
-    private int getMaxEnchantmentLevel(ItemStack itemStack) {
+    public int getMaxEnchantmentLevel(ItemStack itemStack) {
         int maxLevel = 1;
         int count = this.getNearbyEnchantmentCount();
 

@@ -51,6 +51,7 @@ public class KnowledgeBookItem extends Item {
      */
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
+        /*
         ResourceLocation enchantmentId = getEnchantment(pStack);
         if (enchantmentId != null) {
             Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
@@ -63,6 +64,8 @@ public class KnowledgeBookItem extends Item {
             }
             pTooltip.add(name);
         }
+
+         */
     }
 
     /**

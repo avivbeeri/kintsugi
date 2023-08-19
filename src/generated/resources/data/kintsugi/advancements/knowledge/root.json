@@ -22,7 +22,7 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "kintsugi:knowledge_book"
+      "item": "minecraft:knowledge_book"
     },
     "show_toast": false,
     "title": {
