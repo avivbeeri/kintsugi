@@ -1,4 +1,5 @@
 {
+  "item.kintsugi.knowledge_book.generic": "Book of Knowledge",
   "item.kintsugi.knowledge_book": "Knowledge of \"%1$s\"",
   "creativetab.kintsugi": "Books of Knowledge",
   "container.kintsugi.enchant.levelcost": "Enchantment cost: %1$s",

@@ -27,7 +27,8 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
 
     @Overwrite
     protected void updateTrades() {
-        VillagerTrades.ItemListing bookTrade = new ModTradeOffers.CopyKnowledgeBookForEmeralds(1);
+        VillagerTrades.ItemListing bookCopyTrade = new ModTradeOffers.CopyKnowledgeBookForEmeralds(1);
+        VillagerTrades.ItemListing bookBuyTrade = new ModTradeOffers.EmeraldsForRandomKnowledgeBook(1);
         VillagerTrades.ItemListing[] commonTrades = VillagerTrades.WANDERING_TRADER_TRADES.get(1);
         VillagerTrades.ItemListing[] rareTrades = VillagerTrades.WANDERING_TRADER_TRADES.get(2);
         if (commonTrades != null && rareTrades != null) {
@@ -39,7 +40,8 @@ public abstract class WanderingTraderMixin extends AbstractVillager {
             if (rareOffer != null) {
                 merchantOffers.add(rareOffer);
             }
-            merchantOffers.add(bookTrade.getOffer(this, this.random));
+            merchantOffers.add(0, bookCopyTrade.getOffer(this, this.random));
+            merchantOffers.add(1, bookBuyTrade.getOffer(this, this.random));
         }
     }
 }

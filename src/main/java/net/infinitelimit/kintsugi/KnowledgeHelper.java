@@ -63,7 +63,6 @@ public class KnowledgeHelper {
 
     public static Enchantment getRandomVillagerEnchantment(VillagerType type, RandomSource pRandom) {
         List<Enchantment> villagerEnchants = new ArrayList<>(ANY_VILLAGER_TRADES);
-        villagerEnchants.add(getEnchantmentByVillagerType(type, pRandom));
         return villagerEnchants.get(pRandom.nextInt(villagerEnchants.size()));
     }
 
@@ -72,6 +71,15 @@ public class KnowledgeHelper {
                 .stream()
                 .filter(enchantment -> !KnowledgeHelper.DEFAULT_ENCHANTMENTS.contains(enchantment))
                 .collect(Collectors.toCollection(LinkedHashSet::new));
+    }
+
+    public static int getEnchantmentCategory(Enchantment enchantment) {
+        for (int category = 0; category < 5; category++) {
+            if (KnowledgeHelper.ENCHANTMENT_CATEGORIES.get(category).contains(enchantment)) {
+                return category;
+            }
+        }
+        return 4;
     }
 }
 

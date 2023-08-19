@@ -47,6 +47,22 @@ public class ModTradeOffers {
         }
     }
 
+    public static class EmeraldsForRandomKnowledgeBook implements VillagerTrades.ItemListing {
+        private final int villagerXp;
+
+        public EmeraldsForRandomKnowledgeBook(int pVillagerXp) {
+            this.villagerXp = pVillagerXp;
+        }
+
+        public MerchantOffer getOffer(@NotNull Entity pTrader, RandomSource pRandom) {
+            Enchantment enchantment = KnowledgeHelper.getRandomEnchantment(pRandom);
+            ItemStack itemstack = KnowledgeBookItem.createForEnchantment(enchantment);
+            int cost = calculateEnchantmentCost(pRandom, enchantment);
+
+            return new MerchantOffer(itemstack, new ItemStack(Items.EMERALD, cost) , 1, this.villagerXp, 0.2F);
+        }
+    }
+
     public static class CopyKnowledgeBookForEmeralds implements VillagerTrades.ItemListing {
         private final int villagerXp;
 
@@ -64,10 +80,15 @@ public class ModTradeOffers {
     }
 
     private static int calculateEnchantmentCost(RandomSource pRandom, Enchantment enchantment) {
-        int i = Mth.nextInt(pRandom, enchantment.getMinLevel(), enchantment.getMaxLevel());
+        int category = KnowledgeHelper.getEnchantmentCategory(enchantment) + 1;
 
-        int j = 2 + pRandom.nextInt(5 + i * 10) + 3 * i;
-        if (enchantment.isTreasureOnly()) {
+        int j = 7 + 3 * category + pRandom.nextInt(7 + category * 7);
+        // cat 1 = 7 + 3 + rand(14) = 10 - 24
+        // cat 2 = 7 + 6 + rand(21) = 13 - 34
+        // cat 3 = 7 + 9 + rand(28) = 16 - 44
+        // cat 4 = 7 + 12 + rand(35) = 19 - 54
+        // cat 5 = 7 + 15 + rand(42) = 22 - 64
+        if (enchantment.isTreasureOnly() || !KnowledgeHelper.ANY_VILLAGER_TRADES.contains(enchantment)) {
             j *= 2;
         }
 

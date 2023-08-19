@@ -1,5 +1,6 @@
 package net.infinitelimit.kintsugi.item;
 
+import net.infinitelimit.kintsugi.Kintsugi;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,10 +41,16 @@ public class KnowledgeBookItem extends Item {
      */
     @Override
     public @NotNull Component getName(@NotNull ItemStack pStack) {
-        String enchantmentName = Component.translatable(
-                Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(getEnchantment(pStack))).getDescriptionId()
-        ).getString();
-        return Component.translatable(this.getDescriptionId(pStack), enchantmentName);
+        ResourceLocation enchantment = getEnchantment(pStack);
+        if (enchantment == null) {
+            // Defensive, in case the book is created without a tag.
+            return Component.translatable(new ResourceLocation(Kintsugi.MOD_ID, "item.kintsugi.knowledge_book.generic").getPath());
+        } else {
+            String enchantmentName = Component.translatable(
+                    Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(enchantment)).getDescriptionId()
+            ).getString();
+            return Component.translatable(this.getDescriptionId(pStack), enchantmentName);
+        }
     }
 
     /**
@@ -51,21 +58,6 @@ public class KnowledgeBookItem extends Item {
      */
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltip, TooltipFlag pFlag) {
         super.appendHoverText(pStack, pLevel, pTooltip, pFlag);
-        /*
-        ResourceLocation enchantmentId = getEnchantment(pStack);
-        if (enchantmentId != null) {
-            Enchantment enchantment = ForgeRegistries.ENCHANTMENTS.getValue(enchantmentId);
-            assert enchantment != null;
-            MutableComponent name = Component.translatable(enchantment.getDescriptionId());
-            if (enchantment.isCurse()) {
-                name.withStyle(ChatFormatting.RED);
-            } else {
-                name.withStyle(ChatFormatting.GRAY);
-            }
-            pTooltip.add(name);
-        }
-
-         */
     }
 
     /**
