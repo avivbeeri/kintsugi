@@ -36,8 +36,6 @@ public class KnowledgeAdvancements implements ForgeAdvancementProvider.Advanceme
                 .addCriterion("book", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.KNOWLEDGE_BOOK.get()))
                 .save(saver, new ResourceLocation(Kintsugi.MOD_ID, "knowledge/root"), existingFileHelper);
 
-
-
         Advancement advancement1 = Advancement.Builder.advancement().parent(advancementRoot)
                 .display(ModItems.KNOWLEDGE_BOOK.get(), Component.translatable("advancements.kintsugi.acquire.title"), Component.translatable("advancements.kintsugi.acquire.description"), null, FrameType.TASK, true, true, false)
                 .addCriterion("acquired_book", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.KNOWLEDGE_BOOK.get()))
@@ -69,8 +67,6 @@ public class KnowledgeAdvancements implements ForgeAdvancementProvider.Advanceme
 
        Advancement advancement4 =  builder.save(saver, new ResourceLocation(Kintsugi.MOD_ID, "knowledge/shelve_all"), existingFileHelper);;
     }
-
-
 
     public static TradeTrigger.TriggerInstance tradedBookWithVillager() {
         return new TradeTrigger.TriggerInstance(ContextAwarePredicate.ANY, ContextAwarePredicate.ANY, ItemPredicate.Builder.item().of(ModItems.KNOWLEDGE_BOOK.get()).build());
