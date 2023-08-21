@@ -1,7 +1,7 @@
 {
   "sources": [
     {
-      "type": "single",
+      "type": "minecraft:single",
       "resource": "kintsugi:entity/enchanting_table_book"
     }
   ]
