@@ -26,11 +26,11 @@ public class DataGenerators {
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
         generator.addProvider(event.includeServer(), new ModLootTableProvider(output, MOD_ID));
         generator.addProvider(event.includeClient(), new ModItemModelProvider(output, MOD_ID, existingFileHelper));
+        generator.addProvider(event.includeClient(), new ModSpriteSourceProvider(output, existingFileHelper, MOD_ID));
 
         BlockTagGenerator blockTagGenerator = generator.addProvider(event.includeServer(), new BlockTagGenerator(output, lookupProvider,  MOD_ID, existingFileHelper));
         generator.addProvider(event.includeServer(), new ItemTagGenerator(output, lookupProvider, blockTagGenerator.contentsGetter(), MOD_ID, existingFileHelper));
 
         generator.addProvider(event.includeServer(), new ForgeAdvancementProvider(output, lookupProvider, existingFileHelper, List.of(new KnowledgeAdvancements())));
-        generator.addProvider(event.includeClient(), new ModSpriteSourceProvider(output, existingFileHelper, MOD_ID));
     }
 }
