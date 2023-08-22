@@ -1,4 +1,4 @@
-# Kintsugi - Enchantment Remix
+# Kintsugi - Enchanting Reimagined
 
 **Kintsugi** seamlessly replaces the way enchanting is done in Minecraft to make the enchanting table relevant again. Rather than relying on rolls of the dice, you can pick your enchantments.
 
