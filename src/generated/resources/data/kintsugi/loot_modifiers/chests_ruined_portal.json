@@ -9,7 +9,7 @@
   "enchantments": {
     "minecraft:fire_aspect": 0.333,
     "minecraft:fire_protection": 0.333,
-    "minecraft:flame": 0.333
+    "minecraft:flame": 0.334
   },
   "item": "kintsugi:knowledge_book",
   "rate": 0.015

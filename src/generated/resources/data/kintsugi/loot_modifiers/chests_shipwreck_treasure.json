@@ -8,7 +8,7 @@
   ],
   "enchantments": {
     "minecraft:aqua_affinity": 0.333,
-    "minecraft:depth_strider": 0.333,
+    "minecraft:depth_strider": 0.334,
     "minecraft:respiration": 0.333
   },
   "item": "kintsugi:knowledge_book",

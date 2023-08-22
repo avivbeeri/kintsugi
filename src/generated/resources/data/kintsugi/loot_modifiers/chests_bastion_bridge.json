@@ -7,7 +7,7 @@
     }
   ],
   "enchantments": {
-    "minecraft:multishot": 0.333,
+    "minecraft:multishot": 0.334,
     "minecraft:piercing": 0.333,
     "minecraft:quick_charge": 0.333
   },
