@@ -35,7 +35,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
         this.addChestEntry(BuiltInLootTables.NETHER_BRIDGE, 0.03, Map.ofEntries(
             Map.entry(eId(FIRE_PROTECTION), 0.333),
             Map.entry(eId(FIRE_ASPECT), 0.333),
-            Map.entry(eId(FLAMING_ARROWS), 0.333)
+            Map.entry(eId(FLAMING_ARROWS), 0.334)
         ));
         this.addChestEntry(BuiltInLootTables.RUINED_PORTAL, 0.015, Map.ofEntries(
                 Map.entry(eId(FIRE_PROTECTION), 0.333),
@@ -91,7 +91,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
         ));
 
         this.addChestEntry(BuiltInLootTables.BASTION_HOGLIN_STABLE, 0.01, Map.ofEntries(
-                Map.entry(eId(PIERCING), 0.667),
+                Map.entry(eId(PIERCING), 0.668),
                 Map.entry(eId(QUICK_CHARGE), 0.166),
                 Map.entry(eId(MULTISHOT), 0.166)
         ));
