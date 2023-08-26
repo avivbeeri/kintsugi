@@ -5,8 +5,9 @@
   "refmap": "kintsugi.refmap.json",
   "mixins": [
     "EnchantmentTableBlockMixin",
+    "EnchantTableRendererMixin",
     "WanderingTraderMixin",
-    "EnchantTableRendererMixin"
+    "AnvilMenuMixin"
   ],
   "client": [
     "EnchantTableRendererMixin"
