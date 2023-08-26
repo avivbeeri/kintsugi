@@ -41,77 +41,90 @@ public class ModEvents {
 
     @SubscribeEvent
     public static void onAnvilUpdate(AnvilUpdateEvent event) {
-        ItemStack item = event.getLeft();
+        ItemStack target = event.getLeft();
         ItemStack sacrifice = event.getRight();
-        ItemStack result = item.copy();
+        ItemStack result = target.copy();
 
         boolean createResult = false;
         int xpCost = 0;
         int materialCost = 0;
-        int damage = item.getDamageValue();
+        int damage = target.getDamageValue();
         boolean addUse = false;
 
-        if (item.isEmpty()) {
+        if (target.isEmpty()) {
             event.setOutput(ItemStack.EMPTY);
             return;
         }
 
         if (event.getName() != null && !Util.isBlank(event.getName())) {
-            if (!event.getName().equals(item.getHoverName().getString())) {
+            if (!event.getName().equals(target.getHoverName().getString())) {
                 result.setHoverName(Component.literal(event.getName()));
                 xpCost += 1;
                 createResult = true;
             }
-        } else if (item.hasCustomHoverName()) {
+        } else if (target.hasCustomHoverName()) {
             result.resetHoverName();
         }
 
-        Map<Enchantment, Integer> itemEnchantments = EnchantmentHelper.getEnchantments(item);
+        Map<Enchantment, Integer> targetEnchantments = EnchantmentHelper.getEnchantments(target);
 
         if (!sacrifice.isEmpty()) {
             Map<Enchantment, Integer> sacrificeEnchantments = EnchantmentHelper.getEnchantments(sacrifice);
-            if (item.isDamageableItem() && item.isDamaged() && item.getItem().isValidRepairItem(item, sacrifice)) {
+            if (target.isDamageableItem() && target.isDamaged() && target.getItem().isValidRepairItem(target, sacrifice)) {
                 // repair
                 createResult = true;
                 addUse = true;
                 int expense = Math.min(4, sacrifice.getCount());
                 damage -= (result.getMaxDamage() / 4) * expense;
                 materialCost += expense;
-            } else if (item.is(sacrifice.getItem())) {
+                xpCost += expense;
+            } else if (target.is(sacrifice.getItem())) {
                 // do item merging
                 createResult = true;
                 addUse = true;
-                int itemDamage = item.getMaxDamage() - item.getDamageValue();
+                if (target.isDamaged()) {
+                    xpCost += 1;
+                }
+                int targetDamage = target.getMaxDamage() - target.getDamageValue();
                 int sacrificeDamage = sacrifice.getMaxDamage() - sacrifice.getDamageValue();
-                int bonusDamage = Math.round(item.getMaxDamage() * 0.12f);
-                damage = Math.max(0, item.getMaxDamage() - (itemDamage + sacrificeDamage + bonusDamage));
+                int bonusDamage = Math.round(target.getMaxDamage() * 0.12f);
+                damage = Math.max(0, target.getMaxDamage() - (targetDamage + sacrificeDamage + bonusDamage));
             }
 
-            if ((item.is(sacrifice.getItem())) || (sacrifice.is(Items.ENCHANTED_BOOK) && !EnchantedBookItem.getEnchantments(sacrifice).isEmpty() && item.isBookEnchantable(sacrifice))) {
+            if ((target.is(sacrifice.getItem())) || (sacrifice.is(Items.ENCHANTED_BOOK) && !EnchantedBookItem.getEnchantments(sacrifice).isEmpty() && target.isBookEnchantable(sacrifice))) {
                 // apply enchantment to item
                 createResult = true;
                 addUse = true;
+                // add cost for previous enchantments
+                xpCost += targetEnchantments.size();
                 for (Enchantment enchantment: sacrificeEnchantments.keySet()) {
-                    if (!enchantment.canEnchant(item)) {
+                    if (!enchantment.canEnchant(target)) {
                         continue;
                     }
-                    if (!itemEnchantments.containsKey(enchantment) && !EnchantmentHelper.isEnchantmentCompatible(itemEnchantments.keySet(), enchantment)) {
+                    if (!targetEnchantments.containsKey(enchantment) && !EnchantmentHelper.isEnchantmentCompatible(targetEnchantments.keySet(), enchantment)) {
                         continue;
                     }
                     int sacrificeLevel = sacrificeEnchantments.getOrDefault(enchantment, 0);
-                    int existingLevel = itemEnchantments.getOrDefault(enchantment, 0);
+                    int existingLevel = targetEnchantments.getOrDefault(enchantment, 0);
+                    if (existingLevel == 0) {
+                        // new enchantments cost extra
+                        xpCost += sacrificeLevel;
+                    } else if (sacrificeLevel > existingLevel) {
+                        xpCost += sacrificeLevel - existingLevel;
+                    }
+
                     int level = Math.max(sacrificeLevel, existingLevel);
-                    itemEnchantments.put(enchantment, level);
+                    targetEnchantments.put(enchantment, level);
                 }
-                EnchantmentHelper.setEnchantments(itemEnchantments, result);
+                EnchantmentHelper.setEnchantments(targetEnchantments, result);
             }
         }
 
         if (createResult) {
             if (addUse) {
-                int repairCost = Math.max(item.getBaseRepairCost(), sacrifice.getBaseRepairCost());
-                repairCost = AnvilMenu.calculateIncreasedRepairCost(repairCost);
-                result.setRepairCost(repairCost);
+                int repairCost = Math.max(target.getBaseRepairCost(), sacrifice.getBaseRepairCost());
+                xpCost += repairCost;
+                result.setRepairCost(AnvilMenu.calculateIncreasedRepairCost(repairCost));
             }
 
             result.setDamageValue(damage);
