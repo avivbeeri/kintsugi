@@ -29,7 +29,7 @@ public abstract class AnvilMenuMixin extends ItemCombinerMenu {
     @Overwrite
     protected boolean mayPickup(Player pPlayer, boolean pHasStack) {
         return (pPlayer.getAbilities().instabuild
-                || (pPlayer.experienceLevel >= this.getCost()) && this.getCost() > 0
-                || this.getSlot(1).getItem().getCount() >= this.repairItemCountCost && this.repairItemCountCost > 0);
+                || (pPlayer.experienceLevel >= this.getCost()) && this.getCost() > 0);
+//                || this.getSlot(1).getItem().getCount() >= this.repairItemCountCost && this.repairItemCountCost > 0);
     }
 }
