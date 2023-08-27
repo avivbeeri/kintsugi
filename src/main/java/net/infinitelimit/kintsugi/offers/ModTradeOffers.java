@@ -7,13 +7,81 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerTrades;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.trading.MerchantOffer;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 
 public class ModTradeOffers {
+
+    public static class EmeraldsForItems implements VillagerTrades.ItemListing {
+        private final ItemLike item;
+        private final int emeraldCost;
+        private final int cost;
+        private final int maxUses;
+        private final int villagerXp;
+        private final float priceMultiplier;
+
+        public EmeraldsForItems(ItemLike item, int quantity, int emeraldCost, int pMaxUses, int pVillagerXp) {
+            this.item = item;
+            this.cost = quantity;
+            this.emeraldCost = emeraldCost;
+            this.maxUses = pMaxUses;
+            this.villagerXp = pVillagerXp;
+            this.priceMultiplier = 0.05F;
+        }
+
+        public MerchantOffer getOffer(Entity pTrader, RandomSource pRandom) {
+            return new MerchantOffer(new ItemStack(item, cost), new ItemStack(Items.EMERALD, emeraldCost), this.maxUses, this.villagerXp, this.priceMultiplier);
+        }
+    }
+
+    public static class EmeraldForPotionItems implements VillagerTrades.ItemListing {
+        private final Potion potion;
+        private final int cost;
+        private final int maxUses;
+        private final int villagerXp;
+        private final float priceMultiplier;
+
+        public EmeraldForPotionItems(Potion potion, int pCost, int pMaxUses, int pVillagerXp) {
+            this.potion = potion;
+            this.cost = pCost;
+            this.maxUses = pMaxUses;
+            this.villagerXp = pVillagerXp;
+            this.priceMultiplier = 0.05F;
+        }
+
+        public MerchantOffer getOffer(Entity pTrader, RandomSource pRandom) {
+            ItemStack item = PotionUtils.setPotion(new ItemStack(Items.POTION, cost), potion);
+            return new MerchantOffer(item, new ItemStack(Items.EMERALD), this.maxUses, this.villagerXp, this.priceMultiplier);
+        }
+    }
+
+    public static class PotionItemForEmeralds implements VillagerTrades.ItemListing {
+        private final Potion potion;
+        private final int cost;
+        private final int maxUses;
+        private final int villagerXp;
+        private final float priceMultiplier;
+
+        public PotionItemForEmeralds(Potion potion, int pCost, int pMaxUses, int pVillagerXp) {
+            this.potion = potion;
+            this.cost = pCost;
+            this.maxUses = pMaxUses;
+            this.villagerXp = pVillagerXp;
+            this.priceMultiplier = 0.05F;
+        }
+
+        public MerchantOffer getOffer(Entity pTrader, RandomSource pRandom) {
+            ItemStack item = PotionUtils.setPotion(new ItemStack(Items.POTION), potion);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, cost), item, this.maxUses, this.villagerXp, this.priceMultiplier);
+        }
+    }
 
     public static class KnowledgeBookForEmeralds implements VillagerTrades.ItemListing {
         private final int villagerXp;
