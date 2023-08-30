@@ -42,7 +42,7 @@ jobs:                                             #The place where you actually 
       - name: Publish (CurseForge/Modrinth/GitHub)
         uses: Kir-Antipov/mc-publish@v3.3                                   #The specified MC-Publish GitHub Action in the version 3.2
         with:
-          curseforge-id: 905452                                        #The id of your CurseForge project
+          curseforge-id: 908206                                        #The id of your CurseForge project
           curseforge-token: "${{env.CURSEFORGE_TOKEN}}"
 
           modrinth-id: PBTDWjGW                                             #The id of your modrinth project
