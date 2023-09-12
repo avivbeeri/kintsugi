@@ -4,6 +4,7 @@ import net.infinitelimit.kintsugi.Kintsugi;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.StructureTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.common.data.ForgeAdvancementProvider;
 import net.minecraftforge.data.event.GatherDataEvent;
@@ -31,6 +32,7 @@ public class DataGenerators {
         BlockTagGenerator blockTagGenerator = generator.addProvider(event.includeServer(), new BlockTagGenerator(output, lookupProvider,  MOD_ID, existingFileHelper));
         generator.addProvider(event.includeServer(), new ItemTagGenerator(output, lookupProvider, blockTagGenerator.contentsGetter(), MOD_ID, existingFileHelper));
 
+        generator.addProvider(event.includeServer(), new ModStructureTagsProvider(output, lookupProvider, MOD_ID, existingFileHelper));
         generator.addProvider(event.includeServer(), new ForgeAdvancementProvider(output, lookupProvider, existingFileHelper, List.of(new KnowledgeAdvancements())));
     }
 }
