@@ -1,7 +1,10 @@
 package net.infinitelimit.kintsugi;
 
+import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.npc.VillagerType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -80,6 +83,11 @@ public class KnowledgeHelper {
             }
         }
         return 4;
+    }
+
+    public static Enchantment getEnchantment(ItemStack itemStack) {
+        ResourceLocation resource = KnowledgeBookItem.getEnchantment(itemStack);
+        return ForgeRegistries.ENCHANTMENTS.getValue(resource);
     }
 }
 

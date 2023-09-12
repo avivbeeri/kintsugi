@@ -14,6 +14,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.event.AnvilUpdateEvent;
 import net.minecraftforge.event.GrindstoneEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -34,26 +35,35 @@ public class ModGrindstoneEvents {
             }
             event.setOutput(new ItemStack(Items.BOOK));
             event.setXp(calculateEnchantmentExperience(current));
+        } else if (bottom.is(ModItems.KNOWLEDGE_BOOK.get()) && top.is(ModItems.KNOWLEDGE_BOOK.get())) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onGrindstoneTake(GrindstoneEvent.OnTakeItem event) {
+        ItemStack bottom = event.getBottomItem();
+        ItemStack top = event.getTopItem();
+        if ((bottom.isEmpty() && !top.isEmpty()) || (!bottom.isEmpty() && top.isEmpty())) {
+            boolean topFlag = !top.isEmpty();
+            ItemStack current = (topFlag ? top: bottom).copy();
+            if (!current.is(ModItems.KNOWLEDGE_BOOK.get())) {
+                return;
+            }
+            current.shrink(1);
+            if (topFlag) {
+                event.setNewTopItem(current);
+            } else {
+                event.setNewBottomItem(current);
+            }
         }
     }
 
     private static int calculateEnchantmentExperience(ItemStack current) {
-        int xp = 0;
-        for (Map.Entry<Enchantment, Integer> entry: current.getAllEnchantments().entrySet()) {
-            Enchantment enchantment = entry.getKey();
-            int level = entry.getValue();
+        Enchantment enchantment = KnowledgeHelper.getEnchantment(current);
+        int category = KnowledgeHelper.getEnchantmentCategory(enchantment);
 
-            int category;
-            for (category = 0; category < 5; category++) {
-                if (KnowledgeHelper.ENCHANTMENT_CATEGORIES.get(category).contains(enchantment)) {
-                    break;
-                }
-            }
-
-            xp += category + level;
-        }
-
-        return xp;
+        return category + enchantment.getMaxLevel();
     }
 
 }

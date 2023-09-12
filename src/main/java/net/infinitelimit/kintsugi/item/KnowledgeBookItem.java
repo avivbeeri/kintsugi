@@ -38,11 +38,6 @@ public class KnowledgeBookItem extends Item {
     @Override
     public boolean canGrindstoneRepair(ItemStack pStack) { return true; }
 
-    @Override
-    public int getMaxStackSize(ItemStack stack) {
-        return 1;
-    }
-
     /**
      * Gets the title name of the book
      */
