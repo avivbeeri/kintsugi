@@ -25,8 +25,8 @@ public abstract class EnchantmentTableBlockMixin {
 
     @Final
     @Shadow
-    public static final List<BlockPos> BOOKSHELF_OFFSETS = BlockPos.betweenClosedStream(-2, -2, -2, 2, 2, 2).filter((p_207914_) -> {
-        return Math.abs(p_207914_.getX()) == 2 || Math.abs(p_207914_.getZ()) == 2;
+    public static final List<BlockPos> BOOKSHELF_OFFSETS = BlockPos.betweenClosedStream(-3, -2, -3, 3, 2, 3).filter((p_207914_) -> {
+        return Math.abs(p_207914_.getX()) > 1 || Math.abs(p_207914_.getZ()) > 1;
     }).map(BlockPos::immutable).toList();
 
     @Inject(at = @At("HEAD"), method = "getMenuProvider(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/MenuProvider;", cancellable = true)

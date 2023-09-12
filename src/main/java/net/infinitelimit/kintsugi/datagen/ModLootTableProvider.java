@@ -26,10 +26,10 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
     @Override
     public void start() {
 
-        this.addChestEntry(BuiltInLootTables.SIMPLE_DUNGEON, 0.07, Map.ofEntries(
-            Map.entry(eId(PROJECTILE_PROTECTION), 0.333),
-            Map.entry(eId(SMITE), 0.333),
-            Map.entry(eId(BANE_OF_ARTHROPODS), 0.334)
+        this.addChestEntry(BuiltInLootTables.SIMPLE_DUNGEON, 0.8, Map.ofEntries(
+            Map.entry(eId(PROJECTILE_PROTECTION), 0.25),
+            Map.entry(eId(SMITE), 0.5),
+            Map.entry(eId(BANE_OF_ARTHROPODS), 0.25)
         ));
 
         this.addChestEntry(BuiltInLootTables.NETHER_BRIDGE, 0.03, Map.ofEntries(
@@ -42,7 +42,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(FIRE_ASPECT), 0.333),
                 Map.entry(eId(FLAMING_ARROWS), 0.334)
         ));
-        this.addChestEntry(BuiltInLootTables.ABANDONED_MINESHAFT, 0.07, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.ABANDONED_MINESHAFT, 0.1, Map.ofEntries(
                 Map.entry(eId(BANE_OF_ARTHROPODS), 1.0)
         ));
         this.addChestEntry(BuiltInLootTables.STRONGHOLD_LIBRARY, 0.33, Map.ofEntries(
