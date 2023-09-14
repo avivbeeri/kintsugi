@@ -1,16 +1,24 @@
 package net.infinitelimit.kintsugi;
 
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Codec;
 import net.infinitelimit.kintsugi.item.ModCreativeModeTabs;
 import net.infinitelimit.kintsugi.item.ModItems;
 import net.infinitelimit.kintsugi.loot.ModLootModifiers;
 import net.infinitelimit.kintsugi.menus.ModMenuTypes;
 import net.infinitelimit.kintsugi.screens.RemixEnchantmentScreen;
+import net.infinitelimit.kintsugi.worldgen.LibraryStructureProcessor;
+import net.infinitelimit.kintsugi.worldgen.ModifyBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
+import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -48,6 +56,8 @@ public class Kintsugi
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
+        registerRule("modify_block", ModifyBlockState.CODEC);
+        register("library_structure", LibraryStructureProcessor.CODEC);
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -57,6 +67,7 @@ public class Kintsugi
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
     }
+
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
     @Mod.EventBusSubscriber(modid = MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -73,4 +84,14 @@ public class Kintsugi
     }
 
 
+    private static <P extends RuleBlockEntityModifier> RuleBlockEntityModifierType<P> registerRule(String pName, Codec<P> pCodec) {
+        return Registry.register(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER, pName, () -> {
+            return pCodec;
+        });
+    }
+    private static <P extends StructureProcessor> StructureProcessorType<P> register(String pName, Codec<P> pCodec) {
+        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, pName, () -> {
+            return pCodec;
+        });
+    }
 }

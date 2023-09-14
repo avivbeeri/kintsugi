@@ -10,8 +10,8 @@
 
     "salt": 1694767080,
 
-    "spacing": 12,
+    "separation": 8,
+    "spacing": 32
 
-    "separation": 4
   }
 }

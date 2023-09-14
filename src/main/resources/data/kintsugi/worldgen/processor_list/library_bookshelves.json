@@ -1,0 +1,31 @@
+{
+  "processors": [
+    {
+      "delegate": {
+        "processor_type": "minecraft:rule",
+        "rules": [
+          {
+            "block_entity_modifier": {
+              "type": "minecraft:modify_block"
+            },
+            "input_predicate": {
+              "predicate_type": "minecraft:tag_match",
+              "tag": "minecraft:enchantment_power_provider"
+            },
+            "location_predicate": {
+              "predicate_type": "minecraft:always_true"
+            },
+            "output_state": {
+              "Name": "minecraft:chiseled_bookshelf",
+              "Properties": {
+                "slot_0_occupied": true
+              }
+            }
+          }
+        ]
+      },
+      "limit": 1,
+      "processor_type": "minecraft:capped"
+    }
+  ]
+}
