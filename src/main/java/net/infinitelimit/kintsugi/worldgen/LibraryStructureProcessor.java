@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntIterator;
 import net.infinitelimit.kintsugi.Kintsugi;
+import net.infinitelimit.kintsugi.KnowledgeHelper;
 import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
@@ -15,10 +16,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChiseledBookShelfBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
@@ -57,26 +61,60 @@ public class LibraryStructureProcessor extends StructureProcessor {
                         break;
                     }
                 }
+
+                intiterator = intarraylist.intIterator();
+                while(intiterator.hasNext()) {
+                    int current = intiterator.nextInt();
+
+                    StructureTemplate.StructureBlockInfo originalBlockInfo = originalBlockInfoList.get(current);
+                    StructureTemplate.StructureBlockInfo processedBlockInfoBefore = processedBlockInfoList.get(current);
+                    if (!processedBlockInfoBefore.state().is(Blocks.ENCHANTING_TABLE)) {
+                        continue;
+                    }
+                    StructureTemplate.StructureBlockInfo processedBlockInfoAfter = processEnchantingTable(pServerLevel, pOffset, blockPosition, originalBlockInfo, processedBlockInfoBefore, pSettings);
+                    if (processedBlockInfoAfter != null && !processedBlockInfoAfter.equals(processedBlockInfoBefore)) {
+                        processedBlockInfoList.set(current, processedBlockInfoAfter);
+                        break;
+                    }
+                }
             }
         }
         return processedBlockInfoList;
+    }
+
+    private StructureTemplate.StructureBlockInfo processEnchantingTable(ServerLevelAccessor pServerLevel, BlockPos pOffset, BlockPos blockPosition, StructureTemplate.StructureBlockInfo originalBlockInfo, StructureTemplate.StructureBlockInfo pRelativeBlockInfo, StructurePlaceSettings pSettings) {
+        RandomSource randomsource = RandomSource.create(Mth.getSeed(pRelativeBlockInfo.pos()));
+        if (randomsource.nextDouble() < 0.2) {
+            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), Blocks.OBSIDIAN.defaultBlockState(), pRelativeBlockInfo.nbt());
+        }
+
+        return pRelativeBlockInfo;
     }
 
     public StructureTemplate.StructureBlockInfo processBookshelf(LevelReader pLevel, BlockPos p_74300_, BlockPos pPos, StructureTemplate.StructureBlockInfo pBlockInfo, StructureTemplate.StructureBlockInfo pRelativeBlockInfo, StructurePlaceSettings pSettings) {
         RandomSource randomsource = RandomSource.create(Mth.getSeed(pRelativeBlockInfo.pos()));
         BlockState blockstate = pRelativeBlockInfo.state();
         if (blockstate.is(BlockTags.ENCHANTMENT_POWER_PROVIDER)) {
-            blockstate = blockstate.setValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(0), Boolean.valueOf(true));
-            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), blockstate, applyTag(randomsource, pRelativeBlockInfo.nbt()));
+            int slot = randomsource.nextInt(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.size());
+            blockstate = blockstate.setValue(ChiseledBookShelfBlock.SLOT_OCCUPIED_PROPERTIES.get(slot), Boolean.valueOf(true));
+            Enchantment enchantment;
+            VillagerType villagerType = VillagerType.byBiome(pLevel.getBiome(pRelativeBlockInfo.pos()));
+            if (randomsource.nextDouble() < 0.90) {
+                enchantment = KnowledgeHelper.getRandomVillagerEnchantment(villagerType, randomsource);
+            } else {
+                enchantment = KnowledgeHelper.getEnchantmentByVillagerType(villagerType, randomsource);
+            }
+            return new StructureTemplate.StructureBlockInfo(pRelativeBlockInfo.pos(), blockstate, applyTag(randomsource, pRelativeBlockInfo.nbt(), slot, enchantment));
         }
 
         return pRelativeBlockInfo;
     }
 
-    private CompoundTag applyTag(RandomSource pRandom, @Nullable CompoundTag pTag) {
+    private CompoundTag applyTag(RandomSource pRandom, @Nullable CompoundTag pTag, int slot, Enchantment enchantment) {
         CompoundTag itemTag = new CompoundTag();
-        itemTag.putByte("Slot", (byte) 0);
-        ItemStack stack = KnowledgeBookItem.createForEnchantment(Enchantments.VANISHING_CURSE);
+        itemTag.putByte("Slot", (byte) slot);
+
+        ItemStack stack = KnowledgeBookItem.createForEnchantment(enchantment);
         stack.save(itemTag);
 
         ListTag listTag = new ListTag();
