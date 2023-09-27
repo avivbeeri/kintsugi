@@ -13,6 +13,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import net.minecraftforge.common.extensions.IForgeMenuType;
@@ -27,34 +28,14 @@ public class ModStructures {
     public static final ResourceKey<Structure> LIBRARY_KEY = ResourceKey.create(Registries.STRUCTURE, new ResourceLocation(Kintsugi.MOD_ID, "library"));
     public static final TagKey<Structure> LIBRARY = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Kintsugi.MOD_ID, "library"));
 
-    /*
-
-   // public static RuleBlockEntityModifierType<ModifyBlockState> MODIFY_BLOCK_STATE;
-    private static final DeferredRegister<RuleBlockEntityModifierType<?>> REGISTER = DeferredRegister.create(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER.key(), Kintsugi.MOD_ID);
-
-    public static final RegistryObject<RuleBlockEntityModifierType<ModifyBlockState>> MODIFY_BLOCK_STATE =
-            REGISTER.register(
-            "modify_block",
-                    () -> ModifyBlockState.CODEC
-    );
-
-
-
     public static void register(IEventBus eventBus) {
-        //MODIFY_BLOCK_STATE = register("modify_block", ModifyBlockState.CODEC);
-        REGISTER.register(eventBus);
+        register("library_structure", LibraryStructureProcessor.CODEC);
     }
 
-    private static <P extends RuleBlockEntityModifier> RuleBlockEntityModifierType<P> register(String pName, Codec<P> pCodec) {
-        return Registry.register(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER, pName, () -> {
+    private static <P extends StructureProcessor> StructureProcessorType<P> register(String pName, Codec<P> pCodec) {
+        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, pName, () -> {
             return pCodec;
         });
     }
-
-
-
-);
-
- */
 
 }

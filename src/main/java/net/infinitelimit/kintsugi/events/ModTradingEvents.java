@@ -3,6 +3,7 @@ package net.infinitelimit.kintsugi.events;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.infinitelimit.kintsugi.Kintsugi;
 import net.infinitelimit.kintsugi.offers.ModTradeOffers;
+import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.npc.VillagerProfession;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.Items;
@@ -25,11 +26,11 @@ public class ModTradingEvents {
     public static void addCustomTrades(VillagerTradesEvent event) {
         if (event.getType() == VillagerProfession.LIBRARIAN) {
             Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
-            trades.put(1, List.of(new VillagerTrades.EmeraldForItems(Items.PAPER, 24, 16, 2), new VillagerTrades.ItemsForEmeralds(Blocks.BOOKSHELF, 7, 1, 12, 1),new VillagerTrades.ItemsForEmeralds(Blocks.CHISELED_BOOKSHELF, 9, 1, 6, 1)));
-            trades.put(2, List.of(new VillagerTrades.EmeraldForItems(Items.BOOK, 4, 12, 10), new ModTradeOffers.RandomKnowledgeBookForEmeralds(10), new VillagerTrades.ItemsForEmeralds(Items.LANTERN, 1, 1, 5)));
-            trades.put(3, List.of(new VillagerTrades.EmeraldForItems(Items.INK_SAC, 5, 12, 20), new ModTradeOffers.RandomKnowledgeBookForEmeralds(20), new VillagerTrades.ItemsForEmeralds(Items.GLASS, 1, 4, 10)));
-            trades.put(4, List.of(new VillagerTrades.EmeraldForItems(Items.WRITABLE_BOOK, 2, 12, 30), new ModTradeOffers.RandomKnowledgeBookForEmeralds(30), new VillagerTrades.ItemsForEmeralds(Items.CLOCK, 5, 1, 15), new VillagerTrades.ItemsForEmeralds(Items.COMPASS, 4, 1, 15)));
-            trades.put(5, List.of(new VillagerTrades.ItemsForEmeralds(NAME_TAG, 20, 1, 30), new ModTradeOffers.KnowledgeBookForEmeralds(30)));
+            trades.put(1, NonNullList.of(new VillagerTrades.EmeraldForItems(Items.PAPER, 24, 16, 2), new VillagerTrades.ItemsForEmeralds(Blocks.BOOKSHELF, 7, 1, 12, 1),new VillagerTrades.ItemsForEmeralds(Blocks.CHISELED_BOOKSHELF, 9, 1, 6, 1)));
+            trades.put(2, NonNullList.of(new VillagerTrades.EmeraldForItems(Items.BOOK, 4, 12, 10), new ModTradeOffers.RandomKnowledgeBookForEmeralds(10), new VillagerTrades.ItemsForEmeralds(Items.LANTERN, 1, 1, 5)));
+            trades.put(3, NonNullList.of(new VillagerTrades.EmeraldForItems(Items.INK_SAC, 5, 12, 20), new ModTradeOffers.RandomKnowledgeBookForEmeralds(20), new VillagerTrades.ItemsForEmeralds(Items.GLASS, 1, 4, 10)));
+            trades.put(4, NonNullList.of(new VillagerTrades.EmeraldForItems(Items.WRITABLE_BOOK, 2, 12, 30), new ModTradeOffers.RandomKnowledgeBookForEmeralds(30), new VillagerTrades.ItemsForEmeralds(Items.CLOCK, 5, 1, 15), new VillagerTrades.ItemsForEmeralds(Items.COMPASS, 4, 1, 15)));
+            trades.put(5, NonNullList.of(new VillagerTrades.ItemsForEmeralds(NAME_TAG, 20, 1, 30), new ModTradeOffers.KnowledgeBookForEmeralds(30)));
         }
     }
 
@@ -38,7 +39,7 @@ public class ModTradingEvents {
         event.getGenericTrades().clear();
         event.getRareTrades().clear();
 
-        List<VillagerTrades.ItemListing> commonTrades =List.of(
+        List<VillagerTrades.ItemListing> commonTrades = NonNullList.of(
                 new VillagerTrades.ItemsForEmeralds(Items.SEA_PICKLE, 2, 1, 5, 1),
                 new VillagerTrades.ItemsForEmeralds(Items.SLIME_BALL, 4, 1, 5, 1),
                 new VillagerTrades.ItemsForEmeralds(Items.GLOWSTONE, 2, 1, 5, 1),
@@ -107,7 +108,7 @@ public class ModTradingEvents {
                 new VillagerTrades.ItemsForEmeralds(Items.TROPICAL_FISH_BUCKET, 3, 1, 4, 1),
                 new VillagerTrades.ItemsForEmeralds(Items.GUNPOWDER, 1, 4, 2, 1)
         );
-        List<VillagerTrades.ItemListing> rareTrades = List.of(
+        List<VillagerTrades.ItemListing> rareTrades = NonNullList.of(
                new VillagerTrades.ItemsForEmeralds(Items.PACKED_ICE, 1, 1, 6, 1),
                new VillagerTrades.ItemsForEmeralds(Items.BLUE_ICE, 6, 1, 6, 1),
                new VillagerTrades.ItemsForEmeralds(Items.PODZOL, 3, 3, 6, 1),

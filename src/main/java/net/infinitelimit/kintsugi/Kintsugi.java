@@ -8,7 +8,7 @@ import net.infinitelimit.kintsugi.loot.ModLootModifiers;
 import net.infinitelimit.kintsugi.menus.ModMenuTypes;
 import net.infinitelimit.kintsugi.screens.RemixEnchantmentScreen;
 import net.infinitelimit.kintsugi.worldgen.LibraryStructureProcessor;
-import net.infinitelimit.kintsugi.worldgen.ModifyBlockState;
+import net.infinitelimit.kintsugi.worldgen.ModStructures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Registry;
@@ -46,6 +46,7 @@ public class Kintsugi
         ModMenuTypes.register(modEventBus);
         // Register the item to a creative tab
         ModCreativeModeTabs.register(modEventBus);
+        ModStructures.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
@@ -56,8 +57,7 @@ public class Kintsugi
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-        registerRule("modify_block", ModifyBlockState.CODEC);
-        register("library_structure", LibraryStructureProcessor.CODEC);
+
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
@@ -89,9 +89,5 @@ public class Kintsugi
             return pCodec;
         });
     }
-    private static <P extends StructureProcessor> StructureProcessorType<P> register(String pName, Codec<P> pCodec) {
-        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, pName, () -> {
-            return pCodec;
-        });
-    }
+
 }
