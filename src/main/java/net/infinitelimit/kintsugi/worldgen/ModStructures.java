@@ -29,13 +29,11 @@ public class ModStructures {
     public static final TagKey<Structure> LIBRARY = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Kintsugi.MOD_ID, "library"));
 
     public static void register(IEventBus eventBus) {
-        register("library_structure", LibraryStructureProcessor.CODEC);
+        // register("library_structure", LibraryStructureProcessor.CODEC);
     }
 
     private static <P extends StructureProcessor> StructureProcessorType<P> register(String pName, Codec<P> pCodec) {
-        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, pName, () -> {
-            return pCodec;
-        });
+        return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, pName, () -> pCodec);
     }
 
 }
