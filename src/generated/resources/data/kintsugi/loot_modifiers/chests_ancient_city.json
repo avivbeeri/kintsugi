@@ -11,5 +11,5 @@
     "minecraft:swift_sneak": 0.5
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.025
+  "rate": 0.1
 }

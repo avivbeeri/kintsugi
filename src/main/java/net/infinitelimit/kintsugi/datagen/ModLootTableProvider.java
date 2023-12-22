@@ -32,12 +32,12 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
             Map.entry(eId(BANE_OF_ARTHROPODS), 0.25)
         ));
 
-        this.addChestEntry(BuiltInLootTables.NETHER_BRIDGE, 0.03, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.NETHER_BRIDGE, 0.2, Map.ofEntries(
             Map.entry(eId(FIRE_PROTECTION), 0.333),
             Map.entry(eId(FIRE_ASPECT), 0.333),
             Map.entry(eId(FLAMING_ARROWS), 0.334)
         ));
-        this.addChestEntry(BuiltInLootTables.RUINED_PORTAL, 0.015, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.RUINED_PORTAL, 0.1, Map.ofEntries(
                 Map.entry(eId(FIRE_PROTECTION), 0.333),
                 Map.entry(eId(FIRE_ASPECT), 0.333),
                 Map.entry(eId(FLAMING_ARROWS), 0.334)
@@ -49,11 +49,11 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(BANE_OF_ARTHROPODS), 0.5),
                 Map.entry(eId(INFINITY_ARROWS), 0.5)
         ));
-        this.addChestEntry(BuiltInLootTables.ANCIENT_CITY, 0.025, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.ANCIENT_CITY, 0.1, Map.ofEntries(
                 Map.entry(eId(MENDING), 0.5),
                 Map.entry(eId(SWIFT_SNEAK), 0.5)
         ));
-        this.addChestEntry(BuiltInLootTables.SHIPWRECK_TREASURE, 0.08, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.SHIPWRECK_TREASURE, 0.1, Map.ofEntries(
                 Map.entry(eId(AQUA_AFFINITY), 0.333),
                 Map.entry(eId(RESPIRATION), 0.333),
                 Map.entry(eId(DEPTH_STRIDER), 0.334)
@@ -64,7 +64,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(MOB_LOOTING), 0.5)
         ));
 
-        this.addChestEntry(BuiltInLootTables.UNDERWATER_RUIN_SMALL, 0.025, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.UNDERWATER_RUIN_SMALL, 0.1, Map.ofEntries(
                 Map.entry(eId(IMPALING), 0.25),
                 Map.entry(eId(CHANNELING), 0.25),
                 Map.entry(eId(RIPTIDE), 0.25),
@@ -78,7 +78,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(LOYALTY), 0.25)
         ));
 
-        this.addChestEntry(BuiltInLootTables.BASTION_TREASURE, 0.05, Map.ofEntries(
+        this.addChestEntry(BuiltInLootTables.BASTION_TREASURE, 0.1, Map.ofEntries(
                 Map.entry(eId(PIERCING), 0.333),
                 Map.entry(eId(QUICK_CHARGE), 0.333),
                 Map.entry(eId(MULTISHOT), 0.334)

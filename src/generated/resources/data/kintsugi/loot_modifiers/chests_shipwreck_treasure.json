@@ -12,5 +12,5 @@
     "minecraft:respiration": 0.333
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.08
+  "rate": 0.1
 }

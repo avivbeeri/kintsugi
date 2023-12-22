@@ -7,10 +7,10 @@
     }
   ],
   "enchantments": {
-    "minecraft:bane_of_arthropods": 0.334,
-    "minecraft:projectile_protection": 0.333,
-    "minecraft:smite": 0.333
+    "minecraft:bane_of_arthropods": 0.25,
+    "minecraft:projectile_protection": 0.25,
+    "minecraft:smite": 0.5
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.07
+  "rate": 0.8
 }

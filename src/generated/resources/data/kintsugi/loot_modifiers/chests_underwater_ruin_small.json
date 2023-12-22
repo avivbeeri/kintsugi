@@ -13,5 +13,5 @@
     "minecraft:riptide": 0.25
   },
   "item": "kintsugi:knowledge_book",
-  "rate": 0.025
+  "rate": 0.1
 }

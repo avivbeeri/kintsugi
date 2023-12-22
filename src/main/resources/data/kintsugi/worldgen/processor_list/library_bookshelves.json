@@ -25,7 +25,7 @@
         ]
       },
       "limit": 1,
-      "processor_type": "minecraft:library_structure"
+      "processor_type": "kintsugi:library_structure"
     }
   ]
 }
