@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 0.1.1 - Feedback Tweaks
+
+- Increased the probability of discovering knowledge books in some locations.
+- Fixed some issues that may have prevented compatibility between other mods.
+
 ## 0.1.0 - Initial Release (Beta)
 
 - Enchantment table mechanics are replaced
