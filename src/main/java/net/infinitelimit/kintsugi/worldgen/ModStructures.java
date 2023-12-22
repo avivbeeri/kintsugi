@@ -16,7 +16,7 @@ public class ModStructures {
     public static final TagKey<Structure> LIBRARY = TagKey.create(Registries.STRUCTURE, new ResourceLocation(Kintsugi.MOD_ID, "library"));
 
     private static final DeferredRegister<StructureProcessorType<?>> REGISTER = DeferredRegister.create(Registries.STRUCTURE_PROCESSOR, Kintsugi.MOD_ID);
-    public static final RegistryObject<StructureProcessorType<LibraryStructureProcessor>> LIBRARY_PROCESSOR = REGISTER.register("library_structure", () -> () -> LibraryStructureProcessor.CODEC);
+    //public static final RegistryObject<StructureProcessorType<LibraryStructureProcessor>> LIBRARY_PROCESSOR = REGISTER.register("library_structure", () -> () -> LibraryStructureProcessor.CODEC);
 
     public static void register(IEventBus eventBus) {
        REGISTER.register(eventBus);

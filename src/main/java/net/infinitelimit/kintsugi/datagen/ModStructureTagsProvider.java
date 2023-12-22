@@ -20,6 +20,6 @@ public class ModStructureTagsProvider extends StructureTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider pProvider) {
-       this.tag(ModStructures.LIBRARY).add(ModStructures.LIBRARY_KEY);
+      // this.tag(ModStructures.LIBRARY).add(ModStructures.LIBRARY_KEY);
     }
 }
