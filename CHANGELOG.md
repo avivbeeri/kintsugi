@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.2 - Bug Fixes
+
+- Fixed some issues that may have prevented compatibility between other mods.
+
 ## 0.1.1 - Feedback Tweaks
 
 - Increased the probability of discovering knowledge books in some locations.
