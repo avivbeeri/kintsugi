@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 0.1.3 - JEI Compatibility
+
+- Added rudimentary JEI compatibility, so all Knowledge books will appear in the JEI picker window.
+
 ## 0.1.2 - Bug Fixes
 
 - Fixed some issues that may have prevented compatibility between other mods.
