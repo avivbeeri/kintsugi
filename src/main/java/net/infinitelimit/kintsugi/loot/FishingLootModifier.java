@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.infinitelimit.kintsugi.config.KintsugiConfig;
 import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -51,6 +53,11 @@ public class FishingLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        boolean dropLoot = KintsugiConfig.dropLoot.get();
+        if (!dropLoot) {
+            return generatedLoot;
+        }
+
         ItemStack stack = generatedLoot.get(0);
         if (!stack.is(ENCHANTED_BOOK)) {
             return generatedLoot;
@@ -72,6 +79,7 @@ public class FishingLootModifier extends LootModifier {
             total += tuple.getB();
             if (roll <= total) {
                 enchantment = tuple.getA();
+                break;
             }
         }
 

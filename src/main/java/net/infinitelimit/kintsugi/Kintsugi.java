@@ -2,19 +2,17 @@ package net.infinitelimit.kintsugi;
 
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
+import net.infinitelimit.kintsugi.config.KintsugiConfig;
 import net.infinitelimit.kintsugi.item.ModCreativeModeTabs;
 import net.infinitelimit.kintsugi.item.ModItems;
 import net.infinitelimit.kintsugi.loot.ModLootModifiers;
 import net.infinitelimit.kintsugi.menus.ModMenuTypes;
 import net.infinitelimit.kintsugi.screens.RemixEnchantmentScreen;
-import net.infinitelimit.kintsugi.worldgen.LibraryStructureProcessor;
 import net.infinitelimit.kintsugi.worldgen.ModStructures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import net.minecraftforge.api.distmarker.Dist;
@@ -41,6 +39,8 @@ public class Kintsugi
     {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
+        KintsugiConfig.register();
+
         ModItems.register(modEventBus);
         ModLootModifiers.register(modEventBus);
         ModMenuTypes.register(modEventBus);
@@ -53,6 +53,7 @@ public class Kintsugi
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

@@ -4,6 +4,7 @@ import com.google.common.base.Suppliers;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.infinitelimit.kintsugi.config.KintsugiConfig;
 import net.infinitelimit.kintsugi.item.KnowledgeBookItem;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
@@ -12,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.loot.IGlobalLootModifier;
 import net.minecraftforge.common.loot.LootModifier;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -49,6 +51,11 @@ public class ChestLootModifier extends LootModifier {
 
     @Override
     protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context) {
+        boolean dropLoot = KintsugiConfig.dropLoot.get();
+        if (!dropLoot) {
+            return generatedLoot;
+        }
+
         if (context.getRandom().nextDouble() < rate) {
             List<Tuple<Enchantment, Double>> distribution = enchantments.entrySet().stream().map(it ->
                     new Tuple<>(Objects.requireNonNull(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.tryParse(it.getKey()))), it.getValue())).toList();
@@ -60,6 +67,7 @@ public class ChestLootModifier extends LootModifier {
                 total += tuple.getB();
                 if (roll <= total) {
                     enchantment = tuple.getA();
+                    break;
                 }
             }
 
