@@ -102,7 +102,7 @@ public class ModLootTableProvider extends GlobalLootModifierProvider {
                 Map.entry(eId(MULTISHOT), 0.334)
         ));
 
-        this.addFishingEntry(0.3334, Map.ofEntries(
+        this.addFishingEntry(0.9, Map.ofEntries(
                 Map.entry(eId(FISHING_SPEED), 0.48),
                 Map.entry(eId(FISHING_LUCK), 0.48),
                 Map.entry(eId(BINDING_CURSE), 0.02),

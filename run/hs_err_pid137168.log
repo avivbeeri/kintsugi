@@ -1,0 +1,60 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x00007f04afa7d0f0, pid=137168, tid=137353
+#
+# JRE version: OpenJDK Runtime Environment Temurin-17.0.8+7 (17.0.8+7) (build 17.0.8+7)
+# Java VM: OpenJDK 64-Bit Server VM Temurin-17.0.8+7 (17.0.8+7, mixed mode, sharing, tiered, compressed oops, compressed class ptrs, g1 gc, linux-amd64)
+# Problematic frame:
+# C  [libopenal.so+0x7d0f0]
+#
+# Core dump will be written. Default location: Core dumps may be processed with "/usr/lib/systemd/systemd-coredump %P %u %g %s %t %c %h %d %F" (or dumping to /home/aviv/dev/Kintsugi/run/core.137168)
+#
+# If you would like to submit a bug report, please visit:
+#   https://github.com/adoptium/adoptium-support/issues
+#
+
+---------------  S U M M A R Y ------------
+
+Command Line: -Ddebugger.agent.enable.coroutines=true -Dforge.enableGameTest=true -Dforge.enabledGameTestNamespaces=kintsugi -Dforge.logging.console.level=debug -Dforge.logging.markers=REGISTRIES -DignoreList=bootstraplauncher,securejarhandler,asm-commons,asm-util,asm-analysis,asm-tree,asm,JarJarFileSystems,client-extra,fmlcore,javafmllanguage,lowcodelanguage,mclanguage,forge- -Djava.net.preferIPv6Addresses=system -Dkotlinx.coroutines.debug.enable.creation.stack.trace=false -Dkotlinx.coroutines.debug.enable.flows.stack.trace=true -Dkotlinx.coroutines.debug.enable.mutable.state.flows.stack.trace=true -DlegacyClassPath.file=/home/aviv/dev/Kintsugi/build/classpath/runClient_minecraftClasspath.txt -DmergeModules=jna-5.10.0.jar,jna-platform-5.10.0.jar -Dmixin.env.refMapRemappingFile=/home/aviv/dev/Kintsugi/build/createSrgToMcp/output.srg -Dmixin.env.remapRefMap=true -Dnet.minecraftforge.gradle.GradleStart.srg.srg-mcp=/home/aviv/dev/Kintsugi/build/createSrgToMcp/output.srg --module-path=/home/aviv/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.5/19ab5b5800a3910d30d3a3e64fdb00fd0cb42de0/asm-commons-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.5/64b5a1fc8c1b15ed2efd6a063e976bc8d3dc5ffe/asm-util-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.5/490bacc77de7cbc0be1a30bb3471072d705be4a4/asm-analysis-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.5/fd33c8b6373abaa675be407082fdfda35021254a/asm-tree-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.5/dc6ea1875f4d64fbc85e1691c95b96a3d8569c90/asm-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar --add-modules=ALL-MODULE-PATH --add-opens=java.base/java.util.jar=cpw.mods.securejarhandler --add-opens=java.base/java.lang.invoke=cpw.mods.securejarhandler --add-exports=java.base/sun.security.util=cpw.mods.securejarhandler --add-exports=jdk.naming.dns/com.sun.jndi.dns=java.naming --module-path=/home/aviv/.gradle/caches/modules-2/files-2.1/cpw.mods/bootstraplauncher/1.1.2/c546e00443d8432cda6baa1c860346980742628/bootstraplauncher-1.1.2.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/cpw.mods/securejarhandler/2.1.10/51e6a22c6c716beb11e244bf5b8be480f51dd6b5/securejarhandler-2.1.10.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/9.5/19ab5b5800a3910d30d3a3e64fdb00fd0cb42de0/asm-commons-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-util/9.5/64b5a1fc8c1b15ed2efd6a063e976bc8d3dc5ffe/asm-util-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/9.5/490bacc77de7cbc0be1a30bb3471072d705be4a4/asm-analysis-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/9.5/fd33c8b6373abaa675be407082fdfda35021254a/asm-tree-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/9.5/dc6ea1875f4d64fbc85e1691c95b96a3d8569c90/asm-9.5.jar:/home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/JarJarFileSystems/0.3.19/2464eb7d6b9ddb9db36a82cf8a95193e5c6fe020/JarJarFileSystems-0.3.19.jar --add-modules=ALL-MODULE-PATH --add-opens=java.base/java.util.jar=cpw.mods.securejarhandler --add-opens=java.base/java.lang.invoke=cpw.mods.securejarhandler --add-exports=java.base/sun.security.util=cpw.mods.securejarhandler --add-exports=jdk.naming.dns/com.sun.jndi.dns=java.naming -agentlib:jdwp=transport=dt_socket,server=n,suspend=y,address=127.0.0.1:45945 -javaagent:/home/aviv/bin/idea-IC-232.8660.185/plugins/java/lib/rt/debugger-agent.jar=file:///tmp/capture12430952261064687216.props -Dfile.encoding=UTF-8 -Duser.country=GB -Duser.language=en -Duser.variant cpw.mods.bootstraplauncher.BootstrapLauncher --launchTarget forgeclientuserdev --version MOD_DEV --assetIndex 5 --assetsDir /home/aviv/.gradle/caches/forge_gradle/assets --gameDir . --fml.forgeVersion 47.2.0 --fml.mcVersion 1.20.1 --fml.forgeGroup net.minecraftforge --fml.mcpVersion 20230612.114412 --mixin.config kintsugi.mixins.json
+
+Host: 12th Gen Intel(R) Core(TM) i7-1270P, 16 cores, 30G, Fedora release 43 (Forty Three)
+Time: Tue Nov 11 21:49:56 2025 GMT elapsed time: 1434.295439 seconds (0d 0h 23m 54s)
+
+---------------  T H R E A D  ---------------
+
+Current thread is native thread
+
+Stack: [0x00007f0437000000,0x00007f04377ff000],  sp=0x00007f04377fd3b0,  free space=8180k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libopenal.so+0x7d0f0]
+
+
+siginfo: si_signo: 11 (SIGSEGV), si_code: 2 (SEGV_ACCERR), si_addr: 0x00007f0564dec1b2
+
+Registers:
+RAX=0x00000000ffffffff, RBX=0x00007f0658b65450, RCX=0x00007f065af51400, RDX=0x0000000000000000
+RSP=0x00007f04377fd3b0, RBP=0x00007f0564dec1b0, RSI=0x00007f065af51000, RDI=0x000000003327d0c1
+R8 =0x00007f04983f7ec0, R9 =0x00007f04984376d8, R10=0x000000003327d0c0, R11=0x00007f04983f7eb0
+R12=0x00007f04afabd028, R13=0x00007f065af50a40, R14=0x00007f04377fd3e0, R15=0x00007f04377fd3f0
+RIP=0x00007f04afa7d0f0, EFLAGS=0x0000000000010206, CSGSFS=0x002b000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007f04377fd3b0)
+0x00007f04377fd3b0:   00007f04983f7f50 0000000000000000
+0x00007f04377fd3c0:   0000000000000001 00007f065af51004
+0x00007f04377fd3d0:   00007f065af51008 00007f065af5100c
+0x00007f04377fd3e0:   3e8bc7903e053e2f 3f0159793dbb9999 
+
+Instructions: (pc=0x00007f04afa7d0f0)
+0x00007f04afa7cff0:   02 04 00 e8 28 3b f9 ff 0f 1f 84 00 00 00 00 00
+0x00007f04afa7d000:   41 57 41 56 48 89 d1 41 55 41 54 49 89 f8 55 53
+0x00007f04afa7d010:   48 83 ec 78 8b 57 0c f3 0f 10 35 6d 01 04 00 f3
+0x00007f04afa7d020:   0f 5e de f3 0f 10 25 a1 3c 03 00 64 48 8b 04 25
+0x00007f04afa7d030:   28 00 00 00 48 89 44 24 68 31 c0 48 8b 47 10 0f
+0x00007f04afa7d040:   28 fc f3 0f 10 28 4c 8d 4c d0 f8 31 d2 0f 2e ea
+0x00007f04afa7d050:   f3 0f 5c fb 0f 28 df 76 20 4c 39 c8 75 07 eb 19
+0x00007f04afa7d060:   49 39 c1 74 14 0f b6 78 04 48 83 c0 08 f3 0f 10
+0x00007f04afa7d070:   28 48 01 fa 0f 2e ea 77 e7 0f b6 40 04 f3 0f 10
+0x00007f04afa7d080:   15 e7 00 04 00 f3 0f 58 d0 66 0f ef c0 4d 8b 58
+0x00007f04afa7d090:   18 66 0f ef ed 0f 28 f9 4c 8d 7c 24 40 8d 78 ff

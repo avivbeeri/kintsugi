@@ -1,39 +1,36 @@
-[25Jan2025 09:20:46.134] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, /home/aviv/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.2.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, kintsugi, --all, --output, /home/aviv/dev/Kintsugi/src/generated/resources, --existing, /home/aviv/dev/Kintsugi/src/main/resources, --mixin.config, kintsugi.mixins.json]
-[25Jan2025 09:20:46.145] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.8 by Eclipse Adoptium; OS Linux arch amd64 version 6.12.9-200.fc41.x86_64
-[25Jan2025 09:20:46.325] [main/WARN] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Configuration file /home/aviv/dev/Kintsugi/run-data/config/fml.toml is not correct. Correcting
-[25Jan2025 09:20:46.328] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSkipGLVersions] was corrected from null to []
-[25Jan2025 09:20:46.328] [main/INFO] [net.minecraftforge.fml.loading.FMLConfig/CORE]: Incorrect key [earlyWindowSquir] was corrected from null to false
-[25Jan2025 09:20:46.346] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
-[25Jan2025 09:20:46.397] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/aviv/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
-[25Jan2025 09:20:46.724] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.2.0/7f9181f85acc66547685a72020713fc8cbde98/javafmllanguage-1.20.1-47.2.0.jar is missing mods.toml file
-[25Jan2025 09:20:46.725] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.2.0/7872f5205685fdd26fae39b1be79b0e60ca5b7bd/lowcodelanguage-1.20.1-47.2.0.jar is missing mods.toml file
-[25Jan2025 09:20:46.726] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.2.0/d501d161cabed08b3c139a2c6217b02a39f3c3e9/mclanguage-1.20.1-47.2.0.jar is missing mods.toml file
-[25Jan2025 09:20:46.728] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.2.0/ffd3c6debac0a388c9e33ac43c9f5eafb91cb466/fmlcore-1.20.1-47.2.0.jar is missing mods.toml file
-[25Jan2025 09:20:46.808] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
-[25Jan2025 09:20:48.451] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
-[25Jan2025 09:20:48.455] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, /home/aviv/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --mod, kintsugi, --all, --output, /home/aviv/dev/Kintsugi/src/generated/resources, --existing, /home/aviv/dev/Kintsugi/src/main/resources]
-[25Jan2025 09:20:48.495] [main/WARN] [mixin/]: Reference map 'kintsugi.refmap.json' for kintsugi.mixins.json could not be read. If this is a development environment you can ignore this message
-[25Jan2025 09:20:49.009] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [kintsugi]
-[25Jan2025 09:20:50.035] [main/WARN] [mixin/]: @Final field BOOKSHELF_OFFSETS:Ljava/util/List; in kintsugi.mixins.json:EnchantmentTableBlockMixin should be final
-[25Jan2025 09:20:53.651] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.2.0, for MC 1.20.1 with MCP 20230612.114412
-[25Jan2025 09:20:53.652] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.2.0 Initialized
-[25Jan2025 09:20:53.887] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager...
-[25Jan2025 09:20:53.892] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager took 3.429 ms
-[25Jan2025 09:20:54.226] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/aviv/dev/Kintsugi/build/fg_cache/net/minecraftforge/forge/1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1.jar%23181!/assets/.mcassetsroot' uses unexpected schema
-[25Jan2025 09:20:54.227] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/aviv/dev/Kintsugi/build/fg_cache/net/minecraftforge/forge/1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1.jar%23181!/data/.mcassetsroot' uses unexpected schema
-[25Jan2025 09:20:54.430] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Global Loot Modifiers : kintsugi
-[25Jan2025 09:20:54.467] [main/INFO] [net.minecraft.data.DataGenerator/]: Global Loot Modifiers : kintsugi finished after 36 ms
-[25Jan2025 09:20:54.468] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: kintsugi
-[25Jan2025 09:20:54.477] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: kintsugi finished after 8 ms
-[25Jan2025 09:20:54.477] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: atlases generator for kintsugi
-[25Jan2025 09:20:54.482] [main/INFO] [net.minecraft.data.DataGenerator/]: atlases generator for kintsugi finished after 4 ms
-[25Jan2025 09:20:54.482] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id kintsugi
-[25Jan2025 09:20:54.606] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id kintsugi finished after 123 ms
-[25Jan2025 09:20:54.606] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id kintsugi
-[25Jan2025 09:20:54.608] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id kintsugi finished after 1 ms
-[25Jan2025 09:20:54.608] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:worldgen/structure mod id kintsugi
-[25Jan2025 09:20:54.608] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:worldgen/structure mod id kintsugi finished after 0 ms
-[25Jan2025 09:20:54.608] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Advancements
-[25Jan2025 09:20:54.689] [main/INFO] [net.minecraft.data.DataGenerator/]: Advancements finished after 80 ms
-[25Jan2025 09:20:54.690] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 260 ms
-[25Jan2025 09:20:54.695] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 25, old count: 25, new count: 26, removed stale: 0, written: 0
+[11Nov2025 20:51:32.659] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher running: args [--launchTarget, forgedatauserdev, --assetIndex, 5, --assetsDir, /home/aviv/.gradle/caches/forge_gradle/assets, --gameDir, ., --fml.forgeVersion, 47.2.0, --fml.mcVersion, 1.20.1, --fml.forgeGroup, net.minecraftforge, --fml.mcpVersion, 20230612.114412, --mod, kintsugi, --all, --output, /home/aviv/dev/Kintsugi/src/generated/resources, --existing, /home/aviv/dev/Kintsugi/src/main/resources, --mixin.config, kintsugi.mixins.json]
+[11Nov2025 20:51:32.665] [main/INFO] [cpw.mods.modlauncher.Launcher/MODLAUNCHER]: ModLauncher 10.0.9+10.0.9+main.dcd20f30 starting: java version 17.0.8 by Eclipse Adoptium; OS Linux arch amd64 version 6.17.7-300.fc43.x86_64
+[11Nov2025 20:51:32.840] [main/INFO] [net.minecraftforge.fml.loading.ImmediateWindowHandler/]: ImmediateWindowProvider not loading because launch target is forgedatauserdev
+[11Nov2025 20:51:32.898] [main/INFO] [mixin/]: SpongePowered MIXIN Subsystem Version=0.8.5 Source=union:/home/aviv/.gradle/caches/modules-2/files-2.1/org.spongepowered/mixin/0.8.5/9d1c0c3a304ae6697ecd477218fa61b850bf57fc/mixin-0.8.5.jar%23116!/ Service=ModLauncher Env=CLIENT
+[11Nov2025 20:51:33.155] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/javafmllanguage/1.20.1-47.2.0/7f9181f85acc66547685a72020713fc8cbde98/javafmllanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[11Nov2025 20:51:33.157] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/lowcodelanguage/1.20.1-47.2.0/7872f5205685fdd26fae39b1be79b0e60ca5b7bd/lowcodelanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[11Nov2025 20:51:33.158] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/mclanguage/1.20.1-47.2.0/d501d161cabed08b3c139a2c6217b02a39f3c3e9/mclanguage-1.20.1-47.2.0.jar is missing mods.toml file
+[11Nov2025 20:51:33.160] [main/WARN] [net.minecraftforge.fml.loading.moddiscovery.ModFileParser/LOADING]: Mod file /home/aviv/.gradle/caches/modules-2/files-2.1/net.minecraftforge/fmlcore/1.20.1-47.2.0/ffd3c6debac0a388c9e33ac43c9f5eafb91cb466/fmlcore-1.20.1-47.2.0.jar is missing mods.toml file
+[11Nov2025 20:51:33.231] [main/INFO] [net.minecraftforge.fml.loading.moddiscovery.JarInJarDependencyLocator/]: No dependencies to load found. Skipping!
+[11Nov2025 20:51:34.640] [main/INFO] [mixin/]: Compatibility level set to JAVA_17
+[11Nov2025 20:51:34.645] [main/INFO] [cpw.mods.modlauncher.LaunchServiceHandler/MODLAUNCHER]: Launching target 'forgedatauserdev' with arguments [--gameDir, ., --assetsDir, /home/aviv/.gradle/caches/forge_gradle/assets, --assetIndex, 5, --mod, kintsugi, --all, --output, /home/aviv/dev/Kintsugi/src/generated/resources, --existing, /home/aviv/dev/Kintsugi/src/main/resources]
+[11Nov2025 20:51:34.675] [main/WARN] [mixin/]: Reference map 'kintsugi.refmap.json' for kintsugi.mixins.json could not be read. If this is a development environment you can ignore this message
+[11Nov2025 20:51:35.060] [main/INFO] [net.minecraftforge.data.loading.DatagenModLoader/]: Initializing Data Gatherer for mods [kintsugi]
+[11Nov2025 20:51:35.914] [main/WARN] [mixin/]: @Final field BOOKSHELF_OFFSETS:Ljava/util/List; in kintsugi.mixins.json:EnchantmentTableBlockMixin should be final
+[11Nov2025 20:51:39.204] [modloading-worker-0/INFO] [net.minecraftforge.common.ForgeMod/FORGEMOD]: Forge mod loading, version 47.2.0, for MC 1.20.1 with MCP 20230612.114412
+[11Nov2025 20:51:39.206] [modloading-worker-0/INFO] [net.minecraftforge.common.MinecraftForge/FORGE]: MinecraftForge v47.2.0 Initialized
+[11Nov2025 20:51:39.358] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager...
+[11Nov2025 20:51:39.363] [modloading-worker-0/INFO] [mezz.jei.library.load.PluginCaller/]: Sending ConfigManager took 3.702 ms
+[11Nov2025 20:51:39.715] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/aviv/dev/Kintsugi/build/fg_cache/net/minecraftforge/forge/1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23181!/assets/.mcassetsroot' uses unexpected schema
+[11Nov2025 20:51:39.716] [main/WARN] [net.minecraft.server.packs.VanillaPackResourcesBuilder/]: Assets URL 'union:/home/aviv/dev/Kintsugi/build/fg_cache/net/minecraftforge/forge/1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1/forge-1.20.1-47.2.0_mapped_parchment_2023.09.03-1.20.1-recomp.jar%23181!/data/.mcassetsroot' uses unexpected schema
+[11Nov2025 20:51:39.883] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Global Loot Modifiers : kintsugi
+[11Nov2025 20:51:39.928] [main/INFO] [net.minecraft.data.DataGenerator/]: Global Loot Modifiers : kintsugi finished after 43 ms
+[11Nov2025 20:51:39.928] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Item Models: kintsugi
+[11Nov2025 20:51:39.937] [main/INFO] [net.minecraft.data.DataGenerator/]: Item Models: kintsugi finished after 8 ms
+[11Nov2025 20:51:39.937] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: atlases generator for kintsugi
+[11Nov2025 20:51:39.941] [main/INFO] [net.minecraft.data.DataGenerator/]: atlases generator for kintsugi finished after 3 ms
+[11Nov2025 20:51:39.941] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:block mod id kintsugi
+[11Nov2025 20:51:40.057] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:block mod id kintsugi finished after 115 ms
+[11Nov2025 20:51:40.057] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:item mod id kintsugi
+[11Nov2025 20:51:40.060] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:item mod id kintsugi finished after 2 ms
+[11Nov2025 20:51:40.060] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Tags for minecraft:worldgen/structure mod id kintsugi
+[11Nov2025 20:51:40.061] [main/INFO] [net.minecraft.data.DataGenerator/]: Tags for minecraft:worldgen/structure mod id kintsugi finished after 0 ms
+[11Nov2025 20:51:40.061] [main/INFO] [net.minecraft.data.DataGenerator/]: Starting provider: Advancements
+[11Nov2025 20:51:40.123] [main/INFO] [net.minecraft.data.DataGenerator/]: Advancements finished after 62 ms
+[11Nov2025 20:51:40.123] [main/INFO] [net.minecraft.data.DataGenerator/]: All providers took: 240 ms
+[11Nov2025 20:51:40.130] [main/INFO] [net.minecraft.data.HashCache/]: Caching: total files: 25, old count: 25, new count: 26, removed stale: 0, written: 0

@@ -1,5 +1,5 @@
 
 #Configure the Kintsugi Mod
 [kintsugi]
-	drop_as_loot = false
+	drop_as_loot = true
 
