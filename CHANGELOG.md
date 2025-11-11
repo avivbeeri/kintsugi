@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.1.5 - Bug Fixes
+
+- Corrected an issue with loot distribution, causing only one kind of book to be distributed
+- Wandering traders correctly copy their chosen Knowledge Book now.
+- The chance of getting a Knowledge Book by fishing has been increased.
+- Added a data config file to include Knowledge Books in the loot tables for chests and fishing.
+
 ## 0.1.3 - JEI Compatibility
 
 - Added rudimentary JEI compatibility, so all Knowledge books will appear in the JEI picker window.
