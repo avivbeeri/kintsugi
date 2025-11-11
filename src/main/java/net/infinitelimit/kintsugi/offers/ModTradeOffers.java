@@ -143,7 +143,7 @@ public class ModTradeOffers {
             ItemStack itemstack = KnowledgeBookItem.createForEnchantment(enchantment);
             int cost = calculateEnchantmentCost(pRandom, enchantment);
 
-            return new MerchantOffer(new ItemStack(Items.EMERALD, cost), itemstack, itemstack.copy(), 1, this.villagerXp, 0.2F);
+            return new MerchantOffer(new ItemStack(Items.EMERALD, cost), itemstack, itemstack.copyWithCount(2), 1, this.villagerXp, 0.2F);
         }
     }
 

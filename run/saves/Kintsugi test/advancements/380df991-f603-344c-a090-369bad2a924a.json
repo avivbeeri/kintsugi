@@ -153,6 +153,12 @@
     },
     "done": true
   },
+  "minecraft:recipes/food/mushroom_stew": {
+    "criteria": {
+      "has_bowl": "2025-11-11 21:31:14 +0000"
+    },
+    "done": true
+  },
   "minecraft:recipes/transportation/mangrove_boat": {
     "criteria": {
       "in_water": "2025-11-11 21:40:46 +0000"
@@ -183,12 +189,6 @@
     },
     "done": true
   },
-  "minecraft:recipes/food/mushroom_stew": {
-    "criteria": {
-      "has_bowl": "2025-11-11 21:31:14 +0000"
-    },
-    "done": true
-  },
   "minecraft:recipes/transportation/birch_boat": {
     "criteria": {
       "in_water": "2025-11-11 21:40:46 +0000"
@@ -210,6 +210,36 @@
   "minecraft:recipes/transportation/dark_oak_boat": {
     "criteria": {
       "in_water": "2025-11-11 21:40:46 +0000"
+    },
+    "done": true
+  },
+  "kintsugi:knowledge/trade": {
+    "criteria": {
+      "trade": "2025-11-11 21:55:09 +0000"
+    },
+    "done": true
+  },
+  "kintsugi:knowledge/acquire": {
+    "criteria": {
+      "acquired_book": "2025-11-11 21:53:47 +0000"
+    },
+    "done": true
+  },
+  "minecraft:recipes/building_blocks/emerald_block": {
+    "criteria": {
+      "has_emerald": "2025-11-11 21:54:15 +0000"
+    },
+    "done": true
+  },
+  "kintsugi:knowledge/root": {
+    "criteria": {
+      "book": "2025-11-11 21:53:47 +0000"
+    },
+    "done": true
+  },
+  "minecraft:adventure/trade": {
+    "criteria": {
+      "traded": "2025-11-11 21:55:09 +0000"
     },
     "done": true
   },
